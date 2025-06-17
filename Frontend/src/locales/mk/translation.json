@@ -1,0 +1,11 @@
+{
+    "navigation": {
+        "Home": "Дома",
+        "RealEstate": "Недвижнини",
+        "LookingProperty": "Барате имот",
+        "YourOffer": "Ваша понуда",
+        "AboutUs": "За нас",
+        "OurLocation": "Локација",
+        "Contact": "Контакт"
+    }
+}

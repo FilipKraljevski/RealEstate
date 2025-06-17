@@ -1,0 +1,11 @@
+{
+    "navigation": {
+        "Home": "Home",
+        "RealEstate": "Real estate",
+        "LookingProperty": "Looking property",
+        "YourOffer": "Your offer",
+        "AboutUs": "About us",
+        "OurLocation": "Location",
+        "Contact": "Contact"
+    }
+}

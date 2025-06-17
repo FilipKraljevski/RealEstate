@@ -1,25 +1,22 @@
 import { Tabs, Tab } from "@mui/material";
-import { Link } from "@tanstack/react-router";
-import React from "react";
+import { Link, useLocation } from "@tanstack/react-router";
+import { getActiveTabValue } from "../../common/Logic/NavigationHelper";
+import { navigationData } from "../../common/Repository/NavigationData";
+import { useTranslation } from "react-i18next";
 
 export default function Navigation() {
 
-    const [value, setValue] = React.useState('1');
-
-    const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-      setValue(newValue);
-    };
+    const location = useLocation();
+    const { t } = useTranslation()
     
+    const activeTabValue = getActiveTabValue(location.pathname);
+
     return (
         <>
-            <Tabs onChange={handleChange} value={value} textColor="inherit">
-                <Tab label="Дома" value="1" component={Link} to="/"/>
-                <Tab label="За нас" value="2" component={Link} to="/AboutUs" />
-                <Tab label="Недвижнини" value="3" component={Link} to="/RealEstate" />
-                <Tab label="Ваша понуда" value="4" component={Link} to="/YourOffer"/>
-                <Tab label="Барате имот" value="5" component={Link} to="/LookingProperty"/>
-                <Tab label="Локација" value="6" component={Link} to="/OurLocation"/>
-                <Tab label="Контакт" value="7" component={Link} to="/Contact"/>
+            <Tabs value={activeTabValue} textColor="inherit">
+                {navigationData.map((item, index) => (
+                    <Tab key={index} label={t(`navigation.${item.label}`)} value={item.value} component={Link} to={item.to}/>
+                ))}
             </Tabs>
         </>
     )
