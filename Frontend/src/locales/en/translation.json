@@ -7,5 +7,49 @@
         "AboutUs": "About us",
         "OurLocation": "Location",
         "Contact": "Contact"
+    },    
+    "footer": {
+        "Contact": "Contact",
+        "Politics": "Privacy politics",
+        "Privacy": "Privacy"
+    },
+    "Home": {
+        "Vision": "Empower every homeowner, renter and investor to discover, list and secure their ideal property.",
+        "MoreInfo": "More info",
+        "EstatesByCategory": "Estates by category",
+        "LookingProperty": "Looking for a property we don't currently have?",
+        "LookingPropertyInfo": "Provide the details of the property you're searching for and the relevant agencies will contact you if an identical or similar listing becomes available.",
+        "EnterInformation": "Enter details",
+        "YourOffer": "Have a property you'd like to offer?",
+        "YourOfferInfo": "Submit your property details and the relevant agencies will reach out regarding your listing.",
+        "Contact": "Are you an agency looking to list your properties on our site?",
+        "ContactUs": "Contact us"
+    },
+    "AboutUs": {
+        "AboutUs": "About us",
+        "Intro" : "Welcome to our real estate platform, where finding or listing a property is no longer a chore but an experience tailored to you. A single destination that brings agencies, homeowners and buyers together under one digital roof.",
+        "ExploreListings": "Browse an ever-growing catalog of homes, apartments and commercial spaces. Each entry shows category, property type, agency, location, surface area and more. Use powerful filters — by location, price range, square footage to instantly surface matches.",
+        "DeepDetails": "Click any listing to view high resolution images, agency contact info and an immersive description.",
+        "ListYourProperty": "Selling or renting? Simply complete our intuitive form with your property's details, upload photos, then confirm your identity via emailed code. With two-factor verification, only legitimate listings make it live.",
+        "CustomAlert": "Searching for something unique? Tell us what you need — location, layout, budget — and we'll notify you the moment a matching property hits our database. Again, two-factor authentication ensures we're reaching real people with real requests."
+    },
+    "Contact": {
+        "ContactUs": "Contact us",
+        "ContactInfo": "If you are an agency and you want to upload your estates in our website, feel free to contact us through telephone or email.",
+        "Telephone": "Telephone number: ",
+        "Email": "Email contact form:",
+        "Submit": "Send"
+    },
+    "form": {
+        "name": "name",
+        "email": "email",
+        "subject": "subject",
+        "body": "body"
+    },
+    "error": {
+        "Error": "Error",
+        "ErrorInfo": "Please fill the required fields or change the data provided in the fields where it is failing!",
+        "Required": "This field is required",
+        "Email": "Invalid email"
     }
 }

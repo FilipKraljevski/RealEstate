@@ -1,6 +1,7 @@
 import { Box, Button, Container, IconButton, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
 import { createLazyRoute, Link } from '@tanstack/react-router'
 import InfoIcon from '@mui/icons-material/Info';
+import { useTranslation } from 'react-i18next';
 
 export const Route = createLazyRoute('/')({
     component: Home,
@@ -8,22 +9,24 @@ export const Route = createLazyRoute('/')({
 
 export default function Home() {
 
+    const { t } = useTranslation()
+
     return (
         <Box>
-            <Box sx={{ position: 'relative', width: '100%', height: '500px', mb: '1%' }}>
+            <Box sx={{ position: 'relative', width: '100%', height: '550px', mb: '1%' }}>
                 <Box component='img' src='/LivingRoomHomeResized.jpg' alt='Living Room Interior' sx={{ width: '100%', height: '100%', 
                     objectFit: 'cover' }}/>
-                <Box sx={{ position: 'absolute',top: '0',left: '50%',transform: 'translateX(-50%)',textAlign: 'center',color: 'black',
+                <Box sx={{ position: 'absolute',top: '0',left: '50%',transform: 'translateX(-50%)', textAlign: 'center',color: 'black',
                     padding: '8px 16px',borderRadius: '4px', mt: 5}}>
-                    <Typography variant="h4">Продажба и изнајмување на недвижен имот на територија на град Скопје</Typography>
+                    <Typography variant="h4">{t('Home.Vision')}</Typography>
                     <Button href='/AboutUs' component={Link} style={{ color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.5)',
                         padding: '8px 16px', marginTop: '2%'}}>
-                            Повеќе инфо
+                            {t('Home.MoreInfo')}
                     </Button>
                 </Box>
             </Box>
             <Container>
-                <Typography variant='h4'>Недвижнини по категорија</Typography>
+                <Typography variant='h4'>{t('Home.EstatesByCategory')}</Typography>
                 <ImageList cols={3} sx={{ width: '100%', height: '500px'}}>
                     {itemData.map((item) => (
                         <ImageListItem key={item.img}>
@@ -31,9 +34,7 @@ export default function Home() {
                                 src={`${item.img}?w=164&h=164&fit=crop&auto=format`} alt={item.title} loading='lazy'/>
                             <ImageListItemBar title={item.title}
                                 actionIcon={
-                                    <IconButton
-                                        sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                        aria-label={`info about ${item.title}`}>
+                                    <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }} aria-label={`info about ${item.title}`}>
                                         <InfoIcon />
                                     </IconButton>
                                 }
@@ -47,13 +48,11 @@ export default function Home() {
                     <Box component='img' src='/LookingProperty.jpg' alt='House' sx={{ width: '50%', height: '250px', 
                         objectFit: 'cover', display: { xs: 'none', sm: 'block' } }}/>
                     <Box sx={{ textAlign: 'center', mt: 0}}>
-                        <Typography variant='h5'>Барате недвижнина која моментално ја немаме?</Typography>
-                        <Typography>Внесете ги информациите за недвижнината која ја барате и ќе ве контактираат соодветните агениции
-                            доколку се појави нова недвижнана која е иста или слична со информациите внесени од ваша страна.
-                        </Typography>
+                        <Typography variant='h5'>{t('Home.LookingProperty')}</Typography>
+                        <Typography>{t('Home.LookingPropertyInfo')}</Typography>
                         <Button component={Link} href='/LookingProperty' variant='contained' color='primary' style={{ color:'white', 
                             padding: '8px 16px', marginTop: '2%'}}>
-                            Внесете информации
+                            {t('Home.EnterInformation')}
                         </Button>
                     </Box>
                 </Box>
@@ -61,21 +60,19 @@ export default function Home() {
                     <Box component="img" src='/YourOffer.jpg' alt='House with keys' sx={{ width: '50%', height: '250px', 
                         objectFit: 'cover', display: { xs: 'none', sm: 'block' } }}/>
                     <Box sx={{ textAlign: 'center', mt: 0}}>
-                        <Typography variant='h5'>Имате недвижнина која сакате да ја понудите?</Typography>
-                        <Typography>Внесете ги информациите за недвижнината која ја нудите и ќе ве контактираат соодветните агениции 
-                            за вашата недвижнина.
-                        </Typography>
+                        <Typography variant='h5'>{t('Home.YourOffer')}</Typography>
+                        <Typography>{t('Home.YourOfferInfo')}</Typography>
                         <Button component={Link} href='/YourOffer' variant='contained' style={{ color:'white', 
                             padding: '8px 16px', marginTop: '2%'}}>
-                            Внесете информации
+                            {t('Home.EnterInformation')}
                         </Button>
                     </Box>
                 </Box>
             </Container>
             <Container sx={{mb: '1%'}}>
-                <Typography variant='h5'>Вие сте агенција, и сакате да ги објавите вашите недвижнини на нашата страница?</Typography>
+                <Typography variant='h5'>{t('Home.Contact')}</Typography>
                 <Button component={Link} href='/Contact' variant='contained' style={{ color:'white', padding: '8px 16px', marginTop: '2%'}}>
-                    Стапете во контакт со нас
+                    {t('Home.ContactUs')}
                 </Button>
             </Container>
         </Box>
