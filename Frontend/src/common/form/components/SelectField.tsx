@@ -28,13 +28,11 @@ export default function SelectField(props: Props) {
             <Select id={field.name} required={isRequired} value={field.state.value} labelId="select-label" label={t(`form.${field.name}`)}
                 onChange={(e) => field.handleChange(e.target.value)} error={getErrorsLength(field.state.meta)}>
                     {defaultValue || 
-                        <MenuItem value='0'>
-                            <em>None</em>
-                        </MenuItem>
+                        <MenuItem value='0'>{t(`option.Select`)}</MenuItem>
                     }
                     {data.map((item: Item, index: number) => {
                         return (
-                            <MenuItem key={index} value={item.value}>{item.label}</MenuItem>
+                            <MenuItem key={index} value={item.value}>{t(`option.${item.label}`)}</MenuItem>
                         )
                     })}
             </Select>

@@ -43,6 +43,20 @@
         "floor": "floor",
         "images": "attach pictures"
     },
+    "option": {
+        "Select": "Select",
+        "Yes": "Yes",
+        "No": "No",
+        "Macedonia": "Macedonia",
+        "House": "House",
+        "Apartment": "Apartment",
+        "Office": "Office",
+        "Shop": "Shop",
+        "Werehouse": "Werehouse",
+        "Land": "Land",
+        "Purchase": "Purchase",
+        "Rent": "Rent"
+    },
     "error": {
         "Error": "Error",
         "ErrorInfo": "Please fill the required fields or change the data provided in the fields where it is failing!",

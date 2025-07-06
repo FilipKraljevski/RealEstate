@@ -84,8 +84,6 @@ export default function YourOffer() {
         form.handleSubmit()
     }
 
-    console.log(form.state.values.images)
-
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
             <Typography variant='h4' sx={{mb: '1%',}}>{t('YourOffer.YourOffer')}</Typography>
