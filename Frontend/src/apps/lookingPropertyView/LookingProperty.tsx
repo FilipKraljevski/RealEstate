@@ -32,7 +32,8 @@ export default function LookingProperty() {
         areaFrom: z.coerce.number().nonnegative(t('error.NonNegative')),
         areaTo: z.coerce.number(),
         country: z.nativeEnum(Country, { message: t('error.Select')}),
-        location: z.string().nonempty(t('error.Required')),
+        city: z.string().nonempty(t('error.Required')),
+        municipality: z.string().nonempty(t('error.Required')),
         terrace: z.boolean(),
         heating: z.boolean(),
         parking: z.boolean(),
@@ -40,6 +41,7 @@ export default function LookingProperty() {
         yearConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
         floorFrom: z.coerce.number().nonnegative(t('error.NonNegative')),
         floorTo: z.coerce.number(),
+        basement: z.boolean(),
         rooms: z.coerce.number().nonnegative(t('error.NonNegative')),
         message: z.string()
     }).superRefine((vals, ctx) => {
@@ -70,7 +72,8 @@ export default function LookingProperty() {
             areaFrom: 0,
             areaTo: 0,
             country: 0,
-            location: "",
+            city: "",
+            municipality: "",
             terrace: false,
             heating: false,
             parking: false,
@@ -78,6 +81,7 @@ export default function LookingProperty() {
             yearConstruction: 0,
             floorFrom: 0,
             floorTo: 0,
+            basement: false,
             rooms: 0,
             message: ""
         },
@@ -114,7 +118,7 @@ export default function LookingProperty() {
                         <form.AppField name="telephone" children={(field) => <field.Text required={false} type='tel' fullWidth={true}/>} />
                     </Grid>
                     <Grid size={4}>
-                        <form.AppField name="maxPrice" children={(field) => <field.Text required={true} type='number' fullWidth={true}/>} />
+                        <form.AppField name="maxPrice" children={(field) => <field.Text required={true} type='number' fullWidth={true} adornment='€'/>} />
                     </Grid>
                 </Grid>
                 <Divider />
@@ -136,7 +140,10 @@ export default function LookingProperty() {
                         <form.AppField name="country" children={(field) => <field.SelectField data={countryOptions}/>} />
                     </Grid>
                     <Grid size={4}>
-                        <form.AppField name="location" children={(field) => <field.Text fullWidth={true}/>} />
+                        <form.AppField name="city" children={(field) => <field.Text fullWidth={true}/>} />
+                    </Grid>
+                    <Grid size={4}>
+                        <form.AppField name="municipality" children={(field) => <field.Text fullWidth={true}/>} />
                     </Grid>
                     <Grid size={3}>
                         <form.AppField name="terrace" children={(field) => <field.SelectField data={YesNoOptions} defaultValue={true}/>} />
@@ -158,6 +165,9 @@ export default function LookingProperty() {
                     </Grid>
                     <Grid size={2}>
                         <form.AppField name="floorTo" children={(field) => <field.Text fullWidth={true} type='number'/>} />
+                    </Grid>
+                    <Grid size={3}>
+                        <form.AppField name="basement" children={(field) => <field.SelectField data={YesNoOptions} defaultValue={true}/>} />
                     </Grid>
                     <form.Subscribe selector={(state) => state.values.estateType} children=
                         {(estateType) => {

@@ -25,7 +25,8 @@
         "areaFrom": "from m²",
         "areaTo": "to m²",
         "country": "country",
-        "location": "location/city/municipality",
+        "city": "city",
+        "municipality": "municipality",
         "terrace": "terrace",
         "heating": "heating",
         "parking": "parking",
@@ -34,7 +35,13 @@
         "floorFrom": "floor from",
         "floorTo": "floor to",
         "rooms": "number of rooms",
-        "message": "message"
+        "basement": "basement",
+        "message": "message",
+        "address": "property address",
+        "price": "price",
+        "area": "area m²",
+        "floor": "floor",
+        "images": "attach pictures"
     },
     "error": {
         "Error": "Error",
@@ -64,6 +71,13 @@
         "Intro": "Please fill out the form with details about what kind of property you are looking for, and the appropriate agency will contact you if such an offer arises.",
         "PersonData": "Information about the property seeker:",
         "EstateData": "Information about what kind of property you are looking for:",
+        "Submit": "Send"
+    },
+    "YourOffer": {
+        "YourOffer": "Your offer",
+        "Intro": "Please fill out the form with the details about your property that you are offering, and the appropriate agency will contact you based on the location of the property.",
+        "PersonData": "Bidder of property:",
+        "EstateData": "Information about your property:",
         "Submit": "Send"
     },
     "AboutUs": {
