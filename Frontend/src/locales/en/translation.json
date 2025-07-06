@@ -13,6 +13,40 @@
         "Politics": "Privacy politics",
         "Privacy": "Privacy"
     },
+    "form": {
+        "name": "name",
+        "email": "email",
+        "subject": "subject",
+        "body": "body",
+        "telephone": "telephone",
+        "maxPrice": "maximum price",
+        "purchaseType": "seeking estate for",
+        "estateType": "estate type",
+        "areaFrom": "from m²",
+        "areaTo": "to m²",
+        "country": "country",
+        "location": "location/city/municipality",
+        "terrace": "terrace",
+        "heating": "heating",
+        "parking": "parking",
+        "elevator": "elevator",
+        "yearConstruction": "year of construction",
+        "floorFrom": "floor from",
+        "floorTo": "floor to",
+        "rooms": "number of rooms",
+        "message": "message"
+    },
+    "error": {
+        "Error": "Error",
+        "ErrorInfo": "Please fill the required fields or change the data provided in the fields where it is failing!",
+        "Required": "This field is required",
+        "Email": "Invalid email",
+        "GT0": "Number must be greater than 0",
+        "Select": "You must select a value in the select field",
+        "NonNegative": "Number cannot have a negative value",
+        "AreaFrom": "Area from cannot exceed area to",
+        "FloorFrom": "Floor from cannot exceed floor to"
+    },
     "Home": {
         "Vision": "Empower every homeowner, renter and investor to discover, list and secure their ideal property.",
         "MoreInfo": "More info",
@@ -24,6 +58,13 @@
         "YourOfferInfo": "Submit your property details and the relevant agencies will reach out regarding your listing.",
         "Contact": "Are you an agency looking to list your properties on our site?",
         "ContactUs": "Contact us"
+    },
+    "LookingProperty": {
+        "LookingProperty": "Looking for a property",
+        "Intro": "Please fill out the form with details about what kind of property you are looking for, and the appropriate agency will contact you if such an offer arises.",
+        "PersonData": "Information about the property seeker:",
+        "EstateData": "Information about what kind of property you are looking for:",
+        "Submit": "Send"
     },
     "AboutUs": {
         "AboutUs": "About us",
@@ -39,17 +80,5 @@
         "Telephone": "Telephone number: ",
         "Email": "Email contact form:",
         "Submit": "Send"
-    },
-    "form": {
-        "name": "name",
-        "email": "email",
-        "subject": "subject",
-        "body": "body"
-    },
-    "error": {
-        "Error": "Error",
-        "ErrorInfo": "Please fill the required fields or change the data provided in the fields where it is failing!",
-        "Required": "This field is required",
-        "Email": "Invalid email"
     }
 }
