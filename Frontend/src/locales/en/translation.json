@@ -1,11 +1,14 @@
 {
+    "header":{
+        "Menu": "Menu"
+    },
     "navigation": {
         "Home": "Home",
         "RealEstate": "Real estate",
         "LookingProperty": "Looking property",
         "YourOffer": "Your offer",
         "AboutUs": "About us",
-        "OurLocation": "Location",
+        "Agencies": "Agencies",
         "Contact": "Contact"
     },    
     "footer": {
@@ -94,6 +97,16 @@
         "EstateData": "Information about your property:",
         "Submit": "Send"
     },
+    "Agencies": {
+        "Agencies": "Agencies",
+        "Country": "Country",
+        "Contact": "Contact Agency",
+        "Telephones": "Telephones:",
+        "Email": "Email:",
+        "Estates": "Estates:",
+        "NoEstates": "Number of estates published:",
+        "Description": "Description"
+    },
     "AboutUs": {
         "AboutUs": "About us",
         "Intro" : "Welcome to our real estate platform, where finding or listing a property is no longer a chore but an experience tailored to you. A single destination that brings agencies, homeowners and buyers together under one digital roof.",
@@ -108,5 +121,8 @@
         "Telephone": "Telephone number: ",
         "Email": "Email contact form:",
         "Submit": "Send"
+    },
+    "Country": {
+        "Macedonia": "Macedonia"
     }
 }

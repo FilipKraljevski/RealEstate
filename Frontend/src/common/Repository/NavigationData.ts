@@ -20,14 +20,14 @@ export const navigationData = [
         to: "/YourOffer"
     },
     {
-        label: "AboutUs",
+        label: "Agencies",
         value: "5",
-        to: "/AboutUs"
+        to: "/Agencies"
     },
     {
-        label: "OurLocation",
+        label: "AboutUs",
         value: "6",
-        to: "/OurLocation"
+        to: "/AboutUs"
     },
     {
         label: "Contact",

@@ -11,3 +11,8 @@ export function enumToOptions<E extends string | number>(enumObj: Record<string,
         label: String(key),
     }))
 }
+
+export function getEnumTypeKey<E extends string | number>(value: string | number, type:  Record<string, E>) {
+    const key = Object.entries(type).find(x => x[1] == value)
+    return key ? key[0] : ""
+}

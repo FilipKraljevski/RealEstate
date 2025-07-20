@@ -48,12 +48,19 @@ export const lookingPropertyRoute = createRoute({
     loader: () => console.log("fecthApi"),
 }).lazy(() => import('../../apps/lookingPropertyView/LookingProperty').then((d) => d.Route))
 
-export const ourLocationRoute = createRoute({
+export const agenciesRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: 'OurLocation',
+    path: 'Agencies',
     //errorComponent: ErrorComponent, 
     loader: () => console.log("fecthApi"),
-}).lazy(() => import('../../apps/ourLocationView/OurLocation').then((d) => d.Route))
+}).lazy(() => import('../../apps/agenciesView/Agencies').then((d) => d.Route))
+
+export const agencyDetailsRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: 'AgencyDetails/$id',
+    //errorComponent: ErrorComponent, 
+    loader: () => console.log("fecthApi"),
+}).lazy(() => import('../../apps/agenciesView/AgencyDetails').then((d) => d.Route))
 
 export const contactRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -68,6 +75,7 @@ export const routeTree = rootRoute.addChildren([
     realEstateRoute,
     yourOfferRoute,
     lookingPropertyRoute,
-    ourLocationRoute,
+    agenciesRoute,
+    agencyDetailsRoute,
     contactRoute,
 ])

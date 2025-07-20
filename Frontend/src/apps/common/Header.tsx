@@ -52,7 +52,7 @@ export default function Header() {
         <Drawer variant='temporary' open={mobileOpen} onClose={handleDrawerToggle} ModalProps={{ keepMounted: true }} 
           sx={{display: { xs: 'block', md: 'none' }, '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 }}}>
           <Typography variant='h6' sx={{ textAlign: 'center', mb: 2 }}>
-            Мени
+            {t('header.Menu')}
           </Typography>
           <Box onClick={handleDrawerToggle} >
             <MobileNavigation />
