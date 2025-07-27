@@ -58,7 +58,8 @@
         "Werehouse": "Werehouse",
         "Land": "Land",
         "Purchase": "Purchase",
-        "Rent": "Rent"
+        "Rent": "Rent",
+        "ShortPeriod": "Short period"
     },
     "error": {
         "Error": "Error",
