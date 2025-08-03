@@ -23,8 +23,8 @@
         "body": "тело",
         "telephone": "телефон",
         "maxPrice": "максимална сума",
-        "purchaseType": "имот за",
-        "estateType": "Бид на имот",
+        "purchaseType": "недвижнина за",
+        "estateType": "вид на имот",
         "areaFrom": "од m²",
         "areaTo": "до m²",
         "country": "држава",
@@ -44,7 +44,8 @@
         "price": "цена",
         "area": "површина m²",
         "floor": "кат",
-        "images": "прикачи слики"
+        "images": "прикачи слики",
+        "published": "објавено на"
     },
     "filter": {
         "estateFor": "недвижнина за",
@@ -106,7 +107,12 @@
         "Area": "Површина:",
         "Price": "Цена:",
         "Submit": "Филтрирај",
-        "RowsPerPage": "Редови по страница:"
+        "RowsPerPage": "Редови по страница:",
+        "Description": "Опис",
+        "General": "Општи информации",
+        "Financial": "Финансиски информации",
+        "Additional": "Дополнителни информации",
+        "AgencyInfo": "Инфо за агенцијата"
     },
     "LookingProperty": {
         "LookingProperty": "Барате имот",

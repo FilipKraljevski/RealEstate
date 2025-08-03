@@ -185,7 +185,7 @@ export default function RealEstate() {
                     {itemData.map(item => (
                         <Card key={item.id} sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
                             <CardHeader title={item.name} sx={{ backgroundColor: 'lightgray'}}/>
-                            <CardActionArea component={Link} to={`/AgencyDetails/${item.id}`} sx={{ display: 'flex', 
+                            <CardActionArea component={Link} to={`/RealEstateDetails/${item.id}`} sx={{ display: 'flex', 
                                 flexDirection:{ xs: 'column', sm: 'row' }, alignItems: 'center', textDecoration: 'none' }} >
                                 <CardMedia component="img" image={item.img[0]} alt={item.name} sx={{width: 350, objectFit: 'cover'}} />
                                 <CardContent sx={{ flexGrow: 1 }}>
@@ -261,7 +261,7 @@ const itemData = [
         description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
     },
     {
-        id: "Id",
+        id: "Id1",
         img: ["/GramadaLogoUrl.png"],
         name: "luxiourus",
         estateFor: 1,
@@ -277,7 +277,7 @@ const itemData = [
         description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
     },
     {
-        id: "Id",
+        id: "Id2",
         img: ["/GramadaLogoUrl.png"],
         name: "luxiourus",
         estateFor: 1,

@@ -24,6 +24,8 @@ export const getActiveTabValue = (pathname: String) => {
 const subpath = (pathname: String) => {
   if(pathname.includes("AgencyDetails")){
     return '/Agencies'
+  } else if (pathname.includes("RealEstateDetails")){
+    return '/RealEstate'
   }
   return pathname
 }

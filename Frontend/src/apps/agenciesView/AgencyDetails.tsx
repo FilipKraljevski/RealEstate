@@ -20,6 +20,14 @@ export default function AgencyDetails() {
             <Grid container spacing={1} columns={{ xs: 4, sm: 8, md: 12 }} sx={{mt: 1}}>
                 <Grid size={8}>
                     <Paper component='img' src={itemData.img} alt={itemData.name} sx={{ width: '100%', height: '300px'}}/>
+                    <Paper variant="outlined">
+                        <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('Agencies.Country')}</Typography>
+                        <Typography padding={1}>{t(`Country.${getEnumTypeKey(itemData.location, Country)}`)}</Typography>
+                    </Paper>
+                    <Paper variant="outlined" sx={{mt: 1}}>
+                        <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('Agencies.Description')}</Typography>
+                        <Typography padding={1}>{itemData.description}</Typography>
+                    </Paper>
                 </Grid>
                 <Grid size={4}>
                     <Paper variant="outlined">
@@ -32,18 +40,6 @@ export default function AgencyDetails() {
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('Agencies.Estates')}</Typography>
                         <Typography padding={1}><b>{t('Agencies.NoEstates')}</b> {itemData.numberOfEstates}</Typography>
-                    </Paper>
-                </Grid>
-                <Grid size={8}>
-                    <Paper variant="outlined">
-                        <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('Agencies.Country')}</Typography>
-                        <Typography padding={1}>{t(`Country.${getEnumTypeKey(itemData.location, Country)}`)}</Typography>
-                    </Paper>
-                </Grid>
-                <Grid size={8}>
-                    <Paper variant="outlined">
-                        <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('Agencies.Description')}</Typography>
-                        <Typography padding={1}>{itemData.description}</Typography>
                     </Paper>
                 </Grid>
             </Grid>       

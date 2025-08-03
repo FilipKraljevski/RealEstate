@@ -44,7 +44,8 @@
         "price": "price",
         "area": "area m²",
         "floor": "floor",
-        "images": "attach pictures"
+        "images": "attach pictures",
+        "published": "published"
     },
     "filter": {
         "estateFor": "estate for",
@@ -100,13 +101,18 @@
         "OpenFilter": "Open filter",
         "EstateFor": "Estate for:",
         "EstateType": "Estate type:",
-        "Agency": "Agency:",
+        "Agency": "Agency  :",
         "Country": "Country:",
         "Location": "Location:",
         "Area": "Area:",
         "Price": "Price:",
         "Submit": "Filter",
-        "RowsPerPage": "Rows per page:"
+        "RowsPerPage": "Rows per page:",
+        "Description": "Description",
+        "General": "General information",
+        "Financial": "Financial information",
+        "Additional": "Additional information",
+        "AgencyInfo": "Agency info"
     },
     "LookingProperty": {
         "LookingProperty": "Looking for a property",
