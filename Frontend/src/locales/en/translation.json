@@ -46,6 +46,17 @@
         "floor": "floor",
         "images": "attach pictures"
     },
+    "filter": {
+        "estateFor": "estate for",
+        "estateType": "estate type",
+        "fromArea": "from m²",
+        "toArea": "to m²",
+        "country": "country",
+        "city": "city",
+        "fromPrice": "from price",
+        "toPrice": "to price",
+        "agency": "agency"
+    },
     "option": {
         "Select": "Select",
         "Yes": "Yes",
@@ -83,6 +94,19 @@
         "YourOfferInfo": "Submit your property details and the relevant agencies will reach out regarding your listing.",
         "Contact": "Are you an agency looking to list your properties on our site?",
         "ContactUs": "Contact us"
+    },
+    "RealEstate": {
+        "Estates": "Estates",
+        "OpenFilter": "Open filter",
+        "EstateFor": "Estate for:",
+        "EstateType": "Estate type:",
+        "Agency": "Agency:",
+        "Country": "Country:",
+        "Location": "Location:",
+        "Area": "Area:",
+        "Price": "Price:",
+        "Submit": "Filter",
+        "RowsPerPage": "Rows per page:"
     },
     "LookingProperty": {
         "LookingProperty": "Looking for a property",
@@ -125,5 +149,18 @@
     },
     "Country": {
         "Macedonia": "Macedonia"
+    },
+    "Estate": {
+        "House": "House",
+        "Apartment": "Apartment",
+        "Office": "Office",
+        "Shop": "Shop",
+        "Werehouse": "Werehouse",
+        "Land": "Land"
+    },
+    "Purchase": {
+        "Purchase": "Purchase",
+        "Rent": "Rent",
+        "ShortPeriod": "Short period"
     }
 }
