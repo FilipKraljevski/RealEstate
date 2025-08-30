@@ -44,7 +44,7 @@
         "price": "price",
         "area": "area m²",
         "floor": "floor",
-        "images": "attach pictures (attach multiple pirctures at once)",
+        "images": "attach pictures (attach multiple pictures at once)",
         "published": "published"
     },
     "filter": {
