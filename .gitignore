@@ -5,3 +5,4 @@
 /Backend/.vs/Backend
 bin/
 obj/
+Backend/Web/sqlite.db
