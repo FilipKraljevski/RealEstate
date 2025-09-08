@@ -39,11 +39,20 @@ export default function YourOffer() {
         parking: z.boolean(),
         elevator: z.boolean(),
         yearConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
-        floor: z.coerce.number().nonnegative(t('error.NonNegative')),
+        floorFrom: z.coerce.number().nonnegative(t('error.NonNegative')),
+        floorTo: z.coerce.number(),
         basement: z.boolean(),
         rooms: z.coerce.number().nonnegative(t('error.NonNegative')),
         message: z.string(),
         images: z.array(z.instanceof(File))
+    }).superRefine((vals, ctx) => {
+        if (vals.floorFrom > vals.floorTo) {
+            ctx.addIssue({
+                code:     z.ZodIssueCode.custom,
+                message:  t('error.FloorFrom'),
+                path:     ['floorFrom'],
+            })
+        }
     })
 
     const form = useAppForm({
@@ -64,7 +73,8 @@ export default function YourOffer() {
             parking: false,
             elevator: false,
             yearConstruction: 0,
-            floor: 0,
+            floorFrom: 0,
+            floorTo: 0,
             basement: false,
             rooms: 0,
             message: "",
@@ -146,7 +156,10 @@ export default function YourOffer() {
                         <form.AppField name="yearConstruction" children={(field) => <field.Text fullWidth={true}/>} />
                     </Grid>
                     <Grid size={2}>
-                        <form.AppField name="floor" children={(field) => <field.Text fullWidth={true} type='number'/>} />
+                        <form.AppField name="floorFrom" children={(field) => <field.Text fullWidth={true} type='number'/>} />
+                    </Grid>
+                    <Grid size={2}>
+                        <form.AppField name="floorTo" children={(field) => <field.Text fullWidth={true} type='number'/>} />
                     </Grid>
                     <Grid size={3}>
                         <form.AppField name="basement" children={(field) => <field.SelectField data={YesNoOptions} defaultValue={true}/>} />

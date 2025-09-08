@@ -32,7 +32,7 @@ export default function Home() {
                         <ImageListItem key={item.img}>
                             <img srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`} 
                                 src={`${item.img}?w=164&h=164&fit=crop&auto=format`} alt={item.title} loading='lazy'/>
-                            <ImageListItemBar title={item.title}
+                            <ImageListItemBar title={t(`Estate.${item.title}`)}
                                 actionIcon={
                                     <IconButton sx={{ color: 'rgba(255, 255, 255, 0.54)' }} aria-label={`info about ${item.title}`}>
                                         <InfoIcon />
@@ -81,51 +81,27 @@ export default function Home() {
 
 const itemData = [
     {
-      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-      title: 'Breakfast',
+      img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914',
+      title: 'House',
     },
     {
-      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-      title: 'Burger',
+      img: 'https://images.unsplash.com/photo-1621919200669-2779566a6eaf',
+      title: 'Apartment',
     },
     {
-      img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-      title: 'Camera',
+      img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2',
+      title: 'Office',
     },
     {
-      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-      title: 'Coffee',
+      img: 'https://images.unsplash.com/photo-1618179452716-0ad893855abe',
+      title: 'Shop',
     },
     {
-      img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-      title: 'Hats',
+      img: 'https://images.unsplash.com/photo-1669003750652-2027bd69e7a1',
+      title: 'Warehouse',
     },
     {
-      img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-      title: 'Honey',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-      title: 'Basketball',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-      title: 'Fern',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-      title: 'Mushrooms',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-      title: 'Tomato basil',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-      title: 'Sea star',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-      title: 'Bike',
-    },
+      img: 'https://images.unsplash.com/photo-1665065768323-e650fad10cca',
+      title: 'Land',
+    }
   ];

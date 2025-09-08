@@ -67,7 +67,7 @@
         "Apartment": "Apartment",
         "Office": "Office",
         "Shop": "Shop",
-        "Werehouse": "Werehouse",
+        "Warehouse": "Warehouse",
         "Land": "Land",
         "Purchase": "Purchase",
         "Rent": "Rent",
@@ -161,7 +161,7 @@
         "Apartment": "Apartment",
         "Office": "Office",
         "Shop": "Shop",
-        "Werehouse": "Werehouse",
+        "Warehouse": "Warehouse",
         "Land": "Land"
     },
     "Purchase": {

@@ -67,7 +67,7 @@
         "Apartment": "Апартман",
         "Office": "Канцеларија",
         "Shop": "Дуќан",
-        "Werehouse": "Магацин",
+        "Warehouse": "Магацин",
         "Land": "Плац",
         "Purchase": "Купување",
         "Rent": "Издавање",
@@ -161,7 +161,7 @@
         "Apartment": "Апартман",
         "Office": "Канцеларија",
         "Shop": "Дуќан",
-        "Werehouse": "Магацин",
+        "Warehouse": "Магацин",
         "Land": "Плац"
     },
     "Purchase": {

@@ -3,7 +3,7 @@ export enum EstateType {
     Apartment = 2,
     Office = 3,
     Shop = 4,
-    Werehouse = 5,
+    Warehouse = 5,
     Land = 6
 }
 
