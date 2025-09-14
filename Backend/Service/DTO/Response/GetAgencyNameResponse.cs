@@ -1,8 +1,6 @@
-﻿using Domain.Enum;
-
-namespace Service.DTO.Response
+﻿namespace Service.DTO.Response
 {
-    public class GetCityResponse
+    public class GetAgencyNameResponse
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }

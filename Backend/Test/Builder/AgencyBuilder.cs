@@ -1,0 +1,38 @@
+﻿using Domain.Enum;
+using Domain.Model;
+
+namespace Test.Builder
+{
+    public class AgencyBuilder
+    {
+        private Guid id = Guid.NewGuid();
+        private string name = "Gramada Agency";
+        private string description = "Best agency in the world";
+        private Country country = Country.Macedonia;
+        private string email = "gramada@mail.com";
+        private string password = "password";
+        private Guid profilePictureId = Guid.NewGuid();
+        private ICollection<Estate> estates = new List<Estate>(); 
+        private ICollection<Telephone> telephones = new List<Telephone>();
+
+        public AgencyBuilder()
+        {
+        }
+
+        public Agency Build()
+        {
+            return new Agency
+            {
+                Id = id,
+                Name = name,
+                Description = description,
+                Country = country,
+                Email = email,
+                Password = password,
+                ProfilePictureId = profilePictureId,
+                Estates = estates,
+                Telephones = telephones
+            };
+        }
+    }
+}

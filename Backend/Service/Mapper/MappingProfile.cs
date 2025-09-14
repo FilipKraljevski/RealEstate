@@ -9,6 +9,7 @@ namespace Service.Mapper
         public MappingProfile() 
         {
             CreateMap<City, GetCityResponse>().ReverseMap();
+            CreateMap<Agency, GetAgencyNameResponse>().ReverseMap();
         }
     }
 }

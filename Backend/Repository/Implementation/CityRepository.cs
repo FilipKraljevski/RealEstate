@@ -12,7 +12,7 @@ namespace Repository.Implementation
 
         public IEnumerable<City> GetByCountry(Country country)
         {
-            return realEstateDbContext.Cities.Where(c => c.Country == country);
+            return entities.Where(c => c.Country == country);
         }
     }
 }
