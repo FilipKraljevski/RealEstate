@@ -5,8 +5,8 @@ namespace Repository.Implementation
 {
     public class Repository<T> : IRepository<T>where T : class
     {
-        private readonly RealEstateDbContext realEstateDbContext;
-        private DbSet<T> entities;
+        protected readonly RealEstateDbContext realEstateDbContext;
+        protected DbSet<T> entities;
 
         public Repository(RealEstateDbContext realEstateDbContext)
         {
@@ -14,15 +14,9 @@ namespace Repository.Implementation
             entities = realEstateDbContext.Set<T>();
         }
 
-        public void Remove(T entity)
+        public IEnumerable<T> GetAll()
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException("entity is null");
-            }
-
-            entities.Remove(entity);
-            realEstateDbContext.SaveChanges();
+            return entities.AsEnumerable();
         }
 
         public T Get(Guid id)
@@ -49,6 +43,17 @@ namespace Repository.Implementation
             }
 
             entities.Update(entity);
+            realEstateDbContext.SaveChanges();
+        }
+
+        public void Remove(T entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity is null");
+            }
+
+            entities.Remove(entity);
             realEstateDbContext.SaveChanges();
         }
     }
