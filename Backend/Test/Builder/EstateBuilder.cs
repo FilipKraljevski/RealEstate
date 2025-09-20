@@ -18,7 +18,7 @@ namespace Test.Builder
         private int yearOfConstruction = 2016;
         private int? rooms = 2;
         private string? floor = "2";
-        private City? city = new CityBuilder().Build();
+        private City city = new CityBuilder().Build();
         private Agency agency = new AgencyBuilder().Build();
         private ICollection<Images>? images = new List<Images>();
         private ICollection<AdditionalEstateInfo>? additionalEstateInfo = new List<AdditionalEstateInfo>();
@@ -60,6 +60,11 @@ namespace Test.Builder
         public EstateBuilder WithPrice(long value)
         {
             price = value;
+            return this;
+        }
+        public EstateBuilder WithAdditionalEstateInfo(List<AdditionalEstateInfo> value)
+        {
+            additionalEstateInfo = value;
             return this;
         }
 

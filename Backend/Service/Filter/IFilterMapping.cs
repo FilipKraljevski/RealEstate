@@ -1,5 +1,4 @@
-﻿using Domain.Model;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace Service.Filter
 {

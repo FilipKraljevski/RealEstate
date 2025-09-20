@@ -19,4 +19,20 @@
             Data = data;
         }
     }
+
+    public class NotFoundResult<T> : Result<T>
+    {
+        public NotFoundResult(string message) : base(404)
+        {
+            Message = message;
+        }
+    }
+
+    public class ErrorResult<T> : Result<T>
+    {
+        public ErrorResult(string message) : base(500)
+        {
+            Message = message;
+        }
+    }
 }

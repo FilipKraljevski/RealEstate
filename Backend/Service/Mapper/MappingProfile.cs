@@ -12,7 +12,10 @@ namespace Service.Mapper
             CreateMap<Agency, GetAgencyNameResponse>();
             CreateMap<Estate, GetEstateResponse>()
                 .ForMember(d => d.Location, opt => opt.MapFrom(s => s.Municipality + ", " + s.City.Name));
-                //.ForMember(d => d.Image, opt => opt.MapFrom(s => s.Images.FirstOrDefault())); -- Need a function to get Image content from Documents 
+              //.ForMember(d => d.Image, opt => opt.MapFrom(s => s.Images.FirstOrDefault())); -- Need a function to get Image content from Documents
+            CreateMap<Estate, GetEstateDetailsResponse>()
+                .ForMember(d => d.City, opt => opt.MapFrom(s => s.City.Name))
+                .ForMember(d => d.AdditionalEstateInfo, opt => opt.MapFrom(s => s.AdditionalEstateInfo.Select(x => x.Name)));
         }
     }
 }

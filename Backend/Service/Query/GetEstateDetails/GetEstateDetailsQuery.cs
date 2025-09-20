@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Service.DTO.Response;
 
 namespace Service.Query.GetEstateDetails
 {
-    internal class GetEstateDetailsQuery
+    public class GetEstateDetailsQuery : IRequest<Result<GetEstateDetailsResponse>>
     {
+        public Guid EstateId { get; set; }
     }
 }

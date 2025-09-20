@@ -37,7 +37,7 @@ export default function RealEstateDetails() {
                         </IconButton>
                     </Box>
                     <Paper variant="outlined" sx={{mt: 1}}>
-                        <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Estates')}</Typography>
+                        <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Estate')}</Typography>
                         {itemData.estate.map((item) => (
                             <Typography padding={1}><b>{t(`form.${item.label}`)}: </b>
                                 {item.enum ? t(`Purchase.${item.value.toString()}`) : item.value.toString()}

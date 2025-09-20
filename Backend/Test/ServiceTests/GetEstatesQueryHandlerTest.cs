@@ -7,7 +7,6 @@ using Repository.Interface;
 using Service.DTO.Request;
 using Service.Mapper;
 using Service.Query.GetEstates;
-using System.Drawing;
 using Test.Builder;
 
 namespace Test.ServiceTests
