@@ -19,6 +19,12 @@ namespace Test.Builder
         {
         }
 
+        public AgencyBuilder WithId(Guid value)
+        {
+            id = value;
+            return this;
+        }
+
         public Agency Build()
         {
             return new Agency

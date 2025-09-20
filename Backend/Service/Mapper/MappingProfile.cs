@@ -8,8 +8,11 @@ namespace Service.Mapper
     {
         public MappingProfile() 
         {
-            CreateMap<City, GetCityResponse>().ReverseMap();
-            CreateMap<Agency, GetAgencyNameResponse>().ReverseMap();
+            CreateMap<City, GetCityResponse>();
+            CreateMap<Agency, GetAgencyNameResponse>();
+            CreateMap<Estate, GetEstateResponse>()
+                .ForMember(d => d.Location, opt => opt.MapFrom(s => s.Municipality + ", " + s.City.Name));
+                //.ForMember(d => d.Image, opt => opt.MapFrom(s => s.Images.FirstOrDefault())); -- Need a function to get Image content from Documents 
         }
     }
 }

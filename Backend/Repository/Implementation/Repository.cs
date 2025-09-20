@@ -24,6 +24,11 @@ namespace Repository.Implementation
             return entities.SingleOrDefault(x => (Guid)typeof(T).GetProperty("Id").GetValue(x, null) == id);
         }
 
+        public IQueryable<T> GetAsQueryable()
+        {
+            return entities.AsQueryable();
+        }
+
         public void Add(T entity)
         {
             if (entity == null)

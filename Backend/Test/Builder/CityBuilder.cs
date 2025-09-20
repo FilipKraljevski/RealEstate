@@ -13,6 +13,12 @@ namespace Test.Builder
         {
         }
 
+        public CityBuilder WithId(Guid value) 
+        {
+            id = value;
+            return this;
+        }
+
         public City Build()
         {
             return new City

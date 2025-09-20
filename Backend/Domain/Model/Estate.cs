@@ -17,7 +17,7 @@ namespace Domain.Model
         public int YearOfConstruction { get; set; }
         public int? Rooms { get; set; }
         public string? Floor { get; set; }
-        public virtual City? City { get; set; }
+        public virtual required City City { get; set; }
         public virtual required Agency Agency { get; set; }
         public virtual ICollection<Images>? Images { get; set; }
         public virtual ICollection<AdditionalEstateInfo>? AdditionalEstateInfo { get; set; }
