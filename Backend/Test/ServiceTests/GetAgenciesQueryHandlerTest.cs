@@ -48,6 +48,7 @@ namespace Test.ServiceTests
             Assert.Equal(agency.Name, agencyResponse?.Name);
             Assert.Equal(agency.Description, agencyResponse?.Description);
             Assert.Equal(agency.Country, agencyResponse?.Country);
+            _agencyRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
     }
 }

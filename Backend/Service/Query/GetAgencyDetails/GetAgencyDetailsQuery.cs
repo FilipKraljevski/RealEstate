@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Service.DTO.Response;
 
 namespace Service.Query.GetAgencyDetails
 {
-    internal class GetAgencyDetailsQuery
+    public class GetAgencyDetailsQuery : IRequest<Result<GetAgencyDetailsResponse>>
     {
+        public Guid AgencyId { get; set; }
     }
 }

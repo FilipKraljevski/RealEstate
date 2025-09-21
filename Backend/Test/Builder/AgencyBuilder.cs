@@ -24,6 +24,16 @@ namespace Test.Builder
             id = value;
             return this;
         }
+        public AgencyBuilder WithEstates(List<Estate> value)
+        {
+            estates = value;
+            return this;
+        }
+        public AgencyBuilder WithTelephones(List<Telephone> value)
+        {
+            telephones = value;
+            return this;
+        }
 
         public Agency Build()
         {
