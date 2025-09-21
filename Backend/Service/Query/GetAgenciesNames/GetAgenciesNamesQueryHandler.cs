@@ -5,12 +5,12 @@ using Service.DTO.Response;
 
 namespace Service.Query.GetAgenciesNames
 {
-    public class GetAgenciesNamesQueryHanlder : IRequestHandler<GetAgenciesNamesQuery, Result<List<GetAgencyNameResponse>>>
+    public class GetAgenciesNamesQueryHandler : IRequestHandler<GetAgenciesNamesQuery, Result<List<GetAgencyNameResponse>>>
     {
         private readonly IAgencyRepository agencyRepository;
         private readonly IMapper mapper;
 
-        public GetAgenciesNamesQueryHanlder(IAgencyRepository agencyRepository, IMapper mapper)
+        public GetAgenciesNamesQueryHandler(IAgencyRepository agencyRepository, IMapper mapper)
         {
             this.agencyRepository = agencyRepository;
             this.mapper = mapper;

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Service.DTO.Response;
 
 namespace Service.Query.GetAgencies
 {
-    internal class GetAgenciesQuery
+    public class GetAgenciesQuery : IRequest<Result<List<GetAgencyResponse>>>
     {
     }
 }
