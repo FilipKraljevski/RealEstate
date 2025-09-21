@@ -81,6 +81,7 @@ namespace Test.ServiceTests
             Assert.NotNull(result);
             Assert.Equal(200, result.StatusCode);
             Assert.Equal(estate.Id, estateResponse?.Id);
+            //Images Test
             Assert.Equal(estate.Title, estateResponse?.Title);
             Assert.Equal(estate.Description, estateResponse?.Description);
             Assert.Equal(estate.EstateType, estateResponse?.EstateType);

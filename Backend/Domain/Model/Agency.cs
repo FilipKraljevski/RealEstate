@@ -11,6 +11,7 @@ namespace Domain.Model
         public required string Email { get; set; }
         public required string Password { get; set; }
         public Guid ProfilePictureId {get; set; }
+        public int Roles {  get; set; }
         public virtual ICollection<Estate>? Estates { get; set; }
         public virtual ICollection<Telephone>? Telephones { get; set; }
     }
