@@ -1,28 +1,20 @@
-﻿using AutoMapper;
-using Domain.Model;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Domain.Model;
 using Moq;
 using Repository.Interface;
-using Service.Mapper;
 using Service.Query.GetAgenciesNames;
 using Test.Builder;
+using Test.Setup;
 
 namespace Test.ServiceTests
 {
-    public class GetAgenciesNamesQueryHanlderTest
+    public class GetAgenciesNamesQueryHanlderTest : MapperSetup
     {
         private readonly Mock<IAgencyRepository> _agencyRepositoryMock;
-        private readonly IMapper _mapper;
         private readonly GetAgenciesNamesQueryHandler sut;
 
         public GetAgenciesNamesQueryHanlderTest()
         {
             _agencyRepositoryMock = new Mock<IAgencyRepository>();
-            var config = new MapperConfiguration(x =>
-            {
-                x.AddProfile<MappingProfile>();
-            }, NullLoggerFactory.Instance);
-            _mapper = config.CreateMapper();
             sut = new GetAgenciesNamesQueryHandler(_agencyRepositoryMock.Object, _mapper);
         }
 

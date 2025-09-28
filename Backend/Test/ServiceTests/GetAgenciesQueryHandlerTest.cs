@@ -1,28 +1,20 @@
-﻿using AutoMapper;
-using Domain.Model;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Domain.Model;
 using Moq;
 using Repository.Interface;
-using Service.Mapper;
 using Service.Query.GetAgencies;
 using Test.Builder;
+using Test.Setup;
 
 namespace Test.ServiceTests
 {
-    public class GetAgenciesQueryHandlerTest
+    public class GetAgenciesQueryHandlerTest : MapperSetup
     {
         private readonly Mock<IAgencyRepository> _agencyRepositoryMock;
-        private readonly IMapper _mapper;
         private readonly GetAgenciesQueryHandler sut;
 
         public GetAgenciesQueryHandlerTest()
         {
             _agencyRepositoryMock = new Mock<IAgencyRepository>();
-            var config = new MapperConfiguration(x =>
-            {
-                x.AddProfile<MappingProfile>();
-            }, NullLoggerFactory.Instance);
-            _mapper = config.CreateMapper();
             sut = new GetAgenciesQueryHandler(_agencyRepositoryMock.Object, _mapper);
         }
 
@@ -30,11 +22,16 @@ namespace Test.ServiceTests
         public async void TestResultData()
         {
             //arrange
+            var base64 = "base64";
+
             var query = new GetAgenciesQuery();
 
-            var agency = new AgencyBuilder().Build();
+            var agency = new AgencyBuilder()
+                .Build();
 
             _agencyRepositoryMock.Setup(x => x.GetAll()).Returns(new List<Agency>() { agency });
+
+            _imageServiceMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(base64);
 
             //act
             var result = await sut.Handle(query, It.IsAny<CancellationToken>());
@@ -48,7 +45,9 @@ namespace Test.ServiceTests
             Assert.Equal(agency.Name, agencyResponse?.Name);
             Assert.Equal(agency.Description, agencyResponse?.Description);
             Assert.Equal(agency.Country, agencyResponse?.Country);
+            Assert.Equal(base64, agencyResponse?.ProfilePicture);
             _agencyRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+            _imageServiceMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
         }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using Service.Image;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RealEstateDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.Configure<ImageSettings>(builder.Configuration.GetSection("ImageSettings"));
 
 var app = builder.Build();
 

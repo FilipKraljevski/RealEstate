@@ -10,7 +10,7 @@ namespace Service.DTO.Response
         public required string Description { get; set; }
         public Country Country { get; set; }
         public required string Email { get; set; }
-        public byte[]? ProfilePicture { get; set; }
+        public string? ProfilePicture { get; set; }
         public int NumberOfEstates { get; set; }
         public List<string>? Telephones { get; set; }
     }

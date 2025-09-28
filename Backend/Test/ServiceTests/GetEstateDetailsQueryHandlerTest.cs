@@ -1,28 +1,20 @@
-﻿using AutoMapper;
-using Domain.Model;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Domain.Model;
 using Moq;
 using Repository.Interface;
-using Service.Mapper;
 using Service.Query.GetEstateDetails;
 using Test.Builder;
+using Test.Setup;
 
 namespace Test.ServiceTests
 {
-    public class GetEstateDetailsQueryHandlerTest
+    public class GetEstateDetailsQueryHandlerTest : MapperSetup
     {
         private readonly Mock<IEstateRepository> _estateRepository;
-        private readonly IMapper _mapper;
         private readonly GetEstateDetailsQueryHandler sut;
 
         public GetEstateDetailsQueryHandlerTest()
         {
             _estateRepository = new Mock<IEstateRepository>();
-            var config = new MapperConfiguration(x =>
-            {
-                x.AddProfile<MappingProfile>();
-            }, NullLoggerFactory.Instance);
-            _mapper = config.CreateMapper();
             sut = new GetEstateDetailsQueryHandler(_estateRepository.Object, _mapper);
         }
 
@@ -63,6 +55,7 @@ namespace Test.ServiceTests
         {
             //arrange
             var estateId = Guid.NewGuid();
+            var base64 = "base64";
 
             var query = new GetEstateDetailsQuery() { EstateId = estateId };
 
@@ -71,6 +64,8 @@ namespace Test.ServiceTests
                 .Build();
 
             _estateRepository.Setup(x => x.Get(estateId)).Returns(estate);
+
+            _imageServiceMock.Setup(x => x.Get(It.IsAny<List<Guid>>())).Returns(new List<string> { base64 });
 
             //act
             var result = await sut.Handle(query, It.IsAny<CancellationToken>());
@@ -81,7 +76,6 @@ namespace Test.ServiceTests
             Assert.NotNull(result);
             Assert.Equal(200, result.StatusCode);
             Assert.Equal(estate.Id, estateResponse?.Id);
-            //Images Test
             Assert.Equal(estate.Title, estateResponse?.Title);
             Assert.Equal(estate.Description, estateResponse?.Description);
             Assert.Equal(estate.EstateType, estateResponse?.EstateType);
@@ -98,7 +92,9 @@ namespace Test.ServiceTests
             Assert.Equal(estate.AdditionalEstateInfo?.First().Name, estateResponse?.AdditionalEstateInfo?.First());
             Assert.Equal(estate.Agency.Id, estateResponse?.Agency.Id);
             Assert.Equal(estate.Agency.Name, estateResponse?.Agency.Name);
+            Assert.Equal(base64, estateResponse?.Images?.FirstOrDefault());
             _estateRepository.Verify(x => x.Get(estateId), Times.Once);
+            _imageServiceMock.Verify(x => x.Get(It.IsAny<List<Guid>>()), Times.Once);
         }
     }
 }

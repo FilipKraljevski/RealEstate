@@ -9,6 +9,6 @@ namespace Service.DTO.Response
         public required string Name { get; set; }
         public required string Description { get; set; }
         public Country Country { get; set; }
-        public byte[]? ProfilePicture { get; set; }
+        public string? ProfilePicture { get; set; }
     }
 }

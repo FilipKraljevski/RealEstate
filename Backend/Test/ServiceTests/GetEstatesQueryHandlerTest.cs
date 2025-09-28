@@ -1,30 +1,22 @@
-﻿using AutoMapper;
-using Domain.Enum;
+﻿using Domain.Enum;
 using Domain.Model;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Repository.Interface;
 using Service.DTO.Request;
-using Service.Mapper;
 using Service.Query.GetEstates;
 using Test.Builder;
+using Test.Setup;
 
 namespace Test.ServiceTests
 {
-    public class GetEstatesQueryHandlerTest
+    public class GetEstatesQueryHandlerTest : MapperSetup
     {
         private readonly Mock<IEstateRepository> _estateRepository;
-        private readonly IMapper _mapper;
         private readonly GetEstatesQueryHandler sut;
 
         public GetEstatesQueryHandlerTest()
         {
             _estateRepository = new Mock<IEstateRepository>();
-            var config = new MapperConfiguration(x =>
-            {
-                x.AddProfile<MappingProfile>();
-            }, NullLoggerFactory.Instance);
-            _mapper = config.CreateMapper();
             sut = new GetEstatesQueryHandler(_estateRepository.Object, _mapper);
         }
 
@@ -43,6 +35,7 @@ namespace Test.ServiceTests
             //arange
             Guid? cityId = hasCityId.HasValue && hasCityId.Value ? Guid.NewGuid() : null;
             Guid? agencyId = hasAgencyId.HasValue && hasAgencyId.Value ? Guid.NewGuid() : null;
+            var base64 = "base64";
 
             var query = new GetEstatesQuery() { 
                 Filters = new GetEstateFiltersRequest()
@@ -99,6 +92,8 @@ namespace Test.ServiceTests
 
             _estateRepository.Setup(x => x.GetAsQueryable()).Returns(new List<Estate>{ estate1, estate2, estate3, estate4, estate5, estate6, estate7, estate8, estate9 }.AsQueryable());
 
+            _imageServiceMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(base64);
+
             //act
             var result = await sut.Handle(query, It.IsAny<CancellationToken>());
 
@@ -117,6 +112,8 @@ namespace Test.ServiceTests
         public async void TestPagination(int page, int size, int count)
         {
             //arrange
+            var base64 = "base64";
+
             var query = new GetEstatesQuery()
             {
                 Filters = new GetEstateFiltersRequest(),
@@ -134,6 +131,8 @@ namespace Test.ServiceTests
 
             _estateRepository.Setup(x => x.GetAsQueryable()).Returns(estates.AsQueryable());
 
+            _imageServiceMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(base64);
+
             //act
             var result = await sut.Handle(query, It.IsAny<CancellationToken>());
 
@@ -145,6 +144,8 @@ namespace Test.ServiceTests
         public async void TestResultData()
         {
             //arrange
+            var base64 = "base64";
+
             var query = new GetEstatesQuery() 
             {
                 Filters = new GetEstateFiltersRequest(),
@@ -152,9 +153,16 @@ namespace Test.ServiceTests
                 Size = 10
             };
 
-            var estate = new EstateBuilder().Build();
+            var image = new ImageBuilder()
+                .Build();
+
+            var estate = new EstateBuilder()
+                .Withimages(new List<Images>() { image })
+                .Build();
             
             _estateRepository.Setup(x => x.GetAsQueryable()).Returns(new List<Estate> { estate }.AsQueryable());
+
+            _imageServiceMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(base64);
 
             //act
             var result = await sut.Handle(query, It.IsAny<CancellationToken>());
@@ -176,8 +184,9 @@ namespace Test.ServiceTests
             Assert.Equal(estate.Description, estateResponse?.Description);
             Assert.Equal(estate.Agency.Id, estateResponse?.Agency.Id);
             Assert.Equal(estate.Agency.Name, estateResponse?.Agency.Name);
-            //Assert.Equal(); -- Image Test
+            Assert.Equal(base64, estateResponse?.Image);
             _estateRepository.Verify(x => x.GetAsQueryable(), Times.Once);
+            _imageServiceMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
         }
     }
 }

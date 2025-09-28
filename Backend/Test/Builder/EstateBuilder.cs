@@ -67,6 +67,11 @@ namespace Test.Builder
             additionalEstateInfo = value;
             return this;
         }
+        public EstateBuilder Withimages(List<Images> value)
+        {
+            images = value;
+            return this;
+        }
 
         public Estate Build()
         {

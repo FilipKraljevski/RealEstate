@@ -1,29 +1,21 @@
-﻿using AutoMapper;
-using Domain.Enum;
+﻿using Domain.Enum;
 using Domain.Model;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Repository.Interface;
-using Service.Mapper;
 using Service.Query.GetCities;
 using Test.Builder;
+using Test.Setup;
 
 namespace Test.ServiceTests
 {
-    public class GetCitiesQueryHandlerTest
+    public class GetCitiesQueryHandlerTest : MapperSetup
     {
         private readonly Mock<ICityRepository> _cityRepositoryMock;
-        private readonly IMapper _mapper;
         private readonly GetCitiesQueryHandler sut;
 
         public GetCitiesQueryHandlerTest()
         {
             _cityRepositoryMock = new Mock<ICityRepository>();
-            var config = new MapperConfiguration(x => 
-            { 
-                x.AddProfile<MappingProfile>(); 
-            }, NullLoggerFactory.Instance);
-            _mapper = config.CreateMapper();
             sut = new GetCitiesQueryHandler(_cityRepositoryMock.Object, _mapper);
         }
 

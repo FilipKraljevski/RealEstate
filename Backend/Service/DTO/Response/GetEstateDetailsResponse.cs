@@ -5,7 +5,7 @@ namespace Service.DTO.Response
     public class GetEstateDetailsResponse
     {
         public Guid Id { get; set; }
-        //public List<byte[]>? Images { get; set; }
+        public List<string>? Images { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }
         public EstateType EstateType { get; set; }

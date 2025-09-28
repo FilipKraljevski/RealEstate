@@ -1,28 +1,20 @@
-﻿using AutoMapper;
-using Domain.Model;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Domain.Model;
 using Moq;
 using Repository.Interface;
-using Service.Mapper;
 using Service.Query.GetAgencyDetails;
 using Test.Builder;
+using Test.Setup;
 
 namespace Test.ServiceTests
 {
-    public class GetAgencyDetailsQueryHandlerTest
+    public class GetAgencyDetailsQueryHandlerTest : MapperSetup
     {
         private readonly Mock<IAgencyRepository> _agencyRepositoryMock;
-        private readonly IMapper _mapper;
         private readonly GetAgencyDetailsQueryHandler sut;
 
         public GetAgencyDetailsQueryHandlerTest()
         {
             _agencyRepositoryMock = new Mock<IAgencyRepository>();
-            var config = new MapperConfiguration(x =>
-            {
-                x.AddProfile<MappingProfile>();
-            }, NullLoggerFactory.Instance);
-            _mapper = config.CreateMapper();
             sut = new GetAgencyDetailsQueryHandler(_agencyRepositoryMock.Object, _mapper);
         }
 
@@ -61,6 +53,7 @@ namespace Test.ServiceTests
         {
             //arrange
             var agencyId = Guid.NewGuid();
+            var base64 = "base64";
 
             var query = new GetAgencyDetailsQuery() { AgencyId = agencyId };
 
@@ -77,6 +70,8 @@ namespace Test.ServiceTests
 
             _agencyRepositoryMock.Setup(x => x.Get(agencyId)).Returns(agency);
 
+            _imageServiceMock.Setup(x => x.Get(agency.ProfilePictureId)).Returns(base64);
+
             //act
             var result = await sut.Handle(query, It.IsAny<CancellationToken>());
 
@@ -92,8 +87,9 @@ namespace Test.ServiceTests
             Assert.Equal(agency.Email, agencyResponse?.Email);
             Assert.Equal(agency.Estates?.Count, agencyResponse?.NumberOfEstates);
             Assert.Equal(agency.Telephones?.First().PhoneNumber, agencyResponse?.Telephones?.First());
-            //profile pricture
+            Assert.NotNull(agencyResponse?.ProfilePicture);
             _agencyRepositoryMock.Verify(x => x.Get(agencyId), Times.Once);
+            _imageServiceMock.Verify(x => x.Get(agency.ProfilePictureId), Times.Once);
         }
     }
 }

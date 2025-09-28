@@ -14,6 +14,6 @@ namespace Service.DTO.Response
         public long Price { get; set; }
         public required string Description { get; set; }
         public required GetAgencyNameResponse Agency { get; set; }
-        public byte[]? Image { get; set; }
+        public string? Image { get; set; }
     }
 }
