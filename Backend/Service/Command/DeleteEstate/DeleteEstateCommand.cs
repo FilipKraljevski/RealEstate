@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
 
 namespace Service.Command.DeleteEstate
 {
-    internal class DeleteEstateCommand
+    public class DeleteEstateCommand : IRequest<Result<Guid>>
     {
+        public Guid EstateId { get; set; }
     }
 }
