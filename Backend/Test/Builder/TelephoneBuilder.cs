@@ -12,6 +12,12 @@ namespace Test.Builder
         {
         }
 
+        public TelephoneBuilder WithId(Guid value)
+        {
+            id = value;
+            return this;
+        }
+
         public Telephone Build()
         {
             return new Telephone

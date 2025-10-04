@@ -12,7 +12,7 @@ namespace Service.Image
             imageSettings = options.Value;
         }
 
-        public void Add(Guid id, Stream content)
+        public void Add(Guid id, byte[] content)
         {
             if(id == Guid.Empty)
             {
@@ -20,15 +20,17 @@ namespace Service.Image
             }
 
             var filePath = Path.Combine(imageSettings.LocalPath, id.ToString());
+
+            var stream = new MemoryStream(content);
             
-            if(content.CanSeek)
+            if(stream.CanSeek)
             {
-                content.Position = 0;
+                stream.Position = 0;
             }
 
             var fileStream = File.Create(filePath);
 
-            content.CopyTo(fileStream);
+            stream.CopyTo(fileStream);
         }
 
         public string Get(Guid id)

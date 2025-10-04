@@ -22,7 +22,11 @@ namespace Repository
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<MailLog>()
+            modelBuilder.Entity<AdditionalEstateInfo>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Agency>()
                 .Property(x => x.Id)
                 .ValueGeneratedOnAdd();
 
@@ -36,6 +40,14 @@ namespace Repository
                 .WithOne(x => x.Agency)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<City>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Estate>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
             modelBuilder.Entity<Estate>()
                 .HasMany(x => x.Images)
                 .WithOne(x => x.Estate)
@@ -45,6 +57,22 @@ namespace Repository
                 .HasMany(x => x.AdditionalEstateInfo)
                 .WithOne(x => x.Estate)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            //modelBuilder.Entity<Images>()
+            //    .Property(x => x.Id)
+            //    .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<LoginCode>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<MailLog>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Telephone>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd();
         }
     }
 }

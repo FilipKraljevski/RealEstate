@@ -1,6 +1,11 @@
+using AutoMapper;
+using Domain.Model;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Repository;
 using Service.Image;
+using Service.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +17,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RealEstateDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IPasswordHasher<Agency>, PasswordHasher<Agency>>();
 builder.Services.Configure<ImageSettings>(builder.Configuration.GetSection("ImageSettings"));
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddSingleton<IMapper>(sp =>
+{
+    var imageService = sp.GetRequiredService<IImageService>();
+
+    var config = new MapperConfiguration(cfg =>
+    {
+        cfg.AddProfile(new MappingProfile(imageService));
+    }, NullLoggerFactory.Instance);
+
+    return config.CreateMapper();
+});
 
 var app = builder.Build();
 

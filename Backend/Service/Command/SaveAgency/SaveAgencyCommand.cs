@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Service.DTO.Request;
 
 namespace Service.Command.SaveProfile
 {
-    internal class SaveAgencyCommand
+    public class SaveAgencyCommand : IRequest<Result<bool>>
     {
+        public required SaveAgencyRequest SaveAgencyRequest { get; set; }
     }
 }

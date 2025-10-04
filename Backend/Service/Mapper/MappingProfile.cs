@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using Domain.Model;
+using Service.DTO.Request;
 using Service.DTO.Response;
 using Service.Image;
 
@@ -26,6 +28,10 @@ namespace Service.Mapper
                 .ForMember(d => d.NumberOfEstates, opt => opt.MapFrom(s => s.Estates.Count))
                 .ForMember(d => d.Telephones, opt => opt.MapFrom(s => s.Telephones.Select(x => x.PhoneNumber)))
                 .ForMember(d => d.ProfilePicture, opt => opt.MapFrom(s => this.imageService.Get(s.ProfilePictureId)));
+            CreateMap<TelephoneRequest, Telephone>()
+                .EqualityComparison((dto, entity) => dto.Id == entity.Id);
+            CreateMap<SaveAgencyRequest, Agency>()
+                .ForMember(d => d.Telephones, opt => opt.MapFrom(s => s.Telephones));
         }
     }
 }
