@@ -47,14 +47,14 @@ namespace Service.Command.SaveProfile
                     return new NotFoundResult<bool>("Not Found: Agency does not exist");
                 }
 
-                if (request.SaveAgencyRequest.ProfilePicture.Id == Guid.Empty && existingAgency.ProfilePictureId != Guid.Empty)
+                if (request.SaveAgencyRequest.ProfilePicture?.Id == Guid.Empty && existingAgency.ProfilePictureId != Guid.Empty)
                 {
                     imageService.Remove(existingAgency.ProfilePictureId);
                 }
 
                 mapper.Map(request.SaveAgencyRequest, existingAgency);
 
-                if (request.SaveAgencyRequest.ProfilePicture.Id == Guid.Empty && request.SaveAgencyRequest.ProfilePicture.Content != null)
+                if (request.SaveAgencyRequest.ProfilePicture?.Id == Guid.Empty && request.SaveAgencyRequest.ProfilePicture.Content != null)
                 {
                     AddImage(existingAgency, request.SaveAgencyRequest.ProfilePicture.Content);
                 }

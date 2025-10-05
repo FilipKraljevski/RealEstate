@@ -32,6 +32,16 @@ namespace Service.Mapper
                 .EqualityComparison((dto, entity) => dto.Id == entity.Id);
             CreateMap<SaveAgencyRequest, Agency>()
                 .ForMember(d => d.Telephones, opt => opt.MapFrom(s => s.Telephones));
+            CreateMap<CityRequest, City>()
+                .EqualityComparison((dto, entity) => dto.Id == entity.Id);
+            //CreateMap<ImagesRequest, Images>()
+            //    .EqualityComparison((dto, entity) => dto.Id == entity.Id);
+            CreateMap<AdditionalEstateInfoRequest, AdditionalEstateInfo>()
+                .EqualityComparison((dto, entity) => dto.Id == entity.Id);
+            CreateMap<SaveEstateRequest, Estate>()
+                .ForMember(d => d.City, opt => opt.MapFrom(s => s.City))
+                //.ForMember(d => d.Images, opt => opt.MapFrom(s => s.Images));
+                .ForMember(d => d.AdditionalEstateInfo, opt => opt.MapFrom(s => s.AdditionalEstateInfo));
         }
     }
 }

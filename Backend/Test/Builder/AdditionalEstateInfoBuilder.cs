@@ -12,6 +12,12 @@ namespace Test.Builder
         {
         }
 
+        public AdditionalEstateInfoBuilder WithId(Guid value)
+        {
+            id = value;
+            return this;
+        }
+
         public AdditionalEstateInfo Build()
         {
             return new AdditionalEstateInfo

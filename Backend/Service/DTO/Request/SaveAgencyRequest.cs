@@ -9,7 +9,7 @@ namespace Service.DTO.Request
         public required string Description { get; set; }
         public Country Country { get; set; }
         public required string Email { get; set; }
-        public required ProfilePictureRequest ProfilePicture { get; set; }
+        public ProfilePictureRequest? ProfilePicture { get; set; }
         public required List<TelephoneRequest> Telephones { get; set; }
     }
 

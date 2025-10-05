@@ -12,6 +12,12 @@ namespace Test.Builder
         {
         }
 
+        public ImageBuilder WithId(Guid value)
+        {
+            id = value;
+            return this;
+        }
+
         public Images Build()
         {
             return new Images

@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.UserClaims;
+using MediatR;
+using Service.DTO.Request;
 
 namespace Service.Command.SaveEstate
 {
-    internal class SaveEstateCommand
+    public class SaveEstateCommand : IRequest<Result<bool>>
     {
+        public required SaveEstateRequest SaveEstateRequest { get; set; }
+
+        public required UserClaims UserClaims { get; set; }
     }
 }
