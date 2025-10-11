@@ -1,5 +1,6 @@
 ﻿using Domain.Enum;
 using Domain.Model;
+using Microsoft.AspNetCore.Identity;
 
 namespace Test.Builder
 {
@@ -37,7 +38,9 @@ namespace Test.Builder
 
         public Agency Build()
         {
-            return new Agency
+            var passwordHasher = new PasswordHasher<Agency>();
+
+            var agency =  new Agency
             {
                 Id = id,
                 Name = name,
@@ -49,6 +52,10 @@ namespace Test.Builder
                 Estates = estates,
                 Telephones = telephones
             };
+
+            agency.Password = passwordHasher.HashPassword(agency, password);
+
+            return agency;
         }
     }
 }

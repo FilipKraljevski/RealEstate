@@ -2,12 +2,13 @@
 
 namespace Domain.Enum
 {
+    [Flags]
     public enum RoleType
     {
         [Description("Agency")]
-        Agency = 1 >> 1,
+        Agency = 1 << 1,
 
         [Description("Admin")]
-        Admin = 1 >> 2
+        Admin = 1 << 2
     }
 }
