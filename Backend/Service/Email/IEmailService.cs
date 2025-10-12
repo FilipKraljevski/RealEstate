@@ -2,6 +2,7 @@
 {
     public interface IEmailService
     {
-        void Send(string toEmail, string subject, string body);
+        void SendReceivedEmail(string name, string toEmail);
+        void SendEmail(string name, string toEmail, string subject, string body);
     }
 }

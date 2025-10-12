@@ -14,7 +14,7 @@ namespace Repository
         public virtual DbSet<City> Cities => Set<City>();
         public virtual DbSet<Estate> Estates => Set<Estate>();
         public virtual DbSet<Images> Images => Set<Images>();
-        public virtual DbSet<LoginCode> LoginCodes => Set<LoginCode>();
+        public virtual DbSet<CodeAuthorization> LoginCodes => Set<CodeAuthorization>();
         public virtual DbSet<MailLog> MailLogs => Set<MailLog>();
         public virtual DbSet<Telephone> Telephones => Set<Telephone>();
 
@@ -62,7 +62,7 @@ namespace Repository
             //    .Property(x => x.Id)
             //    .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<LoginCode>()
+            modelBuilder.Entity<CodeAuthorization>()
                 .Property(x => x.Id)
                 .ValueGeneratedOnAdd();
 

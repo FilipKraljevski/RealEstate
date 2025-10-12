@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Service.DTO.Request;
 
 namespace Service.Command.Contact
 {
-    internal class ContactCommand
+    public class ContactCommand : IRequest<Result<bool>>
     {
+        public required ContactRequest ContactRequest { get; set; }
     }
 }

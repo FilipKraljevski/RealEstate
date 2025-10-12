@@ -78,7 +78,7 @@ namespace Test.ServiceTests
         }
 
         [Fact]
-        public async void UpdatePassword()
+        public async void TestUpdatePassword()
         {
             //arrange
             var agencyId = Guid.NewGuid();

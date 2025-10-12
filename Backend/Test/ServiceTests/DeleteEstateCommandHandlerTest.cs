@@ -47,7 +47,7 @@ namespace Test.ServiceTests
         }
 
         [Fact]
-        public async void TestDeleteEstate()
+        public async void WhenEsateIdProvided_DeleteEstate()
         {
             //arrange
             var estateId = Guid.NewGuid();
