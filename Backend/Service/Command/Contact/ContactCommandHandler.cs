@@ -18,14 +18,13 @@ namespace Service.Command.Contact
 
         public async Task<Result<bool>> Handle(ContactCommand request, CancellationToken cancellationToken)
         {
-            emailService.SendEmail(request.ContactRequest.Name, request.ContactRequest.Email, request.ContactRequest.Subject, request.ContactRequest.Body);
+            emailService.SendEmail(request.ContactRequest.Subject, request.ContactRequest.Body);
 
             emailService.SendReceivedEmail(request.ContactRequest.Name, request.ContactRequest.Email);
 
             var mailLog = new MailLog()
             {
                 From = request.ContactRequest.Email,
-                To = "Admin",
                 Subject = request.ContactRequest.Subject,
                 DateSent = DateTime.Now
             };

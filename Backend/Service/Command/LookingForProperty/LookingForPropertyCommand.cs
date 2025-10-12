@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Service.DTO.Request;
 
 namespace Service.Command.LookingForProperty
 {
-    internal class LookingForPropertyCommand
+    public class LookingForPropertyCommand : IRequest<Result<bool>>
     {
+        public required LookingForPropertyRequest LookingForPropertyRequest { get; set; }
     }
 }

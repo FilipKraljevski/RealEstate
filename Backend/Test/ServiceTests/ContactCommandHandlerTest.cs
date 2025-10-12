@@ -36,7 +36,7 @@ namespace Test.ServiceTests
                 }
             };
 
-            emailService.Setup(x => x.SendEmail(command.ContactRequest.Name, command.ContactRequest.Email, command.ContactRequest.Subject, command.ContactRequest.Body));
+            emailService.Setup(x => x.SendEmail(command.ContactRequest.Subject, command.ContactRequest.Body));
 
             emailService.Setup(x => x.SendReceivedEmail(command.ContactRequest.Name, command.ContactRequest.Email));
 
@@ -47,7 +47,8 @@ namespace Test.ServiceTests
 
             //assert
             Assert.Equal(200, result.StatusCode);
-            emailService.Verify(x => x.SendEmail(command.ContactRequest.Name, command.ContactRequest.Email, command.ContactRequest.Subject, command.ContactRequest.Body), Times.Once);
+            Assert.True(result.Data);
+            emailService.Verify(x => x.SendEmail(command.ContactRequest.Subject, command.ContactRequest.Body), Times.Once);
             emailService.Verify(x => x.SendReceivedEmail(command.ContactRequest.Name, command.ContactRequest.Email), Times.Once);
             mailLogRepository.Verify(x => x.Add(It.IsAny<MailLog>()), Times.Once);
         }

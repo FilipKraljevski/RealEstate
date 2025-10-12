@@ -1,4 +1,5 @@
-﻿using Domain.Model;
+﻿using Domain.Enum;
+using Domain.Model;
 using Repository.Interface;
 
 namespace Repository.Implementation
@@ -7,6 +8,11 @@ namespace Repository.Implementation
     {
         public AgencyRepository(RealEstateDbContext realEstateDbContext) : base(realEstateDbContext)
         {
+        }
+
+        public IEnumerable<Agency> GetByCountry(Country country)
+        {
+            return entities.Where(e => e.Country == country);
         }
     }
 }

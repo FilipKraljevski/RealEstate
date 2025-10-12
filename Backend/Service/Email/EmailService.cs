@@ -1,7 +1,9 @@
-﻿using MailKit.Net.Smtp;
+﻿using Domain.Model;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using System.Xml.Linq;
 
 namespace Service.Email
 {
@@ -24,14 +26,21 @@ namespace Service.Email
             Send(message);
         }
 
-        public void SendEmail(string name, string toEmail, string subject, string body)
+        public void SendEmail(string subject, string body)
         {
-            var message = BuildMessage(settings.EmailDisplayName, settings.EmailDisplayName, subject, body, name, toEmail);
+            var message = BuildMessage(settings.EmailDisplayName, settings.EmailDisplayName, subject, body);
 
             Send(message);
         }
 
-        private MimeMessage BuildMessage(string toName, string toEmail, string subject, string body, string ccName = "", string ccEmail = "")
+        public void SendEmailToAgencies(List<Agency> toAgencies, string subject, string body)
+        {
+            var message = BuildMessageForAgencies(toAgencies, subject, body);
+
+            Send(message);
+        }
+
+        private MimeMessage BuildMessage(string toName, string toEmail, string subject, string body)
         {
             var email = new MimeMessage();
             email.From.Add(new MailboxAddress(settings.EmailDisplayName, settings.SmtpUserName));
@@ -39,9 +48,19 @@ namespace Service.Email
             email.Subject = subject;
             email.Body = new TextPart(MimeKit.Text.TextFormat.Plain) { Text = body };
 
-            if(ccName != string.Empty && ccEmail != string.Empty)
+            return email;
+        }
+
+        private MimeMessage BuildMessageForAgencies(List<Agency> toAgencies, string subject, string body)
+        {
+            var email = new MimeMessage();
+            email.From.Add(new MailboxAddress(settings.EmailDisplayName, settings.SmtpUserName));
+            email.Subject = subject;
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Plain) { Text = body };
+
+            foreach(var agency in toAgencies)
             {
-                email.Cc.Add(new MailboxAddress(ccName, ccEmail));
+                email.To.Add(new MailboxAddress(agency.Name, agency.Email));
             }
 
             return email;
