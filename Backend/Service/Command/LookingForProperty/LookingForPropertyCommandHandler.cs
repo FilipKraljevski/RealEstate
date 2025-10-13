@@ -26,27 +26,27 @@ namespace Service.Command.LookingForProperty
             {
                 string header = "User: " + request.LookingForPropertyRequest.Name + ", " + request.LookingForPropertyRequest.Email;
                 string message = "Message: " + request.LookingForPropertyRequest.Message;
-                string info = "PurchaseType: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n EstateType: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n Country: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n City: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n Municipality: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n AreaFrom: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n AreaTo: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n MaxPrice: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n YearOfConstruction: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n Rooms: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n FloorFrom: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n FloorTo: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n Terrace: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n Heating: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n Parking: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n Elevator: " + request.LookingForPropertyRequest.PurchaseType +
-                             "\n Basement: " + request.LookingForPropertyRequest.PurchaseType;
+                string info = "Purchase Type: " + request.LookingForPropertyRequest.PurchaseType +
+                             "\n Estate Type: " + request.LookingForPropertyRequest.EstateType +
+                             "\n Country: " + request.LookingForPropertyRequest.Country +
+                             "\n City: " + request.LookingForPropertyRequest.City +
+                             "\n Municipality: " + request.LookingForPropertyRequest.Municipality +
+                             "\n Area From: " + request.LookingForPropertyRequest.AreaFrom +
+                             "\n Area To: " + request.LookingForPropertyRequest.AreaTo +
+                             "\n Max Price: " + request.LookingForPropertyRequest.MaxPrice +
+                             "\n Year Of Construction: " + request.LookingForPropertyRequest.YearOfConstruction +
+                             "\n Rooms: " + request.LookingForPropertyRequest.Rooms +
+                             "\n Floor From: " + request.LookingForPropertyRequest.FloorFrom +
+                             "\n Floor To: " + request.LookingForPropertyRequest.FloorTo +
+                             "\n Terrace: " + request.LookingForPropertyRequest.Terrace +
+                             "\n Heating: " + request.LookingForPropertyRequest.Heating +
+                             "\n Parking: " + request.LookingForPropertyRequest.Parking +
+                             "\n Elevator: " + request.LookingForPropertyRequest.Elevator +
+                             "\n Basement: " + request.LookingForPropertyRequest.Basement;
 
                 string body = header + "\n" + message + "\n" + info;
 
-                emailService.SendEmailToAgencies(agencies.ToList(), "Looking for Property", body);
+                emailService.SendEmailToAgencies(agencies.ToList(), "User " + request.LookingForPropertyRequest.Name + " Looking for Property", body, null);
             }
 
             emailService.SendReceivedEmail(request.LookingForPropertyRequest.Name, request.LookingForPropertyRequest.Email);

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Service.DTO.Request;
 
 namespace Service.Command.YourOffer
 {
-    internal class YourOfferCommand
+    public class YourOfferCommand : IRequest<Result<bool>>
     {
+        public required YourOfferRequest YourOfferRequest { get; set; }
     }
 }

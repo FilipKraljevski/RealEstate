@@ -42,7 +42,7 @@ namespace Test.ServiceTests
 
             agencyRepository.Setup(x => x.GetByCountry(Country.Macedonia)).Returns(new List<Agency>() { agency });
 
-            emailService.Setup(x => x.SendEmailToAgencies(new List<Agency>() { agency }, It.IsAny<string>(), It.IsAny<string>()));
+            emailService.Setup(x => x.SendEmailToAgencies(new List<Agency>() { agency }, It.IsAny<string>(), It.IsAny<string>(), null));
 
             emailService.Setup(x => x.SendReceivedEmail(command.LookingForPropertyRequest.Name, command.LookingForPropertyRequest.Email));
 
@@ -54,7 +54,7 @@ namespace Test.ServiceTests
             //assert
             Assert.Equal(200, result.StatusCode);
             Assert.True(result.Data);
-            emailService.Verify(x => x.SendEmailToAgencies(new List<Agency>() { agency }, It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            emailService.Verify(x => x.SendEmailToAgencies(new List<Agency>() { agency }, It.IsAny<string>(), It.IsAny<string>(), null), Times.Once);
             emailService.Verify(x => x.SendReceivedEmail(command.LookingForPropertyRequest.Name, command.LookingForPropertyRequest.Email), Times.Once);
             mailLogRepository.Verify(x => x.Add(It.IsAny<MailLog>()), Times.Once);
         }

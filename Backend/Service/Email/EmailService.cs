@@ -3,7 +3,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System.Xml.Linq;
+using Service.DTO.Request;
 
 namespace Service.Email
 {
@@ -33,9 +33,9 @@ namespace Service.Email
             Send(message);
         }
 
-        public void SendEmailToAgencies(List<Agency> toAgencies, string subject, string body)
+        public void SendEmailToAgencies(List<Agency> toAgencies, string subject, string body, List<YourOfferImagesRequest>? attachments)
         {
-            var message = BuildMessageForAgencies(toAgencies, subject, body);
+            var message = BuildMessageForAgencies(toAgencies, subject, body, attachments);
 
             Send(message);
         }
@@ -51,17 +51,28 @@ namespace Service.Email
             return email;
         }
 
-        private MimeMessage BuildMessageForAgencies(List<Agency> toAgencies, string subject, string body)
+        private MimeMessage BuildMessageForAgencies(List<Agency> toAgencies, string subject, string body, List<YourOfferImagesRequest>? attachments)
         {
             var email = new MimeMessage();
             email.From.Add(new MailboxAddress(settings.EmailDisplayName, settings.SmtpUserName));
             email.Subject = subject;
-            email.Body = new TextPart(MimeKit.Text.TextFormat.Plain) { Text = body };
 
             foreach(var agency in toAgencies)
             {
                 email.To.Add(new MailboxAddress(agency.Name, agency.Email));
             }
+
+            var builder = new BodyBuilder { TextBody = body };
+
+            if (attachments != null)
+            {
+                foreach (var file in attachments)
+                {
+                    builder.Attachments.Add(file.Name, file.Content);
+                }
+            }
+
+            email.Body = builder.ToMessageBody();
 
             return email;
         }
