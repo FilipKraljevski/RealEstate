@@ -63,7 +63,7 @@ namespace Test.ServiceTests
                     {
                         picture
                     },
-                    AdditionalEstateInfo = new List<AdditionalEstateInfoRequest>
+                    AdditionalEstateInfos = new List<AdditionalEstateInfoRequest>
                     {
                         additionalEstateInfo
                     }
@@ -118,7 +118,7 @@ namespace Test.ServiceTests
                     {
                         picture
                     },
-                    AdditionalEstateInfo = new List<AdditionalEstateInfoRequest>
+                    AdditionalEstateInfos = new List<AdditionalEstateInfoRequest>
                     {
                         additionalEstateInfo
                     }
@@ -160,7 +160,7 @@ namespace Test.ServiceTests
             Assert.Equal(estate.Floor, command.SaveEstateRequest.Floor);
             Assert.Equal(estate.City.Name, command.SaveEstateRequest.City.Name);
             Assert.Equal(estate.City.Country, command.SaveEstateRequest.City.Country);
-            Assert.Equal(estate.AdditionalEstateInfo?.First().Name, command.SaveEstateRequest.AdditionalEstateInfo.First().Name);
+            Assert.Equal(estate.AdditionalEstateInfo?.First().Name, command.SaveEstateRequest.AdditionalEstateInfos.First().Name);
             _agencyRepository.Verify(x => x.Get(agencyId), Times.Once);
             _imageServiceMock.Verify(x => x.Add(It.IsAny<Guid>(), It.IsAny<byte[]>()), Times.Once);
             _estateRepository.Verify(x => x.Add(It.IsAny<Estate>()), Times.Once);
@@ -207,7 +207,7 @@ namespace Test.ServiceTests
                     {
                         picture
                     },
-                    AdditionalEstateInfo = new List<AdditionalEstateInfoRequest>
+                    AdditionalEstateInfos = new List<AdditionalEstateInfoRequest>
                     {
                         additionalEstateInfo
                     }
@@ -282,7 +282,7 @@ namespace Test.ServiceTests
                         pictureAdd,
                         pictureExistRequest
                     },
-                    AdditionalEstateInfo = new List<AdditionalEstateInfoRequest>
+                    AdditionalEstateInfos = new List<AdditionalEstateInfoRequest>
                     {
                         additionalEstateInfoAdd
                     }
@@ -340,7 +340,7 @@ namespace Test.ServiceTests
             Assert.Equal(estate.Floor, command.SaveEstateRequest.Floor);
             Assert.Equal(estate.City.Name, command.SaveEstateRequest.City.Name);
             Assert.Equal(estate.City.Country, command.SaveEstateRequest.City.Country);
-            Assert.Equal(estate.AdditionalEstateInfo?.Last().Id, command.SaveEstateRequest.AdditionalEstateInfo.Last().Id);
+            Assert.Equal(estate.AdditionalEstateInfo?.Last().Id, command.SaveEstateRequest.AdditionalEstateInfos.Last().Id);
             Assert.DoesNotContain(additionalInfoRemove.Id, estate.AdditionalEstateInfo?.Select(x => x.Id));
             _estateRepository.Verify(x => x.Get(estateId), Times.Once);
             _imageServiceMock.Verify(x => x.Remove(It.IsAny<Guid>()), Times.Once);

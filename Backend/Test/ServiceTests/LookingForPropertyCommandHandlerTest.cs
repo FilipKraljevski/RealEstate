@@ -32,7 +32,7 @@ namespace Test.ServiceTests
             { 
                 LookingForPropertyRequest = new LookingForPropertyRequest() 
                 { 
-                    City = "", Code = "", Email = "", FloorFrom = "", FloorTo = "", Message = "", Municipality = "", Name = "",
+                    City = "", Code = "", Email = "", Message = "", Municipality = "", Name = "",
                     Country = Country.Macedonia
                 }
             };

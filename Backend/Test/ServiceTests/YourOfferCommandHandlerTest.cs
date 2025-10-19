@@ -35,8 +35,6 @@ namespace Test.ServiceTests
                     City = "",
                     Code = "",
                     Email = "",
-                    FloorFrom = "",
-                    FloorTo = "",
                     Message = "",
                     Municipality = "",
                     Name = "",

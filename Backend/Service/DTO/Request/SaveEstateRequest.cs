@@ -19,7 +19,7 @@ namespace Service.DTO.Request
         public required CityRequest City { get; set; }
         public Guid UpdatedByAgencyId { get; set; } //Updated by for authorization purposes
         public List<ImagesRequest>? Pictures { get; set; }
-        public List<AdditionalEstateInfoRequest>? AdditionalEstateInfo { get; set; }
+        public List<AdditionalEstateInfoRequest>? AdditionalEstateInfos { get; set; }
     }
 
     public class CityRequest //keep in mind might add duplicate

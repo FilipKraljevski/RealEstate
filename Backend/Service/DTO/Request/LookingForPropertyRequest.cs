@@ -17,8 +17,8 @@ namespace Service.DTO.Request
         public long MaxPrice { get; set; }
         public int YearOfConstruction { get; set; }
         public int? Rooms { get; set; }
-        public required string FloorFrom { get; set; }
-        public required string FloorTo { get; set; }
+        public int FloorFrom { get; set; }
+        public int FloorTo { get; set; }
         public bool Terrace { get; set; }
         public bool Heating { get; set; }
         public bool Parking { get; set; }

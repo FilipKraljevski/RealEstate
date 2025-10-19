@@ -41,7 +41,7 @@ namespace Service.Mapper
             CreateMap<SaveEstateRequest, Estate>()
                 .ForMember(d => d.City, opt => opt.MapFrom(s => s.City))
                 //.ForMember(d => d.Images, opt => opt.MapFrom(s => s.Images));
-                .ForMember(d => d.AdditionalEstateInfo, opt => opt.MapFrom(s => s.AdditionalEstateInfo));
+                .ForMember(d => d.AdditionalEstateInfo, opt => opt.MapFrom(s => s.AdditionalEstateInfos));
         }
     }
 }
