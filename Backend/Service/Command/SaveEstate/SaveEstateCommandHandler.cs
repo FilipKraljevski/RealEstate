@@ -32,6 +32,11 @@ namespace Service.Command.SaveEstate
 
                 var agency = agencyRepository.Get(request.UserClaims.Id);
 
+                if (agency == null)
+                {
+                    return new NotFoundResult<bool>("Not Found: Agency does not exist");
+                }
+
                 estate.Agency = agency;
                 estate.PublishedDate = DateTime.Now;
 

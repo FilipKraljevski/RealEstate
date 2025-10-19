@@ -26,6 +26,60 @@ namespace Test.ServiceTests
         }
 
         [Fact]
+        public async void WhenAgencyeNotFound_ReturnNotFound()
+        {
+            //arrange
+            var picture = new ImagesRequest
+            {
+                Name = "Hall",
+                Content = new byte[1]
+            };
+            var additionalEstateInfo = new AdditionalEstateInfoRequest
+            {
+                Name = "Terrace"
+            };
+
+            var command = new SaveEstateCommand
+            {
+                SaveEstateRequest = new SaveEstateRequest()
+                {
+                    Title = "Luxury",
+                    EstateType = EstateType.Apartment,
+                    PurchaseType = PurchaseType.Purchase,
+                    Country = Country.Macedonia,
+                    Municipality = "Aerodrom",
+                    Area = 45,
+                    Price = 45000,
+                    Description = "Best apartment in the world",
+                    YearOfConstruction = 2016,
+                    Rooms = 2,
+                    Floor = "2",
+                    City = new CityRequest
+                    {
+                        Name = "Skopje",
+                        Country = Country.Macedonia
+                    },
+                    Pictures = new List<ImagesRequest>
+                    {
+                        picture
+                    },
+                    AdditionalEstateInfo = new List<AdditionalEstateInfoRequest>
+                    {
+                        additionalEstateInfo
+                    }
+                },
+                UserClaims = new UserClaims()
+            };
+
+            //act
+            var result = await sut.Handle(command, It.IsAny<CancellationToken>());
+
+            //assert
+            Assert.Equal(404, result.StatusCode);
+            Assert.Equal("Not Found: Agency does not exist", result.Message);
+        }
+
+        [Fact]
         public async void WhenEstateIdEmpty_AddEstate()
         {
             //arrange
@@ -167,8 +221,6 @@ namespace Test.ServiceTests
 
             //act
             var result = await sut.Handle(command, It.IsAny<CancellationToken>());
-
-            var estate = _mapper.Map<Estate>(command.SaveEstateRequest);
 
             //assert
             Assert.Equal(404, result.StatusCode);

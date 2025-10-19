@@ -2,7 +2,8 @@
 
 namespace Repository.Interface
 {
-    public interface IMailLogRepository : IRepository<MailLog>
+    public interface IMailLogRepository
     {
+        public void Add(MailLog entity);
     }
 }

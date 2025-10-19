@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 
 namespace Repository.Implementation
 {
-    public class Repository<T> : IRepository<T>where T : class
+    public class Repository<T> : IRepository<T>where T : class, IEntity
     {
         protected readonly RealEstateDbContext realEstateDbContext;
         protected DbSet<T> entities;
@@ -21,7 +22,7 @@ namespace Repository.Implementation
 
         public T Get(Guid id)
         {
-            return entities.SingleOrDefault(x => (Guid)typeof(T).GetProperty("Id").GetValue(x, null) == id);
+            return entities.SingleOrDefault(x => x.Id == id);
         }
 
         public IQueryable<T> GetAsQueryable()

@@ -14,7 +14,7 @@ namespace Repository
         public virtual DbSet<City> Cities => Set<City>();
         public virtual DbSet<Estate> Estates => Set<Estate>();
         public virtual DbSet<Images> Images => Set<Images>();
-        public virtual DbSet<CodeAuthorization> LoginCodes => Set<CodeAuthorization>();
+        public virtual DbSet<CodeAuthorization> CodeAuthorization => Set<CodeAuthorization>();
         public virtual DbSet<MailLog> MailLogs => Set<MailLog>();
         public virtual DbSet<Telephone> Telephones => Set<Telephone>();
 

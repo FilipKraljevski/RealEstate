@@ -1,6 +1,6 @@
 ﻿namespace Domain.Model
 {
-    public class AdditionalEstateInfo
+    public class AdditionalEstateInfo : IEntity
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }

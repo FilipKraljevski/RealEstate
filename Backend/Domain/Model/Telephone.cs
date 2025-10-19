@@ -1,6 +1,6 @@
 ﻿namespace Domain.Model
 {
-    public class Telephone
+    public class Telephone : IEntity
     {
         public Guid Id { get; set; }
         public required string PhoneNumber { get; set; }

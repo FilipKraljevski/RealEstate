@@ -2,7 +2,7 @@
 
 namespace Domain.Model
 {
-    public class City
+    public class City : IEntity
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }

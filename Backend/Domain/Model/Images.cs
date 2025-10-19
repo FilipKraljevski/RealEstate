@@ -1,6 +1,6 @@
 ﻿namespace Domain.Model
 {
-    public class Images
+    public class Images : IEntity
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }

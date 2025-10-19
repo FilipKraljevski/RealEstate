@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Repository;
+using Repository.Implementation;
+using Repository.Interface;
+using Service;
 using Service.Email;
 using Service.Image;
 using Service.Mapper;
@@ -18,11 +21,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RealEstateDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IAgencyRepository, AgencyRepository>();
+builder.Services.AddScoped<IEstateRepository, EstateRepository>();
+builder.Services.AddScoped<IMailLogRepository, MailLogRepository>();
 builder.Services.AddScoped<IPasswordHasher<Agency>, PasswordHasher<Agency>>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.Configure<ImageSettings>(builder.Configuration.GetSection("ImageSettings"));
-builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddSingleton<IImageService, ImageService>();
 builder.Services.AddSingleton<IMapper>(sp =>
 {
     var imageService = sp.GetRequiredService<IImageService>();
@@ -33,6 +41,10 @@ builder.Services.AddSingleton<IMapper>(sp =>
     }, NullLoggerFactory.Instance);
 
     return config.CreateMapper();
+});
+builder.Services.AddMediatR(c =>
+{
+    c.RegisterServicesFromAssembly(typeof(Result<>).Assembly);
 });
 
 var app = builder.Build();

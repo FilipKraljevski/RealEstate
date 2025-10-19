@@ -2,7 +2,7 @@
 
 namespace Domain.Model
 {
-    public class Estate
+    public class Estate : IEntity
     {
         public Guid Id { get; set; }
         public required string Title { get; set; }
