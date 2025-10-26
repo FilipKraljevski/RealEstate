@@ -5,6 +5,7 @@ import { useState } from "react";
 import MobileNavigation from "./MobileNavigation";
 import { useTranslation } from "react-i18next";
 import { languageData } from "../../common/Repository/LanguageData";
+import Profile from "./Profile";
 
 export default function Header() {
 
@@ -35,11 +36,10 @@ export default function Header() {
                 <Navigation />
               </Box>
             )}
-            <Box sx={{ marginLeft: 'auto' }}>
+            <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
+              <Profile/>
               <FormControl sx={{borderBlockColor: 'white'}}>
                 <Select value={i18n.language} onChange={handleLanguageChange} sx={{ color: 'white', 
-                  '& .MuiOutlinedInput-notchedOutline': { borderColor: 'white',
-                  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white'}},
                   '& .MuiSvgIcon-root': { color: 'white'} }}>
                   {languageData.map((text, index) => (
                     <MenuItem key={index} value={text}>{t(text)}</MenuItem>

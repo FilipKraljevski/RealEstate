@@ -11,6 +11,11 @@
         "Agencies": "Агенции",
         "Contact": "Контакт"
     },
+    "profile": {
+        "Profile": "Профил",
+        "YourEstates": "Твои недвижнини",
+        "Logout": "Одјави се"
+    },
     "footer": {
         "Contact": "Контакт",
         "Politics": "Политика на приватност",

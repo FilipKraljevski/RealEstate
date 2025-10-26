@@ -41,6 +41,13 @@ export const realEstateDetailsRoute = createRoute({
     loader: () => console.log("fecthApi"),
 }).lazy(() => import('../../apps/realEstateView/RealEstateDetails').then((d) => d.Route))
 
+export const yourEstatesRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: 'YourEstates',
+    //errorComponent: ErrorComponent, 
+    loader: () => console.log("fecthApi"),
+}).lazy(() => import('../../apps/realEstateView/YourEstates').then((d) => d.Route))
+
 export const yourOfferRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: 'YourOffer',
@@ -69,6 +76,13 @@ export const agencyDetailsRoute = createRoute({
     loader: () => console.log("fecthApi"),
 }).lazy(() => import('../../apps/agenciesView/AgencyDetails').then((d) => d.Route))
 
+export const agencyFormRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: 'AgencyForm',
+    //errorComponent: ErrorComponent, 
+    loader: () => console.log("fecthApi"),
+}).lazy(() => import('../../apps/agenciesView/AgencyForm').then((d) => d.Route))
+
 export const contactRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: 'Contact',
@@ -81,9 +95,11 @@ export const routeTree = rootRoute.addChildren([
     aboutUsRoute,
     realEstateRoute,
     realEstateDetailsRoute,
+    yourEstatesRoute,
     yourOfferRoute,
     lookingPropertyRoute,
     agenciesRoute,
     agencyDetailsRoute,
+    agencyFormRoute,
     contactRoute,
 ])

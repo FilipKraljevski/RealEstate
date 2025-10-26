@@ -10,7 +10,12 @@
         "AboutUs": "About us",
         "Agencies": "Agencies",
         "Contact": "Contact"
-    },    
+    },
+    "profile": {
+        "Profile": "Profile",
+        "YourEstates": "Your estates",
+        "Logout": "Logout"
+    },
     "footer": {
         "Contact": "Contact",
         "Politics": "Privacy politics",
