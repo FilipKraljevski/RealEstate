@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActionArea, CardContent, CardHeader, CardMedia, Container, Divider, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, TablePagination, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Button, Card, CardActionArea, CardContent, CardHeader, CardMedia, Container, Divider, FormControl, Grid, IconButton, InputAdornment, InputLabel, MenuItem, Select, TablePagination, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { createLazyRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,6 +6,7 @@ import { EstateType } from '../../common/Domain/EstateType'
 import { PurchaseType } from '../../common/Domain/PurchaseType'
 import { Country } from '../../common/Domain/Country'
 import { enumToOptions, getEnumTypeKey } from '../../common/Logic/EnumHelper'
+import { Delete } from '@mui/icons-material'
 
 export const Route = createLazyRoute('/RealEstate')({
     component: RealEstate,
@@ -184,7 +185,12 @@ export default function RealEstate() {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', mt: 1 }}>
                     {itemData.map(item => (
                         <Card key={item.id} sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
-                            <CardHeader title={item.name} sx={{ backgroundColor: 'lightgray'}}/>
+                            <CardHeader title={item.name} sx={{ backgroundColor: 'lightgray'}} 
+                                action={
+                                    <IconButton aria-label="delete" onClick={() => {console.log("Delete")}}>
+                                        <Delete />
+                                    </IconButton>
+                                    }/>
                             <CardActionArea component={Link} to={`/RealEstateDetails/${item.id}`} sx={{ display: 'flex', 
                                 flexDirection:{ xs: 'column', sm: 'row' }, alignItems: 'center', textDecoration: 'none' }} >
                                 <CardMedia component="img" image={item.img[0]} alt={item.name} sx={{width: 350, objectFit: 'cover'}} />

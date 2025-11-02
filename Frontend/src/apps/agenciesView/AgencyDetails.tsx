@@ -1,8 +1,9 @@
-import { Container, Divider, Grid, Paper, Typography } from "@mui/material";
+import { Box, Container, Divider, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { createLazyRoute } from "@tanstack/react-router";
 import { useTranslation } from 'react-i18next';
 import { Country } from "../../common/Domain/Country";
 import { getEnumTypeKey } from "../../common/Logic/EnumHelper";
+import { Edit } from "@mui/icons-material";
 
 export const Route = createLazyRoute("/AgencyDetails/$id")({
     component: AgencyDetails
@@ -14,7 +15,12 @@ export default function AgencyDetails() {
     
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
-            <Typography variant='h4' sx={{mb: '1%'}}>{itemData.name}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant='h4' sx={{mb: '1%'}}>{itemData.name}</Typography>
+                <IconButton>
+                    <Edit/>
+                </IconButton>
+            </Box>
             <Divider />
 
             <Grid container spacing={1} columns={{ xs: 4, sm: 8, md: 12 }} sx={{mt: 1}}>

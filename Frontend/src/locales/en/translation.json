@@ -87,7 +87,8 @@
         "Select": "You must select a value in the select field",
         "NonNegative": "Number cannot have a negative value",
         "AreaFrom": "Area from cannot exceed area to",
-        "FloorFrom": "Floor from cannot exceed floor to"
+        "FloorFrom": "Floor from cannot exceed floor to",
+        "Images": "Only files in image format are allowed"
     },
     "Home": {
         "Vision": "Empower every homeowner, renter and investor to discover, list and secure their ideal property.",
@@ -142,7 +143,8 @@
         "Email": "Email:",
         "Estates": "Estates:",
         "NoEstates": "Number of estates published:",
-        "Description": "Description"
+        "Description": "Description",
+        "Add": "Add"
     },
     "AboutUs": {
         "AboutUs": "About us",

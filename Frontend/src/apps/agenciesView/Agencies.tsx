@@ -1,8 +1,9 @@
-import { Box, Card, CardActionArea, CardContent, CardMedia, Container, Divider, Typography } from '@mui/material'
+import { Box, Card, CardActionArea, CardContent, CardMedia, Container, Divider, IconButton, Typography } from '@mui/material'
 import { createLazyRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { getEnumTypeKey } from '../../common/Logic/EnumHelper'
 import { Country } from '../../common/Domain/Country'
+import { Add } from '@mui/icons-material'
 
 export const Route = createLazyRoute('/Agencies')({
     component: Agencies,
@@ -14,7 +15,13 @@ export default function Agencies() {
     
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
-            <Typography variant='h4' sx={{mb: '1%'}}>{t('Agencies.Agencies')}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant='h4' sx={{mb: '1%'}}>{t('Agencies.Agencies')}</Typography>
+                <IconButton>
+                    <Add/>
+                    {t('Agencies.Add')}
+                </IconButton>
+            </Box>
             <Divider />
 
             <Box sx={{mt: 1, display: 'flex', flexWrap: 'wrap'}}>

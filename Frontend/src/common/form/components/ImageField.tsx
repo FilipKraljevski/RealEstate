@@ -10,7 +10,7 @@ export default function ImageField() {
     return (
         <Box>
             <InputLabel id='image-label'>{t(`form.${field.name}`)}</InputLabel>
-            <input type="file" accept='image/' multiple onChange={(e) => field.handleChange([...(e.target.files ?? [])])} />
+            <input type="file" accept='image/*' multiple onChange={(e) => field.handleChange([...(e.target.files ?? [])])} />
             <FieldError meta={field.state.meta} />
         </Box>
     )
