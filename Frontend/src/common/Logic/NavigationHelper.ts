@@ -17,7 +17,7 @@ export const getActiveTabValue = (pathname: String) => {
     case '/Contact':
       return '7';
     default:
-      return '0';
+      return '1';
   }
 };
 

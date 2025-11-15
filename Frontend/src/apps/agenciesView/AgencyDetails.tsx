@@ -1,5 +1,5 @@
 import { Box, Container, Divider, Grid, IconButton, Paper, Typography } from "@mui/material";
-import { createLazyRoute } from "@tanstack/react-router";
+import { createLazyRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from 'react-i18next';
 import { Country } from "../../common/Domain/Country";
 import { getEnumTypeKey } from "../../common/Logic/EnumHelper";
@@ -17,7 +17,7 @@ export default function AgencyDetails() {
         <Container sx={{textAlign: 'left', mt: '1%'}}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography variant='h4' sx={{mb: '1%'}}>{itemData.name}</Typography>
-                <IconButton>
+                <IconButton component={Link} to={`/AgencyForm/${itemData.id}`}>
                     <Edit/>
                 </IconButton>
             </Box>

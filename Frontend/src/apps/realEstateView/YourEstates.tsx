@@ -1,4 +1,4 @@
-import { Delete, Edit } from "@mui/icons-material";
+import { Add, Delete, Edit } from "@mui/icons-material";
 import {Container, Typography, Divider, Box, Card, CardHeader, IconButton, CardActionArea, CardMedia, CardContent, TablePagination } from "@mui/material";
 import { createLazyRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
@@ -29,7 +29,13 @@ export default function YourEstates(){
 
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
-            <Typography variant='h4' sx={{mb: '1%'}}>Estates</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant='h4' sx={{mb: '1%'}}>{t('RealEstate.YourEstates')}</Typography>
+                <IconButton component={Link} to={`/EstateForm`} >
+                    <Add/>
+                    {t('RealEstate.Add')}
+                </IconButton>
+            </Box>
             <Divider />
 
             <Box sx={{mt: 1}}>
@@ -39,10 +45,10 @@ export default function YourEstates(){
                             <CardHeader title={item.name} sx={{ backgroundColor: 'lightgray'}} 
                                 action={
                                     <>
-                                        <IconButton aria-label="delete" onClick={() => {console.log("Delete")}}>
+                                        <IconButton onClick={() => {console.log("Delete")}}>
                                             <Delete />
                                         </IconButton>
-                                        <IconButton aria-label="delete" onClick={() => {console.log("Delete")}}>
+                                        <IconButton component={Link} to={`/EstateForm/${item.id}`} onClick={() => {console.log("Edit")}}>
                                             <Edit />
                                         </IconButton>
                                      </>

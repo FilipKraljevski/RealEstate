@@ -17,7 +17,7 @@ export default function Agencies() {
         <Container sx={{textAlign: 'left', mt: '1%'}}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography variant='h4' sx={{mb: '1%'}}>{t('Agencies.Agencies')}</Typography>
-                <IconButton>
+                <IconButton component={Link} to={`/AgencyForm`}>
                     <Add/>
                     {t('Agencies.Add')}
                 </IconButton>

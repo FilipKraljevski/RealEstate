@@ -89,7 +89,7 @@ export default function RealEstate() {
 
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
-            <Typography variant='h4' sx={{mb: '1%'}}>Estates</Typography>
+            <Typography variant='h4' sx={{mb: '1%'}}>{t('RealEstate.Estates')}</Typography>
             <Divider />
 
             <Box sx={{mt: 1}}>

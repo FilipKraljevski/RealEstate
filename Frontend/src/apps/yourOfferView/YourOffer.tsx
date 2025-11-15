@@ -53,7 +53,6 @@ export default function YourOffer() {
                 path:     ['floorFrom'],
             })
         }
-        console.log(vals.images[0])
         if(vals.images.find(x => !x.type.startsWith("image/"))){
             ctx.addIssue({
                 code:     z.ZodIssueCode.custom,

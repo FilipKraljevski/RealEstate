@@ -50,7 +50,13 @@
         "area": "area m²",
         "floor": "floor",
         "images": "attach pictures (attach multiple pictures at once)",
-        "published": "published"
+        "published": "published",
+        "title": "title",
+        "description": "description",
+        "additionalInfo": "additional info",
+        "oldPassword": "password",
+        "newPassword": "new password",
+        "confirmPassword": "confirm new password"
     },
     "filter": {
         "estateFor": "estate for",
@@ -88,7 +94,8 @@
         "NonNegative": "Number cannot have a negative value",
         "AreaFrom": "Area from cannot exceed area to",
         "FloorFrom": "Floor from cannot exceed floor to",
-        "Images": "Only files in image format are allowed"
+        "Images": "Only files in image format are allowed",
+        "ConfirmPassword": "Confirm password is not correct"
     },
     "Home": {
         "Vision": "Empower every homeowner, renter and investor to discover, list and secure their ideal property.",
@@ -119,14 +126,28 @@
         "General": "General information",
         "Financial": "Financial information",
         "Additional": "Additional information",
-        "AgencyInfo": "Agency info"
+        "AgencyInfo": "Agency info",
+        "YourEstates": "Your estates",
+        "YourEstatesForm": "Estate form",
+        "GeneralInfo": "General information",
+        "DescriptionInfo": "Description information",
+        "LocationInfo": "Location information",
+        "AdditionalInfo": "Additional information",
+        "ImagesInfo": "Images information",
+        "AddCity": "Add city",
+        "SelectCity": "Select city",
+        "Add": "Add",
+        "Remove": "Remove",
+        "Save": "Save"
     },
     "LookingProperty": {
         "LookingProperty": "Looking for a property",
         "Intro": "Please fill out the form with details about what kind of property you are looking for, and the appropriate agency will contact you if such an offer arises.",
         "PersonData": "Information about the property seeker:",
         "EstateData": "Information about what kind of property you are looking for:",
-        "Submit": "Send"
+        "Submit": "Send",
+        "Remove": "Remove",
+        "Save": "Save"
     },
     "YourOffer": {
         "YourOffer": "Your offer",
@@ -144,7 +165,14 @@
         "Estates": "Estates:",
         "NoEstates": "Number of estates published:",
         "Description": "Description",
-        "Add": "Add"
+        "Profile": "Your profile",
+        "Add": "Add",
+        "Remove": "Remove",
+        "Save": "Save",
+        "Close": "Close",
+        "ChangePassword": "Change password",
+        "UpdatePassword": "Update password",
+        "NumberOfEstates": "Number of estates published"
     },
     "AboutUs": {
         "AboutUs": "About us",

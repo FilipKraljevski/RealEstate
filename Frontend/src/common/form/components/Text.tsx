@@ -8,7 +8,8 @@ interface Props {
     fullWidth?: boolean
     type?: string,
     placeholder?: string,
-    adornment?: string
+    adornment?: string,
+    label?: string
 }
 
 const Adornment = (value: string) => {
@@ -23,10 +24,11 @@ export default function Text(props: Props) {
     const fullWidth = props.fullWidth ?? false
     const type = props.type ?? 'text'
     const adornment = props.adornment ?? ''
+    const label = props.label ?? undefined
 
     return (
         <Box>
-            <TextField id={field.name} required={isRequired} label={t(`form.${field.name}`)} value={field.state.value} fullWidth={fullWidth}
+            <TextField id={field.name} required={isRequired} label={label || t(`form.${field.name}`)} value={field.state.value} fullWidth={fullWidth}
                 type={type} margin='normal' placeholder={props.placeholder} onChange={(e) => field.handleChange(e.target.value)} 
                 error={getErrorsLength(field.state.meta)} slotProps={{ input: {endAdornment: Adornment(adornment)}}}/>
             <FieldError meta={field.state.meta} />
