@@ -1,28 +1,34 @@
 import { Box, Button, Container, Divider, Grid, IconButton, Paper, Typography } from "@mui/material";
-import { createLazyRoute, Link } from "@tanstack/react-router";
+import { createLazyRoute, Link, useParams } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { estateDetailsQueryOptions } from "../../common/Routing/RouteQueries";
 
 export const Route = createLazyRoute("/RealEstateDetails/$id")({
     component: RealEstateDetails
 })
 
 export default function RealEstateDetails() {
-
     const { t } = useTranslation()
     const [current, setCurrent] = useState(0)
+
+    const { id } = useParams({ from: "/RealEstateDetails/$id" });
+    const estateDetailsQuery = useSuspenseQuery(estateDetailsQueryOptions(id))
+    const estate = estateDetailsQuery.data
 
     const showPrev = () => {
         setCurrent(i => Math.max(i - 1, 0))
     }
     const showNext = () => {
-      setCurrent(i => Math.min(i + 1, itemData.img.length - 1))
+      setCurrent(i => Math.min(i + 1, estate ? estate.image.length - 1 : 0))
     }
 
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
-            <Typography variant='h4' sx={{mb: '1%'}}>{itemData.name}</Typography>
+            {estate && <Box>
+            <Typography variant='h4' sx={{mb: '1%'}}>{estate.title}</Typography>
             <Divider />
 
             <Grid container spacing={1} columns={{ sm: 4, md: 12 }} sx={{mt: 1}}>
@@ -31,127 +37,70 @@ export default function RealEstateDetails() {
                         <IconButton onClick={showPrev} disabled={current === 0}sx={{ position: 'absolute', left: 0 }}>
                             <ArrowBackIos />
                         </IconButton>
-                        <Paper component="img" src={itemData.img[current]} alt={`Slide ${current + 1}`} sx={{width: '100%', height: '300px'}}/>
-                        <IconButton onClick={showNext} disabled={current === itemData.img.length - 1} sx={{position: 'absolute', right: 0 }}>
+                        <Paper component="img" src={estate.image[current]} alt={`Slide ${current + 1}`} sx={{width: '100%', height: '300px'}}/>
+                        <IconButton onClick={showNext} disabled={current === estate.image.length - 1} sx={{position: 'absolute', right: 0 }}>
                             <ArrowForwardIos />
                         </IconButton>
                     </Box>
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Estate')}</Typography>
-                        {itemData.estate.map((item) => (
-                            <Typography padding={1}><b>{t(`form.${item.label}`)}: </b>
-                                {item.enum ? t(`Purchase.${item.value.toString()}`) : item.value.toString()}
+                        <Typography padding={1}><b>{t(`form.purchaseType`)}: </b>
+                            {t(`Purchase.${estate.purchaseType.toString()}`)}
                             </Typography>
-                        ))}
+                        <Typography padding={1}><b>{t(`form.published`)}: </b>
+                            {estate.publishedDate.toString()}
+                        </Typography>
                     </Paper>
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Location').substring(0, 8)}</Typography>
-                            {itemData.location.map((item) => (
-                                <Typography padding={1}><b>{t(`form.${item.label}`)}: </b> 
-                                    {item.enum ? t(`Country.${item.value.toString()}`) : item.value.toString()}
-                                </Typography>
-                            ))}
+                        <Typography padding={1}><b>{t(`form.country`)}: </b> 
+                            {t(`Country.${estate.country.toString()}`)}
+                        </Typography>
+                        <Typography padding={1}><b>{t(`form.city`)}: </b> 
+                            {estate.city.toString()}
+                        </Typography>
+                        <Typography padding={1}><b>{t(`form.municipality`)}: </b> 
+                            {estate.municipality.toString()}
+                        </Typography>
                     </Paper>
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Description')}</Typography>
-                        <Typography padding={1}>{itemData.description}</Typography>
+                        <Typography padding={1}>{estate.description}</Typography>
                     </Paper>
                 </Grid>
                 <Grid size={4}>
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" sx={{fontWeight: "bold"}} bgcolor={'lightgray'} padding={1}>{t('RealEstate.General')}</Typography>
-                        {itemData.generalInformation.map((item) => (
-                            <Typography padding={1}><b>{t(`form.${item.label}`)}: </b> {item.value.toString()}</Typography>
-                        ))}
+                        <Typography padding={1}><b>{t(`form.area`)}: </b> {estate.area.toString()}</Typography>
+                        <Typography padding={1}><b>{t(`form.rooms`)}: </b> {estate.rooms.toString()}</Typography>
+                        <Typography padding={1}><b>{t(`form.yearConstruction`)}: </b> {estate.yearOfConstruction.toString()}</Typography>
+                        <Typography padding={1}><b>{t(`form.floor`)}: </b> {estate.floor.toString()}</Typography>
                     </Paper>
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Financial')}</Typography>
-                        {itemData.financial.map((item) => (
-                            <Typography padding={1}><b>{t(`form.${item.label}`)}: </b> 
-                                {item.enum ? t(`Estate.${item.value.toString()}`) : item.value.toString()}
-                            </Typography>
-                        ))}
+                        <Typography padding={1}><b>{t(`form.estateType`)}: </b> 
+                                {t(`Estate.${estate.estateType.toString()}`)}
+                        </Typography>
+                        <Typography padding={1}><b>{t(`form.price`)}: </b> 
+                                {estate.price.toString()}
+                        </Typography>
                     </Paper>
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Additional')}</Typography>
-                        {itemData.additioanlInformations.map((item) => (
+                        {estate.additionalEstateInfo.map((item: string) => (
                             <Typography padding={1}><b>{item}:</b> ✅</Typography>
                         ))}
                     </Paper>
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Agency').substring(0, 8)}</Typography>
-                        <Typography padding={1}><b>{t('RealEstate.Agency')}</b> {itemData.agencyName}</Typography>
-                        <Button component={Link} href={`/AgencyDetails/${itemData.agencyId}`} variant='contained' sx={{ m: 1}}>
+                        <Typography padding={1}><b>{t('RealEstate.Agency')}</b> {estate.agency.name}</Typography>
+                        <Button component={Link} href={`/AgencyDetails/${estate.agency.id}`} variant='contained' sx={{ m: 1}}>
                             {t(`RealEstate.AgencyInfo`)}
                         </Button>
                     </Paper>
                 </Grid>
-            </Grid>  
+            </Grid> 
+            </Box>}
         </Container>
     )
-}
-
-const itemData = {
-    id: "id",
-    img: ['/GramadaLogoUrl.png', '/LivingRoomHome.jpg', '/LookingProperty.jpg', '/YourOffer.jpg'],
-    name: 'Delux Apartment',
-    description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-    estate: [
-        {
-            label: 'purchaseType',
-            value: "Purchase",
-            enum: true
-        },
-        {
-            label: 'published',
-            value: new Date(Date.now())
-        }
-    ],
-    location: [
-        {
-            label: 'country',
-            value: "Macedonia",
-            enum: true
-        },
-        {
-            label: 'city',
-            value: 'Skopje'
-        },
-        {
-            label: 'municipality',
-            value: 'Aerodrom'
-        },
-    ],
-    financial: [
-        {
-            label: 'estateType',
-            value: "Apartment",
-            enum: true
-        },
-        {
-            label: 'price',
-            value: 100000
-        },
-    ],
-    generalInformation: [
-        {
-            label: 'area',
-            value: 100
-        },
-        {
-            label: 'rooms',
-            value: 5
-        },
-        {
-            label: 'yearConstruction',
-            value: 2023
-        },
-        {
-            label: 'floor',
-            value: 2
-        },
-    ],
-    additioanlInformations: ['terrace', 'heating', 'parking', 'basement'],
-    agencyId: 'Id',
-    agencyName: 'Gramada Agency'
 }

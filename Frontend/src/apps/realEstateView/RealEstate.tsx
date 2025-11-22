@@ -7,6 +7,11 @@ import { PurchaseType } from '../../common/Domain/PurchaseType'
 import { Country } from '../../common/Domain/Country'
 import { enumToOptions, getEnumTypeKey } from '../../common/Logic/EnumHelper'
 import { Delete } from '@mui/icons-material'
+import { useQuery } from '@tanstack/react-query'
+import { getCities } from '../../common/Service/CityService'
+import { getAgenciesName } from '../../common/Service/AgencyService'
+import type { AgencyName, City } from '../../common/Service/DTO/ResponseBody'
+import { getEstates } from '../../common/Service/EstateService'
 
 export const Route = createLazyRoute('/RealEstate')({
     component: RealEstate,
@@ -34,33 +39,32 @@ export default function RealEstate() {
     const { t } = useTranslation()
     const theme = useTheme()
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     const [openFilters, setOpenFilters] = useState(true)
     const [filter, setFilters] = useState<Partial<Filter>>({})
-    const [cityOptions, setCityOptions] = useState<Item[]>([])
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
+
+    const { data: cities } = useQuery({
+        queryKey: ["cities", filter.country ?? Country.None], 
+        queryFn:() =>  getCities(filter.country ?? Country.None) 
+    })
+    const { data: agenciesName } = useQuery({
+        queryKey: ["agenciesName"], 
+        queryFn: getAgenciesName
+    })
+    const { data: estates } = useQuery({
+        queryKey: ['estates', filter, page, rowsPerPage],
+        queryFn:() => getEstates(filter, page, rowsPerPage)
+    })
 
     const purchaseOptions = enumToOptions(PurchaseType)
     const estateOptions = enumToOptions(EstateType)
     const countryOptions = enumToOptions(Country)
 
-    const getAgencies = (): Item[] => {
-        return itemDataAgencies
-    }
-
-    const agencyOptions = getAgencies()
-
-    useEffect(() => {
-        setCityOptions(getCities(filter.country))
-    }, [filter.country])
-
     useEffect(() => {
         setOpenFilters(isSmallScreen ? false : true)
     }, [isSmallScreen])
-
-    const getCities = (countyId: any) => {
-        return itemDataCities
-    }
 
     const handleOnChangeFilters = (name: string, value: any) => {
         setFilters(prev => ({
@@ -102,7 +106,7 @@ export default function RealEstate() {
                         <FormControl fullWidth>
                         <InputLabel id='filter.estateFor'>{t(`filter.estateFor`)}</InputLabel>
                         <Select value={filter.estateFor} labelId='filter.estateFor' label={t(`filter.${filter.estateFor}`)}
-                            onChange={(value) => handleOnChangeFilters("estateFor", value)}>
+                            onChange={(e) => handleOnChangeFilters("estateFor", e.target.value)}>
                             {purchaseOptions.map((item: Item) => {
                                 return (
                                     <MenuItem key={item.value} value={item.value}>{t(`option.${item.label}`)}</MenuItem>
@@ -115,7 +119,7 @@ export default function RealEstate() {
                         <FormControl fullWidth>
                         <InputLabel id='filter.estateType'>{t(`filter.estateType`)}</InputLabel>
                         <Select fullWidth value={filter.estateType} labelId='filter.estateType' label={t(`filter.${filter.estateType}`)}
-                            onChange={(value) => handleOnChangeFilters("estateType", value)}>
+                            onChange={(e) => handleOnChangeFilters("estateType", e.target.value)}>
                             {estateOptions.map((item: Item) => {
                                 return (
                                     <MenuItem key={item.value} value={item.value}>{t(`option.${item.label}`)}</MenuItem>
@@ -128,7 +132,7 @@ export default function RealEstate() {
                         <FormControl fullWidth>
                         <InputLabel id='filter.country'>{t(`filter.country`)}</InputLabel>
                         <Select fullWidth value={filter.country} labelId='filter.country' label={t(`filter.${filter.country}`)}
-                            onChange={(value) => handleOnChangeFilters("country", value)}>
+                            onChange={(e) => handleOnChangeFilters("country", e.target.value)}>
                             {countryOptions.map((item: Item) => {
                                 return (
                                     <MenuItem key={item.value} value={item.value}>{t(`option.${item.label}`)}</MenuItem>
@@ -141,10 +145,10 @@ export default function RealEstate() {
                         <FormControl fullWidth>
                         <InputLabel id='filter.city'>{t(`filter.city`)}</InputLabel>
                         <Select fullWidth value={filter.city} labelId='filter.city' label={t(`filter.${filter.city}`)}
-                            onChange={(value) => handleOnChangeFilters("city", value)}>
-                            {cityOptions.map((item: Item) => {
+                            onChange={(e) => handleOnChangeFilters("city", e.target.value)}>
+                            {cities && cities.map((item: City) => {
                                 return (
-                                    <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+                                    <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                                 )
                             })}
                         </Select>
@@ -154,10 +158,10 @@ export default function RealEstate() {
                         <FormControl fullWidth>
                         <InputLabel id='filter.agency'>{t(`filter.agency`)}</InputLabel>
                         <Select fullWidth value={filter.agency} labelId='filter.agency' label={t(`filter.${filter.agency}`)}
-                            onChange={(value) => handleOnChangeFilters("agency", value)}>
-                            {agencyOptions.map((item: Item) => {
+                            onChange={(e) => handleOnChangeFilters("agency", e.target.value)}>
+                            {agenciesName && agenciesName.map((item: AgencyName) => {
                                 return (
-                                    <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+                                    <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                                 )
                             })}
                         </Select>
@@ -179,13 +183,12 @@ export default function RealEstate() {
                         <TextField label={t(`filter.toPrice`)} value={filter.toPrice} fullWidth type='number'
                             onChange={(e) => handleOnChangeFilters("toPrice", e.target.value)} slotProps={{ input: {endAdornment: Adornment("€")}}}></TextField>
                     </Grid>
-                    <Button type='submit' variant='contained'>{t('RealEstate.Submit')}</Button>
                 </Grid>}
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', mt: 1 }}>
-                    {itemData.map(item => (
+                    {estates && estates.map(item => (
                         <Card key={item.id} sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
-                            <CardHeader title={item.name} sx={{ backgroundColor: 'lightgray'}} 
+                            <CardHeader title={item.title} sx={{ backgroundColor: 'lightgray'}} 
                                 action={
                                     <IconButton aria-label="delete" onClick={() => {console.log("Delete")}}>
                                         <Delete />
@@ -193,10 +196,10 @@ export default function RealEstate() {
                                     }/>
                             <CardActionArea component={Link} to={`/RealEstateDetails/${item.id}`} sx={{ display: 'flex', 
                                 flexDirection:{ xs: 'column', sm: 'row' }, alignItems: 'center', textDecoration: 'none' }} >
-                                <CardMedia component="img" image={item.img[0]} alt={item.name} sx={{width: 350, objectFit: 'cover'}} />
+                                <CardMedia component="img" image={item.image} alt={item.title} sx={{width: 350, objectFit: 'cover'}} />
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography variant="body2" gutterBottom>
-                                        <strong>{t(`RealEstate.EstateFor`)}</strong> {t(`Purchase.${getEnumTypeKey(item.estateFor, PurchaseType)}`)}
+                                        <strong>{t(`RealEstate.EstateFor`)}</strong> {t(`Purchase.${getEnumTypeKey(item.purchaseType, PurchaseType)}`)}
                                     </Typography>
                                     <Typography variant="body2" gutterBottom>
                                         <strong>{t(`RealEstate.EstateType`)}</strong> {t(`Estate.${getEnumTypeKey(item.estateType, EstateType)}`)}
@@ -233,69 +236,3 @@ export default function RealEstate() {
         </Container>
     )
 }
-
-//API CALL
-const itemDataAgencies: Item[] = [
-    {
-        value: "id",
-        label: "Gramada Agency"
-    },
-]
-
-const itemDataCities: Item[] = [
-    {
-        value: "id",
-        label: "Skopje"
-    },
-]
-
-const itemData = [
-    {
-        id: "Id",
-        img: ["/GramadaLogoUrl.png"],
-        name: "luxiourus",
-        estateFor: 1,
-        estateType: 1,
-        agency: {
-            id: "Id",
-            name: "Gramada Agency"
-        },
-        country: 1,
-        location: "Aerodrom, Skopje",
-        area: 100,
-        price: 100000 ,
-        description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
-    },
-    {
-        id: "Id1",
-        img: ["/GramadaLogoUrl.png"],
-        name: "luxiourus",
-        estateFor: 1,
-        estateType: 1,
-        agency: {
-            id: "Id",
-            name: "Gramada Agency"
-        },
-        country: 1,
-        location: "Aerodrom, Skopje",
-        area: 100,
-        price: 100000 ,
-        description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
-    },
-    {
-        id: "Id2",
-        img: ["/GramadaLogoUrl.png"],
-        name: "luxiourus",
-        estateFor: 1,
-        estateType: 1,
-        agency: {
-            id: "Id",
-            name: "Gramada Agency"
-        },
-        country: 1,
-        location: "Aerodrom, Skopje",
-        area: 100,
-        price: 100000 ,
-        description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
-    },
-]

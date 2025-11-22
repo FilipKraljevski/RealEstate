@@ -1,7 +1,9 @@
-import { createRootRoute, createRoute, Link } from "@tanstack/react-router";
+import { createRootRouteWithContext, createRoute, Link } from "@tanstack/react-router";
 import Layout from "../../apps/common/Layout";
+import { QueryClient } from '@tanstack/react-query'
+import { agenciesQueryOptions, agencyDetailsQueryOptions, estateDetailsQueryOptions } from "./RouteQueries";
 
-const rootRoute = createRootRoute({
+const rootRoute = createRootRouteWithContext<{queryClient: QueryClient}>()({
     component: Layout,
     notFoundComponent: () => {
         return (
@@ -16,29 +18,23 @@ const rootRoute = createRootRoute({
 export const homeRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/',
-    //errorComponent: ErrorComponent, 
-    loader:() => console.log("fecthApi")
 }).lazy(() => import('../../apps/homeView/Home').then((d) => d.Route))
 
 const aboutUsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: 'AboutUs',
-    //errorComponent: ErrorComponent, 
-    loader: () => console.log("fecthApi"),
 }).lazy(() => import('../../apps/aboutUsView/AboutUs').then((d) => d.Route))
 
 export const realEstateRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: 'RealEstate',
-    //errorComponent: ErrorComponent, 
-    loader: () => console.log("fecthApi"),
 }).lazy(() => import('../../apps/realEstateView/RealEstate').then((d) => d.Route))
 
 export const realEstateDetailsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: 'RealEstateDetails/$id',
-    //errorComponent: ErrorComponent, 
-    loader: () => console.log("fecthApi"),
+    loader: ({ context: { queryClient }, params: { id } }) =>
+        queryClient.ensureQueryData(estateDetailsQueryOptions(id)),
 }).lazy(() => import('../../apps/realEstateView/RealEstateDetails').then((d) => d.Route))
 
 export const yourEstatesRoute = createRoute({
@@ -48,7 +44,6 @@ export const yourEstatesRoute = createRoute({
     loader: () => console.log("fecthApi"),
 }).lazy(() => import('../../apps/realEstateView/YourEstates').then((d) => d.Route))
 
-// Route without id
 export const estateFormNewRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: 'EstateForm',
@@ -81,15 +76,15 @@ export const lookingPropertyRoute = createRoute({
 export const agenciesRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: 'Agencies',
-    //errorComponent: ErrorComponent, 
-    loader: () => console.log("fecthApi"),
+    loader: ({ context: { queryClient } }) =>
+        queryClient.ensureQueryData(agenciesQueryOptions()),
 }).lazy(() => import('../../apps/agenciesView/Agencies').then((d) => d.Route))
 
 export const agencyDetailsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: 'AgencyDetails/$id',
-    //errorComponent: ErrorComponent, 
-    loader: () => console.log("fecthApi"),
+    loader: ({ context: { queryClient }, params: { id } }) =>
+        queryClient.ensureQueryData(agencyDetailsQueryOptions(id)),
 }).lazy(() => import('../../apps/agenciesView/AgencyDetails').then((d) => d.Route))
 
 export const agencyFormNewRoute = createRoute({
