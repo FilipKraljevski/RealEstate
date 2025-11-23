@@ -7,6 +7,9 @@ import { Country } from "../../common/Domain/Country";
 import { EstateType } from "../../common/Domain/EstateType";
 import { PurchaseType } from "../../common/Domain/PurchaseType";
 import { getEnumTypeKey } from "../../common/Logic/EnumHelper";
+import { useQuery } from "@tanstack/react-query";
+import { getEstates } from "../../common/Service/EstateService";
+import type { EstateFilters } from "../../common/Service/DTO/RequestBody";
 
 export const Route = createLazyRoute('/YourEstates')({
     component: YourEstates,
@@ -17,6 +20,12 @@ export default function YourEstates(){
     const { t } = useTranslation()
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
+
+    const filter: EstateFilters = { agencyId: undefined } //Agency LoggedIn
+    const { data: estates } = useQuery({
+        queryKey: ['estates', filter, page, rowsPerPage],
+        queryFn:() => getEstates(filter, page, rowsPerPage)
+    })
 
     const handleOnChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -40,9 +49,9 @@ export default function YourEstates(){
 
             <Box sx={{mt: 1}}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', mt: 1 }}>
-                    {itemData.map(item => (
+                    {estates && estates.map(item => (
                         <Card key={item.id} sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
-                            <CardHeader title={item.name} sx={{ backgroundColor: 'lightgray'}} 
+                            <CardHeader title={item.title} sx={{ backgroundColor: 'lightgray'}} 
                                 action={
                                     <>
                                         <IconButton onClick={() => {console.log("Delete")}}>
@@ -55,10 +64,10 @@ export default function YourEstates(){
                                     }/>
                             <CardActionArea component={Link} to={`/RealEstateDetails/${item.id}`} sx={{ display: 'flex', 
                                 flexDirection:{ xs: 'column', sm: 'row' }, alignItems: 'center', textDecoration: 'none' }} >
-                                <CardMedia component="img" image={item.img[0]} alt={item.name} sx={{width: 350, objectFit: 'cover'}} />
+                                <CardMedia component="img" image={item.image[0]} alt={item.title} sx={{width: 350, objectFit: 'cover'}} />
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography variant="body2" gutterBottom>
-                                        <strong>{t(`RealEstate.EstateFor`)}</strong> {t(`Purchase.${getEnumTypeKey(item.estateFor, PurchaseType)}`)}
+                                        <strong>{t(`RealEstate.EstateFor`)}</strong> {t(`Purchase.${getEnumTypeKey(item.purchaseType, PurchaseType)}`)}
                                     </Typography>
                                     <Typography variant="body2" gutterBottom>
                                         <strong>{t(`RealEstate.EstateType`)}</strong> {t(`Estate.${getEnumTypeKey(item.estateType, EstateType)}`)}
@@ -95,54 +104,3 @@ export default function YourEstates(){
         </Container>
     )
 }
-
-const itemData = [
-    {
-        id: "Id",
-        img: ["/GramadaLogoUrl.png"],
-        name: "luxiourus",
-        estateFor: 1,
-        estateType: 1,
-        agency: {
-            id: "Id",
-            name: "Gramada Agency"
-        },
-        country: 1,
-        location: "Aerodrom, Skopje",
-        area: 100,
-        price: 100000 ,
-        description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
-    },
-    {
-        id: "Id1",
-        img: ["/GramadaLogoUrl.png"],
-        name: "luxiourus",
-        estateFor: 1,
-        estateType: 1,
-        agency: {
-            id: "Id",
-            name: "Gramada Agency"
-        },
-        country: 1,
-        location: "Aerodrom, Skopje",
-        area: 100,
-        price: 100000 ,
-        description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
-    },
-    {
-        id: "Id2",
-        img: ["/GramadaLogoUrl.png"],
-        name: "luxiourus",
-        estateFor: 1,
-        estateType: 1,
-        agency: {
-            id: "Id",
-            name: "Gramada Agency"
-        },
-        country: 1,
-        location: "Aerodrom, Skopje",
-        area: 100,
-        price: 100000 ,
-        description: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica"
-    },
-]

@@ -5,7 +5,7 @@ namespace Service.DTO.Response
     public class GetEstateDetailsResponse
     {
         public Guid Id { get; set; }
-        public List<string>? Images { get; set; }
+        public List<ImageResponse>? Images { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }
         public EstateType EstateType { get; set; }
@@ -19,7 +19,19 @@ namespace Service.DTO.Response
         public string? Floor { get; set; }
         public PurchaseType PurchaseType { get; set; }
         public long Price { get; set; }
-        public List<string>? AdditionalEstateInfo { get; set; }
+        public List<AdditionalEstateInfoResponse>? AdditionalEstateInfo { get; set; }
         public required GetAgencyNameResponse Agency {  get; set; }
+    }
+
+    public class ImageResponse
+    {
+        public Guid Id { get; set; }
+        public required string Content { get; set; }
+    }
+
+    public class AdditionalEstateInfoResponse
+    {
+        public Guid Id { get; set; }
+        public required string Name { get; set; }
     }
 }

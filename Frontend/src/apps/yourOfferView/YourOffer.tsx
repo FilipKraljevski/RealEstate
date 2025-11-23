@@ -8,6 +8,12 @@ import { PurchaseType } from '../../common/Domain/PurchaseType'
 import { useAppForm } from '../../common/form'
 import AlertError from '../../common/form/components/AlertError'
 import { enumToOptions } from '../../common/Logic/EnumHelper'
+import { useEffect, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { sendYourOffer } from '../../common/Service/UserService'
+import { CodeVerificationDialog } from '../common/CodeVerificationDialog'
+import { fileToImage } from '../../common/Logic/ImageHelper'
+import type { Image } from '../../common/Service/DTO/RequestBody'
 
 export const Route = createLazyRoute('/YourOffer')({
     component: YourOffer,
@@ -21,6 +27,18 @@ export default function YourOffer() {
     const estateOptions = enumToOptions(EstateType)
     const countryOptions = enumToOptions(Country)
     const YesNoOptions = [{value: true, label: 'Yes'}, {value: false, label: 'No'}]
+    const [showDialog, setShowDialog] = useState(false);
+
+    const { mutate } = useMutation({
+        mutationFn: sendYourOffer
+    })
+
+    useEffect(() => {
+        const expiry = localStorage.getItem("codePopupExpiry");
+        if (expiry && Date.now() < Number(expiry)) {
+            setShowDialog(true);
+        }
+    }, []);
 
     const validationSchema = z.object({
         name: z.string().nonempty(t('error.Required')),
@@ -38,7 +56,7 @@ export default function YourOffer() {
         heating: z.boolean(),
         parking: z.boolean(),
         elevator: z.boolean(),
-        yearConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
+        yearOfConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
         floorFrom: z.coerce.number().nonnegative(t('error.NonNegative')),
         floorTo: z.coerce.number(),
         basement: z.boolean(),
@@ -79,7 +97,7 @@ export default function YourOffer() {
             heating: false,
             parking: false,
             elevator: false,
-            yearConstruction: 0,
+            yearOfConstruction: 0,
             floorFrom: 0,
             floorTo: 0,
             basement: false,
@@ -92,6 +110,7 @@ export default function YourOffer() {
         },
         onSubmit: ({value}) => {
             console.log(value)
+            setShowDialog(true)
         }
     })
 
@@ -100,6 +119,17 @@ export default function YourOffer() {
         e.stopPropagation()
         form.handleSubmit()
     }
+
+    const handleVerified = async () => {
+        const images: Image[] = await Promise.all(
+            form.state.values.images.map((file) => fileToImage(file))
+        );
+        const payload = {
+            ...form.state.values,
+            images,
+        };
+        mutate(payload)
+    };
 
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
@@ -160,7 +190,7 @@ export default function YourOffer() {
                         <form.AppField name="elevator" children={(field) => <field.SelectField data={YesNoOptions} defaultValue={true}/>} />
                     </Grid>
                     <Grid size={4}>
-                        <form.AppField name="yearConstruction" children={(field) => <field.Text fullWidth={true}/>} />
+                        <form.AppField name="yearOfConstruction" children={(field) => <field.Text fullWidth={true}/>} />
                     </Grid>
                     <Grid size={2}>
                         <form.AppField name="floorFrom" children={(field) => <field.Text fullWidth={true} type='number'/>} />
@@ -214,6 +244,7 @@ export default function YourOffer() {
                 }}/>
                 <Button type='submit' variant='contained' sx={{mt: '1%'}}>{t('YourOffer.Submit')}</Button>
             </Box>
+            <CodeVerificationDialog open={showDialog} onClose={() => setShowDialog(false)} onVerified={handleVerified} />
         </Container>
     )
 }

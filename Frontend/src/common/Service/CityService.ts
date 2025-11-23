@@ -1,6 +1,6 @@
 import type { Country } from "../Domain/Country";
 import axios from 'axios'
-import { url } from "./ServiceConfig";
+import { url, type Response } from "./ServiceConfig";
 import type { City } from "./DTO/ResponseBody";
 
 const endpoint = `${url}/City`

@@ -45,7 +45,7 @@ export default function AgencyDetails() {
                     <Paper variant="outlined">
                         <Typography variant="h6" sx={{fontWeight: "bold"}} bgcolor={'lightgray'} padding={1}>{t('Agencies.Contact')}</Typography>
                         <Typography padding={1}><b>{t('Agencies.Telephones')}</b><br/>
-                            {agency.telephones.map((tel) => ( <span>{tel} <br/></span>))}
+                            {agency.telephones.map((tel) => ( <span>{tel.phoneNumber} <br/></span>))}
                         </Typography>
                         <Typography padding={1}><b>{t('Agencies.Email')}</b> {agency.email}</Typography>
                     </Paper>

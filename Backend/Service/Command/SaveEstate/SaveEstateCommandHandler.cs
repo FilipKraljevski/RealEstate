@@ -73,7 +73,7 @@ namespace Service.Command.SaveEstate
             return new OkResult<bool>(true);
         }
 
-        private void AddImages(Estate estate, List<ImagesRequest>? imagesRequest)
+        private void AddImages(Estate estate, List<ImageRequest>? imagesRequest)
         {
             if (imagesRequest != null)
             {

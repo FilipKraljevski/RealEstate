@@ -8,6 +8,10 @@ import { EstateType, showRoomField } from '../../common/Domain/EstateType'
 import { Country } from '../../common/Domain/Country'
 import AlertError from '../../common/form/components/AlertError'
 import { enumToOptions } from '../../common/Logic/EnumHelper'
+import { useState, useEffect } from 'react'
+import { CodeVerificationDialog } from '../common/CodeVerificationDialog'
+import { useMutation } from '@tanstack/react-query'
+import { sendLookingForProperty } from '../../common/Service/UserService'
 
 export const Route = createLazyRoute('/LookingProperty')({
     component: LookingProperty,
@@ -21,6 +25,18 @@ export default function LookingProperty() {
     const estateOptions = enumToOptions(EstateType)
     const countryOptions = enumToOptions(Country)
     const YesNoOptions = [{value: true, label: 'Yes'}, {value: false, label: 'No'}]
+    const [showDialog, setShowDialog] = useState(false);
+
+    const { mutate } = useMutation({
+        mutationFn: sendLookingForProperty
+    })
+
+    useEffect(() => {
+        const expiry = localStorage.getItem("codePopupExpiry");
+        if (expiry && Date.now() < Number(expiry)) {
+            setShowDialog(true);
+        }
+    }, []);
 
     const validationSchema = z.object({
         name: z.string().nonempty(t('error.Required')),
@@ -38,7 +54,7 @@ export default function LookingProperty() {
         heating: z.boolean(),
         parking: z.boolean(),
         elevator: z.boolean(),
-        yearConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
+        yearOfConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
         floorFrom: z.coerce.number().nonnegative(t('error.NonNegative')),
         floorTo: z.coerce.number(),
         basement: z.boolean(),
@@ -78,7 +94,7 @@ export default function LookingProperty() {
             heating: false,
             parking: false,
             elevator: false,
-            yearConstruction: 0,
+            yearOfConstruction: 0,
             floorFrom: 0,
             floorTo: 0,
             basement: false,
@@ -90,6 +106,7 @@ export default function LookingProperty() {
         },
         onSubmit: ({value}) => {
             console.log(value)
+            setShowDialog(true)
         }
     })
 
@@ -98,6 +115,10 @@ export default function LookingProperty() {
         e.stopPropagation()
         form.handleSubmit()
     }
+
+    const handleVerified = () => {
+        mutate(form.state.values)
+    };
 
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
@@ -158,7 +179,7 @@ export default function LookingProperty() {
                         <form.AppField name="elevator" children={(field) => <field.SelectField data={YesNoOptions} defaultValue={true}/>} />
                     </Grid>
                     <Grid size={4}>
-                        <form.AppField name="yearConstruction" children={(field) => <field.Text fullWidth={true}/>} />
+                        <form.AppField name="yearOfConstruction" children={(field) => <field.Text fullWidth={true}/>} />
                     </Grid>
                     <Grid size={2}>
                         <form.AppField name="floorFrom" children={(field) => <field.Text fullWidth={true} type='number'/>} />
@@ -193,6 +214,7 @@ export default function LookingProperty() {
                 }}/>
                 <Button type='submit' variant='contained' sx={{mt: '1%'}}>{t('LookingProperty.Submit')}</Button>
             </Box>
+            <CodeVerificationDialog open={showDialog} onClose={() => setShowDialog(false)} onVerified={handleVerified} />
         </Container>
     )
 }

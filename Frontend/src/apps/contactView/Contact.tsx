@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { useAppForm } from '../../common/form'
 import AlertError from '../../common/form/components/AlertError'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from '@tanstack/react-query'
+import { sendContact } from '../../common/Service/UserService'
 
 export const Route = createLazyRoute('/Contact')({
     component: Contact,
@@ -13,6 +15,10 @@ export default function Contact() {
 
     const { t } = useTranslation()
 
+    const { mutate } = useMutation({
+        mutationFn: sendContact
+    })
+
     const validationSchema = z.object({
         name: z.string().nonempty(t('error.Required')),
         email: z.string().email(t('error.Email')),
@@ -21,7 +27,7 @@ export default function Contact() {
     })
 
     const form = useAppForm({
-        defaultValues: {
+        defaultValues: { 
             name: "",
             email: "",
             subject: "",
@@ -32,6 +38,7 @@ export default function Contact() {
         },
         onSubmit: ({value}) => {
             console.log(value)
+            mutate(value)
         }
     })
 

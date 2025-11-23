@@ -2,6 +2,22 @@ import type { Country } from "../../Domain/Country"
 import { EstateType } from "../../Domain/EstateType"
 import { PurchaseType } from "../../Domain/PurchaseType"
 
+export interface Image {
+    id: string
+    content: string 
+}
+
+export interface Telephone {
+    id: string
+    phoneNumber: string
+}
+
+export interface AdditionalEstateInfo
+{
+    id: string
+    name: string
+}
+
 // City
 export interface City {
     id: string
@@ -29,8 +45,9 @@ export interface AgencyDetails {
     country: Country
     email: string
     profilePicture: string
+    profilePictureId: string
     numberOfEstates: number
-    telephones: string[]
+    telephones: Telephone[]
 }
 
 //Estate
@@ -50,13 +67,14 @@ export interface Estate {
 
 export interface EstateDetails {
     id: string
-    image: string[]
+    images: Image[]
     title: string
     description: string
     estateType: EstateType
     publishedDate: Date
     country: Country
     city: string
+    cityId: string
     municipality: string
     area: number
     yearOfConstruction: number
@@ -64,6 +82,6 @@ export interface EstateDetails {
     floor: string
     purchaseType: PurchaseType
     price: number
-    additionalEstateInfo: string[]
+    additionalEstateInfo: AdditionalEstateInfo[]
     agency: AgencyName
 }

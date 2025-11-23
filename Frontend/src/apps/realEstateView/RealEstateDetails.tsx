@@ -22,7 +22,7 @@ export default function RealEstateDetails() {
         setCurrent(i => Math.max(i - 1, 0))
     }
     const showNext = () => {
-      setCurrent(i => Math.min(i + 1, estate ? estate.image.length - 1 : 0))
+      setCurrent(i => Math.min(i + 1, estate ? estate.images.length - 1 : 0))
     }
 
     return (
@@ -37,8 +37,8 @@ export default function RealEstateDetails() {
                         <IconButton onClick={showPrev} disabled={current === 0}sx={{ position: 'absolute', left: 0 }}>
                             <ArrowBackIos />
                         </IconButton>
-                        <Paper component="img" src={estate.image[current]} alt={`Slide ${current + 1}`} sx={{width: '100%', height: '300px'}}/>
-                        <IconButton onClick={showNext} disabled={current === estate.image.length - 1} sx={{position: 'absolute', right: 0 }}>
+                        <Paper component="img" src={estate.images[current].content} alt={`Slide ${current + 1}`} sx={{width: '100%', height: '300px'}}/>
+                        <IconButton onClick={showNext} disabled={current === estate.images.length - 1} sx={{position: 'absolute', right: 0 }}>
                             <ArrowForwardIos />
                         </IconButton>
                     </Box>
@@ -87,8 +87,8 @@ export default function RealEstateDetails() {
                     </Paper>
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Additional')}</Typography>
-                        {estate.additionalEstateInfo.map((item: string) => (
-                            <Typography padding={1}><b>{item}:</b> ✅</Typography>
+                        {estate.additionalEstateInfo.map((item) => (
+                            <Typography padding={1}><b>{item.name}:</b> ✅</Typography>
                         ))}
                     </Paper>
                     <Paper variant="outlined" sx={{mt: 1}}>

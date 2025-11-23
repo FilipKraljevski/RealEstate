@@ -18,7 +18,7 @@ namespace Service.DTO.Request
         public string? Floor { get; set; }
         public required CityRequest City { get; set; }
         public Guid UpdatedByAgencyId { get; set; } //Updated by for authorization purposes
-        public List<ImagesRequest>? Pictures { get; set; }
+        public List<ImageRequest>? Pictures { get; set; }
         public List<AdditionalEstateInfoRequest>? AdditionalEstateInfos { get; set; }
     }
 
@@ -29,7 +29,7 @@ namespace Service.DTO.Request
         public Country Country { get; set; }
     }
 
-    public class ImagesRequest
+    public class ImageRequest
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }

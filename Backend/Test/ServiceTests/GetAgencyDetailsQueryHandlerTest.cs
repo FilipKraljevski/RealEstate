@@ -86,7 +86,7 @@ namespace Test.ServiceTests
             Assert.Equal(agency.Country, agencyResponse?.Country);
             Assert.Equal(agency.Email, agencyResponse?.Email);
             Assert.Equal(agency.Estates?.Count, agencyResponse?.NumberOfEstates);
-            Assert.Equal(agency.Telephones?.First().PhoneNumber, agencyResponse?.Telephones?.First());
+            Assert.Equal(agency.Telephones?.First().PhoneNumber, agencyResponse?.Telephones?.First().PhoneNumber);
             Assert.NotNull(agencyResponse?.ProfilePicture);
             _agencyRepositoryMock.Verify(x => x.Get(agencyId), Times.Once);
             _imageServiceMock.Verify(x => x.Get(agency.ProfilePictureId), Times.Once);

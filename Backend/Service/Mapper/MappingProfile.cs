@@ -20,13 +20,13 @@ namespace Service.Mapper
                 .ForMember(d => d.Image, opt => opt.MapFrom(s => this.imageService.Get(s.Images.FirstOrDefault().Id)));
             CreateMap<Estate, GetEstateDetailsResponse>()
                 .ForMember(d => d.City, opt => opt.MapFrom(s => s.City.Name))
-                .ForMember(d => d.AdditionalEstateInfo, opt => opt.MapFrom(s => s.AdditionalEstateInfo.Select(x => x.Name)))
-                .ForMember(d => d.Images, opt => opt.MapFrom(s => this.imageService.Get(s.Images.Select(x => x.Id).ToList())));
+                .ForMember(d => d.AdditionalEstateInfo, opt => opt.MapFrom(s => s.AdditionalEstateInfo.Select(x => new AdditionalEstateInfoResponse { Id = x.Id, Name = x.Name })))
+                .ForMember(d => d.Images, opt => opt.MapFrom(s => s.Images.Select(x => new ImageResponse { Id = x.Id, Content = this.imageService.Get(x.Id) })));
             CreateMap<Agency, GetAgencyResponse>()
                 .ForMember(d => d.ProfilePicture, opt => opt.MapFrom(s => this.imageService.Get(s.ProfilePictureId)));
             CreateMap<Agency, GetAgencyDetailsResponse>()
                 .ForMember(d => d.NumberOfEstates, opt => opt.MapFrom(s => s.Estates.Count))
-                .ForMember(d => d.Telephones, opt => opt.MapFrom(s => s.Telephones.Select(x => x.PhoneNumber)))
+                .ForMember(d => d.Telephones, opt => opt.MapFrom(s => s.Telephones.Select(x => new TelephoneResponse { Id = x.Id, PhoneNumber = x.PhoneNumber })))
                 .ForMember(d => d.ProfilePicture, opt => opt.MapFrom(s => this.imageService.Get(s.ProfilePictureId)));
             CreateMap<TelephoneRequest, Telephone>()
                 .EqualityComparison((dto, entity) => dto.Id == entity.Id);

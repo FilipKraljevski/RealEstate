@@ -4,3 +4,7 @@ export interface Response {
     statusCode: number,
     message: string
 }
+
+export interface BooleanResponse extends Response{
+    data: boolean
+}

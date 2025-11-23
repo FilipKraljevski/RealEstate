@@ -29,7 +29,7 @@ namespace Test.ServiceTests
         public async void WhenAgencyeNotFound_ReturnNotFound()
         {
             //arrange
-            var picture = new ImagesRequest
+            var picture = new ImageRequest
             {
                 Name = "Hall",
                 Content = new byte[1]
@@ -59,7 +59,7 @@ namespace Test.ServiceTests
                         Name = "Skopje",
                         Country = Country.Macedonia
                     },
-                    Pictures = new List<ImagesRequest>
+                    Pictures = new List<ImageRequest>
                     {
                         picture
                     },
@@ -84,7 +84,7 @@ namespace Test.ServiceTests
         {
             //arrange
             var agencyId = Guid.NewGuid();
-            var picture = new ImagesRequest
+            var picture = new ImageRequest
             {
                 Name = "Hall",
                 Content = new byte[1]
@@ -114,7 +114,7 @@ namespace Test.ServiceTests
                         Name = "Skopje",
                         Country = Country.Macedonia
                     },
-                    Pictures = new List<ImagesRequest>
+                    Pictures = new List<ImageRequest>
                     {
                         picture
                     },
@@ -172,7 +172,7 @@ namespace Test.ServiceTests
             //arrange
             var estateId = Guid.NewGuid();
             var agencyId = Guid.NewGuid();
-            var picture = new ImagesRequest
+            var picture = new ImageRequest
             {
                 Name = "Hall",
                 Content = new byte[1]
@@ -203,7 +203,7 @@ namespace Test.ServiceTests
                         Name = "Skopje",
                         Country = Country.Macedonia
                     },
-                    Pictures = new List<ImagesRequest>
+                    Pictures = new List<ImageRequest>
                     {
                         picture
                     },
@@ -235,12 +235,12 @@ namespace Test.ServiceTests
             var agencyId = Guid.NewGuid();
             var pictureExistId = Guid.NewGuid();
             var additionalInfoExistId = Guid.NewGuid();
-            var pictureAdd = new ImagesRequest
+            var pictureAdd = new ImageRequest
             {
                 Name = "Hall",
                 Content = new byte[1]
             };
-            var pictureExistRequest = new ImagesRequest
+            var pictureExistRequest = new ImageRequest
             {
                 Id = pictureExistId,
                 Name = "Hall",
@@ -277,7 +277,7 @@ namespace Test.ServiceTests
                         Name = "Skopje",
                         Country = Country.Macedonia
                     },
-                    Pictures = new List<ImagesRequest>
+                    Pictures = new List<ImageRequest>
                     {
                         pictureAdd,
                         pictureExistRequest

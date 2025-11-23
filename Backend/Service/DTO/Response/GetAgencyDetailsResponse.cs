@@ -11,7 +11,14 @@ namespace Service.DTO.Response
         public Country Country { get; set; }
         public required string Email { get; set; }
         public string? ProfilePicture { get; set; }
+        public Guid? ProfilePictureId { get; set; }
         public int NumberOfEstates { get; set; }
-        public List<string>? Telephones { get; set; }
+        public List<TelephoneResponse>? Telephones { get; set; }
+    }
+
+    public class TelephoneResponse
+    {
+        public Guid Id { get; set; }
+        public required string PhoneNumber { get; set; }
     }
 }

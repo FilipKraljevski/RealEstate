@@ -63,9 +63,12 @@ namespace Test.ServiceTests
                 .WithAdditionalEstateInfo(new List<AdditionalEstateInfo>() { new AdditionalEstateInfoBuilder().Build() })
                 .Build();
 
+            var image = new Images { Id = Guid.NewGuid(), Name = "Test", Estate = estate };
+            estate.Images =  new List<Images> { image };
+
             _estateRepository.Setup(x => x.Get(estateId)).Returns(estate);
 
-            _imageServiceMock.Setup(x => x.Get(It.IsAny<List<Guid>>())).Returns(new List<string> { base64 });
+            _imageServiceMock.Setup(x => x.Get(It.IsAny<Guid>())).Returns(base64);
 
             //act
             var result = await sut.Handle(query, It.IsAny<CancellationToken>());
@@ -89,12 +92,12 @@ namespace Test.ServiceTests
             Assert.Equal(estate.Floor, estateResponse?.Floor);
             Assert.Equal(estate.PurchaseType, estateResponse?.PurchaseType);
             Assert.Equal(estate.Price, estateResponse?.Price);
-            Assert.Equal(estate.AdditionalEstateInfo?.First().Name, estateResponse?.AdditionalEstateInfo?.First());
+            Assert.Equal(estate.AdditionalEstateInfo?.First().Name, estateResponse?.AdditionalEstateInfo?.First().Name);
             Assert.Equal(estate.Agency.Id, estateResponse?.Agency.Id);
             Assert.Equal(estate.Agency.Name, estateResponse?.Agency.Name);
-            Assert.Equal(base64, estateResponse?.Images?.FirstOrDefault());
+            Assert.Equal(base64, estateResponse?.Images?.FirstOrDefault()?.Content);
             _estateRepository.Verify(x => x.Get(estateId), Times.Once);
-            _imageServiceMock.Verify(x => x.Get(It.IsAny<List<Guid>>()), Times.Once);
+            _imageServiceMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Once);
         }
     }
 }

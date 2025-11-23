@@ -1,5 +1,5 @@
 import { Container, Typography, Box, Divider, Grid, Button } from '@mui/material'
-import { createLazyRoute } from '@tanstack/react-router'
+import { createLazyRoute, useMatchRoute, useParams } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import z from 'zod'
 import { Country } from '../../common/Domain/Country'
@@ -9,12 +9,17 @@ import { useAppForm } from '../../common/form'
 import AlertError from '../../common/form/components/AlertError'
 import { enumToOptions } from '../../common/Logic/EnumHelper'
 import { useState } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { getCities } from '../../common/Service/CityService'
+import { getEstateDetails, saveEstate } from '../../common/Service/EstateService'
+import type { Image } from '../../common/Service/DTO/RequestBody'
+import { fileToImage } from '../../common/Logic/ImageHelper'
 
 export const Route1 = createLazyRoute('/EstateForm')({
     component: EstateForm
 })
 
-export const Route = createLazyRoute('/EstateForm/$id?')({
+export const Route = createLazyRoute('/EstateForm/$id')({
     component: EstateForm
 })
 
@@ -26,61 +31,99 @@ export default function EstateForm() {
     const estateOptions = enumToOptions(EstateType)
     const countryOptions = enumToOptions(Country)
 
-    const City = z.object({
-        id: z.string().optional(),
-        name: z.string(),
-        country: z.nativeEnum(EstateType),
+    const matchRoute = useMatchRoute();
+    const id  = !!matchRoute({ to: '/EstateForm/$id' }) ? useParams({ from: '/EstateForm/$id' }).id : ""
+    const { data: estate } = useQuery({
+        queryKey: ['estateDetails', id],
+        enabled: id != "",
+        queryFn:() => getEstateDetails(id)
+    })
+    const { mutate } = useMutation({
+        mutationFn: saveEstate
+    })
+
+    const ImageShow = z.object({
+        id: z.string(),
+        content: z.string(),
     });
 
-    type City = z.infer<typeof City>;
+    type ImageShow = z.infer<typeof ImageShow>;
+
+    const AdditionalEstateInfo = z.object({
+        id: z.string().optional(),
+        name: z.string()
+    })
+
+    type AdditionalEstateInfo = z.infer<typeof AdditionalEstateInfo>;
 
     const validationSchema = z.object({
+        id: z.string(),
         title:  z.string().nonempty(t('error.Required')),
         price: z.coerce.number().gt(0, t('error.GT0')),
         purchaseType: z.nativeEnum(PurchaseType, { message: t('error.Select')}),
         estateType: z.nativeEnum(EstateType, { message: t('error.Select')}),
         area: z.coerce.number().nonnegative(t('error.NonNegative')),
         country: z.nativeEnum(Country, { message: t('error.Select')}),
-        city: City,
+        city: z.string().nonempty(t('error.Required')),
+        cityId: z.string(),
         municipality: z.string().nonempty(t('error.Required')),
-        yearConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
+        yearOfConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
         floor: z.string().nonempty(t('error.Required')),
         rooms: z.coerce.number().nonnegative(t('error.NonNegative')),
         description: z.string(),
-        additionalInfo: z.array(z.string()),
-        images: z.array(z.instanceof(File))
+        additionalEstateInfo: z.array(AdditionalEstateInfo),
+        images: z.array(ImageShow),
+        addedImages: z.array(z.instanceof(File))
     }).superRefine((vals, ctx) => {
-        if(vals.images.find(x => !x.type.startsWith("image/"))){
+        if(vals.addedImages.find(x => !x.type.startsWith("image/"))){
             ctx.addIssue({
                 code:     z.ZodIssueCode.custom,
                 message:  t('error.Images'),
-                path:     ['images'],
+                path:     ['addedImages'],
             })
         }
     })
 
     const form = useAppForm({
         defaultValues: {
-            title: "",
-            price: 0,
-            purchaseType: 0,
-            estateType: 0,
-            area: 0,
-            country: 0,
-            city: {} as City,
-            municipality: "",
-            yearConstruction: 0,
-            floor: "0",
-            rooms: 0,
-            description: "",
-            additionalInfo: [] as string[],
-            images: [] as File[]
+            id: estate?.id ?? "",
+            title: estate?.title ?? "",
+            price: estate?.price ?? 0,
+            purchaseType: estate?.purchaseType ?? 0,
+            estateType: estate?.estateType ?? 0,
+            area: estate?.area ?? 0,
+            country: estate?.country ?? 0,
+            city: estate?.city ?? "",
+            cityId: estate?.cityId ?? "",
+            municipality: estate?.municipality ?? "",
+            yearOfConstruction: estate?.yearOfConstruction ?? 0,
+            floor: estate?.floor ?? "0",
+            rooms: estate?.rooms ?? 0,
+            description: estate?.description ?? "",
+            additionalEstateInfo: estate?.additionalEstateInfo ?? [] as AdditionalEstateInfo[],
+            images:  estate?.images ?? [] as ImageShow[],
+            addedImages: [] as File[]
         },
         validators: {
             onSubmit: validationSchema
         },
-        onSubmit: ({value}) => {
+        onSubmit: async ({value}) => {
             console.log(value)
+            const images: Image[] = await Promise.all(
+                value.addedImages.map((file) => fileToImage(file))
+            );
+            const c = addCityOpen ? { id: undefined, name: value.city }: cities?.find(x => x.id == value.city)
+            const city = {
+                id: c?.id,
+                name: c?.name ?? "",
+                country: value.country
+            }
+            const payload = {
+                ...form.state.values,
+                images,
+                city
+            };
+            mutate(payload)
         }
     })
 
@@ -90,9 +133,11 @@ export default function EstateForm() {
         form.handleSubmit()
     }
 
-    const getCities = (countyId: any) => {
-        return itemDataCities
-    }
+    const { data: cities } = useQuery({
+        queryKey: ["cities", form.state.values.country],
+        enabled: form.state.values.country != Country.None,
+        queryFn:() =>  getCities(form.state.values.country) 
+    })
 
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
@@ -118,7 +163,7 @@ export default function EstateForm() {
                         <form.AppField name="area" children={(field) => <field.Text fullWidth={true} type='number'/>} />
                     </Grid>
                     <Grid size={2}>
-                        <form.AppField name="yearConstruction" children={(field) => <field.Text fullWidth={true} type='number'/>} />
+                        <form.AppField name="yearOfConstruction" children={(field) => <field.Text fullWidth={true} type='number'/>} />
                     </Grid>
                     <Grid size={2}>
                         <form.AppField name="floor" children={(field) => <field.Text fullWidth={true} placeholder='eg., 0, 2-3'/>} />
@@ -150,7 +195,8 @@ export default function EstateForm() {
                     <form.Subscribe selector={(state) => state.values.country} children=
                         {(country) => {
                             const isDisabled = country === 0
-                            const cityOptions = isDisabled ? [] : getCities(country)
+                            const cityOptions = isDisabled || cities == undefined ? [] : 
+                            cities.map(item =>{ return ( { label: item.name, value: item.id } ) })
                             
                             return (
                                 <Grid size={3}>
@@ -180,13 +226,13 @@ export default function EstateForm() {
                 <Divider sx={{mt: '1%'}}/>
                 <Typography sx={{mt: '1%', fontWeight: "bold"}}>{t('RealEstate.AdditionalInfo')}</Typography>
                 <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }} sx={{justifyContent: 'flex-start', alignItems: 'center'}}>
-                    <form.Field name="additionalInfo" mode="array">
+                    <form.Field name="additionalEstateInfo" mode="array">
                     {(field) => {
                         return (
                             <>
                                 {field.state.value.map((_, i) => {
                                 return (
-                                    <form.AppField key={i} name={`additionalInfo[${i}]`} children={(field) => {
+                                    <form.AppField key={i} name={`additionalEstateInfo[${i}]`} children={(field) => {
                                             return (
                                                 <Grid size={3}>
                                                     <field.Text fullWidth={true} label={t('form.additionalInfo')}/>
@@ -198,7 +244,7 @@ export default function EstateForm() {
                                 )
                                 })}
                                 <Grid size={3}>
-                                    <Button onClick={() => field.pushValue("")}>
+                                    <Button onClick={() => field.pushValue({id: undefined, name: ""})}>
                                         {t('RealEstate.Add')}
                                     </Button>
                                     <Button color="error" onClick={() => field.removeValue(field.getMeta.length-1)}>
@@ -215,8 +261,8 @@ export default function EstateForm() {
                 <Typography sx={{mt: '1%', fontWeight: "bold"}}>{t('RealEstate.ImagesInfo')}</Typography>
                 <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }} sx={{justifyContent: 'space-between'}}>
                     <Grid size={12}>
-                        <form.AppField name="images" children={(field) => <field.ImageField />} />
-                        <form.Subscribe selector={(state) => state.values.images} children=
+                        <form.AppField name="addedImages" children={(field) => <field.ImageField />} />
+                        <form.Subscribe selector={(state) => state.values.addedImages} children=
                             {(images) => {
                                 return (
                                     <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
@@ -247,10 +293,3 @@ export default function EstateForm() {
         </Container>
     )
 }
-
-const itemDataCities/*: Item[]*/ = [
-    {
-        value: "id",
-        label: "Skopje"
-    },
-]

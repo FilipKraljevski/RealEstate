@@ -1,19 +1,23 @@
-import { createLazyRoute } from "@tanstack/react-router";
+import { createLazyRoute, useMatchRoute, useParams } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import z from "zod";
 import { useAppForm } from "../../common/form";
-import { Container, Typography, Divider, Box, Button, Avatar, IconButton, Grid, Stack } from "@mui/material";
+import { Container, Typography, Divider, Box, Button, Avatar, IconButton, Stack } from "@mui/material";
 import AlertError from "../../common/form/components/AlertError";
 import { Country } from "../../common/Domain/Country";
 import { enumToOptions } from "../../common/Logic/EnumHelper";
 import { PhotoCamera } from "@mui/icons-material";
 import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { changePassword, getAgencyDetails, saveAgency } from "../../common/Service/AgencyService";
+import { convertToObjectUrl, fileToImage } from "../../common/Logic/ImageHelper";
+import type { Image } from "../../common/Service/DTO/RequestBody";
 
 export const Route1 = createLazyRoute('/AgencyForm')({
     component: AgencyForm,
 })
 
-export const Route = createLazyRoute('/AgencyForm/$id?')({
+export const Route = createLazyRoute('/AgencyForm/$id')({
     component: AgencyForm,
 })
 
@@ -24,29 +28,73 @@ export default function AgencyForm() {
     
     const countryOptions = enumToOptions(Country)
 
+    const matchRoute = useMatchRoute();
+    const id  = !!matchRoute({ to: '/AgencyForm/$id' }) ? useParams({ from: '/AgencyForm/$id' }).id : ""
+    const { data: agency } = useQuery({
+        queryKey: ['agency', id],
+        enabled: id != "",
+        queryFn: () => getAgencyDetails(id),
+    })
+    const { mutate: mutateAgency } = useMutation({
+        mutationFn: saveAgency
+    })
+    const { mutate: mutatePassword } = useMutation({
+        mutationFn: changePassword
+    })
+
+    const Telephone = z.object({
+        id: z.string().optional(),
+        phoneNumber: z.string(),
+    })
+    type Telephone = z.infer<typeof Telephone>;
+
     const validationSchema = z.object({
+        id: z.string(),
         name: z.string().nonempty(t('error.Required')),
         description: z.string().nonempty(t('error.Required')),
         country: z.nativeEnum(Country, { message: t('error.Select')}),
         email: z.string().email(t('error.Email')),
-        telephones: z.array(z.string()).min(1, t('error.Required')),
-        picture: z.array(z.instanceof(File)).max(1)
+        telephones: z.array(Telephone).min(1, t('error.Required')),
+        profilePicture: z.array(z.instanceof(File)).max(1),
+        profilePictureId: z.string()
     })
 
     const form = useAppForm({
-        defaultValues: {
+        defaultValues: agency ?? {
+            id: "",
             name: "",
             description: "",
             country: 0,
             email: "",
-            telephones: [] as string[],
-            picture: [] as File[]
+            telephones: [] as Telephone[],
+            profilePicture: [] as File[],
+            profilePictureId: ""
         },
         validators: {
             onSubmit: validationSchema
         },
-        onSubmit: ({value}) => {
+        onSubmit: async ({value}) => {
             console.log(value)
+            if(value.profilePicture instanceof File){
+                const imageContent: Image = await fileToImage(value.profilePicture)
+                const profilePicture = {
+                    content: imageContent.content
+                }
+                const payload = {
+                    ...value,
+                    profilePicture
+                };
+                mutateAgency(payload)
+            } else {
+                const profilePicture = {
+                    id: value.profilePictureId,
+                }
+                const payload = {
+                    ...value,
+                    profilePicture
+                };
+                mutateAgency(payload)
+            }
         }
     })
 
@@ -57,6 +105,7 @@ export default function AgencyForm() {
     }
 
     const passwordValidationSchema = z.object({
+        agencyId: z.string(),
         oldPassword: z.string().nonempty(t('error.Required')),
         newPassword: z.string().nonempty(t('error.Required')),
         confirmPassword: z.string().nonempty(t('error.Required')),
@@ -72,6 +121,7 @@ export default function AgencyForm() {
 
     const passwordForm = useAppForm({
         defaultValues: {
+            agencyId: id,
             oldPassword: "",
             newPassword: "",
             confirmPassword: "",
@@ -81,6 +131,7 @@ export default function AgencyForm() {
         },
         onSubmit: ({value}) => {
             console.log(value)
+            mutatePassword(value)
         }
     })
 
@@ -98,17 +149,17 @@ export default function AgencyForm() {
                 <Box flex={1}>
                     <Box component="form" noValidate autoComplete="off" onSubmit={handleOnSubmit} width="100%">
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent:'space-between', mt: 2 }}>
-                            <form.Subscribe selector={(state) => state.values.picture} children=
+                            <form.Subscribe selector={(state) => state.values.profilePicture} children=
                                     {(picture) => {
                                         return (
                                             <Avatar
-                                                src={picture[0] ? URL.createObjectURL(picture[0]) : undefined}
+                                                src={picture[0] ? convertToObjectUrl(picture[0]) : undefined}
                                                 sx={{ width: 100, height: 100 }}
                                             />
                                         )
                                     }
                                 }/>
-                            <form.AppField name="picture" children={(field) => {
+                            <form.AppField name="profilePicture" children={(field) => {
                                 return (
                                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                                         <IconButton component="label" sx={{ ml: 2 }}>
@@ -129,7 +180,7 @@ export default function AgencyForm() {
                                         <>
                                             {field.state.value.map((_, i) => {
                                             return (
-                                                <form.AppField key={i} name={`telephones[${i}]`} children={(field) => {
+                                                <form.AppField key={i} name={`telephones[${i}].phoneNumber`} children={(field) => {
                                                         return (
                                                             <Box sx={{display: 'inline-block', mr: 2}}>
                                                                 <field.Text  label={t('form.telephone')}/>
@@ -141,7 +192,7 @@ export default function AgencyForm() {
                                             )
                                             })}
                                             <Box>
-                                                <Button onClick={() => field.pushValue("")}>
+                                                <Button onClick={() => field.pushValue({id: undefined, phoneNumber: ""})}>
                                                     {t('Agencies.Add')}
                                                 </Button>
                                                 <Button color="error" onClick={() => field.removeValue(field.getMeta.length-1)}>

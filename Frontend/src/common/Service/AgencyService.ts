@@ -1,6 +1,7 @@
 import axios from "axios";
-import { url, type Response } from "./ServiceConfig";
+import { url, type BooleanResponse, type Response } from "./ServiceConfig";
 import type { Agency, AgencyDetails, AgencyName } from "./DTO/ResponseBody";
+import type { ChangePassword, SaveAgency } from "./DTO/RequestBody";
 
 const endpoint = `${url}/Agency`
 
@@ -33,6 +34,20 @@ export const getAgencies = async () => {
 export const getAgencyDetails = async (id: string) => {
     const data =  await axios
         .get<ResponseAgencyDetails>(`${endpoint}/Details/${id}`)
+        .then(x => x.data);
+    return data.data
+}
+
+export const saveAgency = async (body: SaveAgency) => {
+    const data =  await axios
+        .post<BooleanResponse>(`${endpoint}/SaveAgency`, body)
+        .then(x => x.data);
+    return data.data
+}
+
+export const changePassword = async (body: ChangePassword) => {
+    const data =  await axios
+        .post<BooleanResponse>(`${endpoint}/ChangePassword`, body)
         .then(x => x.data);
     return data.data
 }
