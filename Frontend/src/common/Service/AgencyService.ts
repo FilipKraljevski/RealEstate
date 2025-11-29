@@ -40,7 +40,7 @@ export const getAgencyDetails = async (id: string) => {
 
 export const saveAgency = async (body: SaveAgency) => {
     const data =  await axios
-        .post<BooleanResponse>(`${endpoint}/SaveAgency`, body)
+        .post<BooleanResponse>(`${endpoint}/Save`, body)
         .then(x => x.data);
     return data.data
 }

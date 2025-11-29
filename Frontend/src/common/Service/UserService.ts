@@ -2,7 +2,7 @@ import axios from "axios";
 import type { Contact, LookingForProperty, YourOffer } from "./DTO/RequestBody";
 import { url, type BooleanResponse } from "./ServiceConfig";
 
-const endpoint = `${url}/City`
+const endpoint = `${url}/User`
 
 export const sendLookingForProperty = async (body: LookingForProperty) => {
     const data =  await axios

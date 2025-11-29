@@ -32,7 +32,6 @@ namespace Test.ServiceTests
                     Email = "Email@mail.com",
                     Subject = "Subject",
                     Body = "Body",
-                    Code = "0"
                 }
             };
 

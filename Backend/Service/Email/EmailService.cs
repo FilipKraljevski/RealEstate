@@ -33,6 +33,13 @@ namespace Service.Email
             Send(message);
         }
 
+        public void SendEmailToUser(string toEmail, string subject, string body)
+        {
+            var message = BuildMessage(toEmail, toEmail, subject, body);
+
+            Send(message);
+        }
+
         public void SendEmailToAgencies(List<Agency> toAgencies, string subject, string body, List<YourOfferImagesRequest>? attachments)
         {
             var message = BuildMessageForAgencies(toAgencies, subject, body, attachments);

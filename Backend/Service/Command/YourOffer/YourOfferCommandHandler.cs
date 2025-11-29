@@ -25,6 +25,7 @@ namespace Service.Command.YourOffer
             if (agencies != null)
             {
                 string header = "User: " + request.YourOfferRequest.Name + ", " + request.YourOfferRequest.Email;
+                string telephone = "Telephone: " + request.YourOfferRequest.Telephone;
                 string message = "Message: " + request.YourOfferRequest.Message;
                 string info = "Purchase Type: " + request.YourOfferRequest.PurchaseType +
                              "\n Estate Type: " + request.YourOfferRequest.EstateType +
@@ -43,7 +44,7 @@ namespace Service.Command.YourOffer
                              "\n Elevator: " + request.YourOfferRequest.Elevator +
                              "\n Basement: " + request.YourOfferRequest.Basement;
 
-                string body = header + "\n" + message + "\n" + info;
+                string body = header + "\n" + telephone + message + "\n" + info;
 
                 emailService.SendEmailToAgencies(agencies.ToList(), "Offer From User " + request.YourOfferRequest.Name, body, request.YourOfferRequest.Images);
             }

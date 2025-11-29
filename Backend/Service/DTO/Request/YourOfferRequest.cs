@@ -2,10 +2,13 @@
 
 namespace Service.DTO.Request
 {
-    public class YourOfferRequest : TwoFactorAuth
+    public class YourOfferRequest
     {
+        public Guid CodeId { get; set; }
+        public required string Code { get; set; }
         public required string Name { get; set; }
         public required string Email { get; set; }
+        public required string Telephone { get; set; }
         public required string Message { get; set; }
         public PurchaseType PurchaseType { get; set; }
         public EstateType EstateType { get; set; }

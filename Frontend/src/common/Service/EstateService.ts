@@ -29,7 +29,7 @@ export const getEstateDetails = async (id: string) => {
 
 export const saveEstate = async (body: SaveEstate) => {
     const data =  await axios
-        .post<BooleanResponse>(`${endpoint}/SaveEstate}`, body)
+        .post<BooleanResponse>(`${endpoint}/Save}`, body)
         .then(x => x.data);
     return data.data
 }

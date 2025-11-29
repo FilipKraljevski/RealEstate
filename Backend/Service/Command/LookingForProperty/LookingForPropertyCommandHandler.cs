@@ -25,6 +25,7 @@ namespace Service.Command.LookingForProperty
             if(agencies != null)
             {
                 string header = "User: " + request.LookingForPropertyRequest.Name + ", " + request.LookingForPropertyRequest.Email;
+                string telephone = "Telephone: " + request.LookingForPropertyRequest.Telephone;
                 string message = "Message: " + request.LookingForPropertyRequest.Message;
                 string info = "Purchase Type: " + request.LookingForPropertyRequest.PurchaseType +
                              "\n Estate Type: " + request.LookingForPropertyRequest.EstateType +
@@ -44,7 +45,7 @@ namespace Service.Command.LookingForProperty
                              "\n Elevator: " + request.LookingForPropertyRequest.Elevator +
                              "\n Basement: " + request.LookingForPropertyRequest.Basement;
 
-                string body = header + "\n" + message + "\n" + info;
+                string body = header + "\n" + telephone + message + "\n" + info;
 
                 emailService.SendEmailToAgencies(agencies.ToList(), "User " + request.LookingForPropertyRequest.Name + " Looking for Property", body, null);
             }

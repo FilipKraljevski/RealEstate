@@ -1,7 +1,11 @@
-﻿namespace Service.DTO
+﻿using MediatR;
+
+namespace Service.DTO
 {
-    public class TwoFactorAuth
+    public interface TwoFactorAuth<TResponse> : IRequest<TResponse>
     {
-        public required string Code { get; set; }
+        public Guid CodeId { get; set; }
+        public string Code { get; set; }
+        public string Email { get; set; }
     }
 }

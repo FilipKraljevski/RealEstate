@@ -32,9 +32,11 @@ namespace Test.ServiceTests
             { 
                 LookingForPropertyRequest = new LookingForPropertyRequest() 
                 { 
-                    City = "", Code = "", Email = "", Message = "", Municipality = "", Name = "",
+                    City = "", Code = "", Email = "", Message = "", Municipality = "", Name = "", Telephone = "1234567",
                     Country = Country.Macedonia
-                }
+                },
+                Code = "Code",
+                Email = "Email"
             };
 
             var agency = new AgencyBuilder()

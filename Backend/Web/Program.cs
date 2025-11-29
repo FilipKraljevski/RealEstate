@@ -1,5 +1,6 @@
 using AutoMapper;
 using Domain.Model;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -10,6 +11,7 @@ using Service;
 using Service.Email;
 using Service.Image;
 using Service.Mapper;
+using Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,7 @@ builder.Services.AddMediatR(c =>
 {
     c.RegisterServicesFromAssembly(typeof(Result<>).Assembly);
 });
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 builder.Services.AddCors(options =>
 {
@@ -64,6 +67,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

@@ -46,8 +46,11 @@ namespace Test.ServiceTests
                             Name = "Name", 
                             Content = new byte[1] 
                         } 
-                    }
-                }
+                    },
+                    Telephone = "12345678"
+                },
+                Code = "Code",
+                Email = "Email"
             };
 
             var agency = new AgencyBuilder()

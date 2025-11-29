@@ -1,5 +1,4 @@
-﻿using Domain;
-using Domain.Model;
+﻿using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 
