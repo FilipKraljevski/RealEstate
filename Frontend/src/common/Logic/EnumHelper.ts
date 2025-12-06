@@ -16,3 +16,10 @@ export function getEnumTypeKey<E extends string | number>(value: string | number
     const key = Object.entries(type).find(x => x[1] == value)
     return key ? key[0] : ""
 }
+
+export const hasFlag = (numbers: number, flagValue: number) => {
+    if(isNaN(Number(flagValue)) || Number(flagValue) === 0){
+        return false
+    }
+    return (numbers & flagValue) === flagValue
+}

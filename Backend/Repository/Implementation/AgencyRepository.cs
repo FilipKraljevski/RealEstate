@@ -14,5 +14,10 @@ namespace Repository.Implementation
         {
             return entities.Where(e => e.Country == country);
         }
+
+        public Agency GetByEmail(string email)
+        {
+            return entities.Where(e => e.Email == email).SingleOrDefault();
+        }
     }
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
-import type { Contact, LookingForProperty, YourOffer } from "./DTO/RequestBody";
-import { url, type BooleanResponse } from "./ServiceConfig";
+import type { Contact, Login, LookingForProperty, YourOffer } from "./DTO/RequestBody";
+import { url, type BooleanResponse, type StringResponse } from "./ServiceConfig";
 
 const endpoint = `${url}/User`
 
@@ -12,12 +12,18 @@ export const sendLookingForProperty = async (body: LookingForProperty) => {
 
 export const sendYourOffer = async (body: YourOffer) => {
     const data =  await axios
-        .post<BooleanResponse>(`${endpoint}/YourOffer`, body)
+        .post<BooleanResponse | StringResponse>(`${endpoint}/YourOffer`, body)
     return data.data
 }
 
 export const sendContact = async (body: Contact) => {
     const data =  await axios
-        .post<BooleanResponse>(`${endpoint}/Contact`, body)
+        .post<BooleanResponse | StringResponse>(`${endpoint}/Contact`, body)
+    return data.data
+}
+
+export const login = async (body: Login) => {
+    const data = await axios
+        .post<StringResponse>(`${endpoint}/Login`, body, { headers: {} })
     return data.data
 }

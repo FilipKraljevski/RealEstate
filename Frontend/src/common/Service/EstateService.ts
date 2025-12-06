@@ -33,3 +33,10 @@ export const saveEstate = async (body: SaveEstate) => {
         .then(x => x.data);
     return data.data
 }
+
+export const deleteEstate = async (id: string) => {
+    const data = await axios
+        .post<BooleanResponse>(`${endpoint}/Delete/${id}`)
+        .then(x => x.data)
+    return data.data
+}

@@ -1,5 +1,6 @@
 ﻿using Domain.UserClaims;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.Command.DeleteEstate;
@@ -38,6 +39,7 @@ namespace Web.Controllers
         }
 
         [HttpPost("Save")]
+        [Authorize]
         public async Task<ActionResult<Result<bool>>> SaveEstate(SaveEstateRequest saveEstateRequest)
         {
             var userClaims = new UserClaims(); //This is for test, we will get this from the logged in user
@@ -46,6 +48,7 @@ namespace Web.Controllers
         }
 
         [HttpPost("Delete/{id}")]
+        [Authorize]
         public async Task<ActionResult<Result<Guid>>> DeleteEstate(Guid id)
         {
             var result = await mediator.Send(new DeleteEstateCommand { EstateId = id});

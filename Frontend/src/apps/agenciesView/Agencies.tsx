@@ -6,6 +6,7 @@ import { Country } from '../../common/Domain/Country'
 import { Add } from '@mui/icons-material'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { agenciesQueryOptions } from '../../common/Routing/RouteQueries'
+import { useAuth } from '../../common/Context/AuthProvider'
 
 export const Route = createLazyRoute('/Agencies')({
     component: Agencies,
@@ -14,6 +15,7 @@ export const Route = createLazyRoute('/Agencies')({
 export default function Agencies() {
 
     const { t } = useTranslation()
+    const { user } = useAuth();
 
     const agenciesQuery = useSuspenseQuery(agenciesQueryOptions())
     const agencies = agenciesQuery.data
@@ -22,10 +24,10 @@ export default function Agencies() {
         <Container sx={{textAlign: 'left', mt: '1%'}}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography variant='h4' sx={{mb: '1%'}}>{t('Agencies.Agencies')}</Typography>
-                <IconButton component={Link} to={`/AgencyForm`}>
+                {user && user.isAdmin && <IconButton component={Link} to={`/AgencyForm`}>
                     <Add/>
                     {t('Agencies.Add')}
-                </IconButton>
+                </IconButton> }
             </Box>
             <Divider />
 

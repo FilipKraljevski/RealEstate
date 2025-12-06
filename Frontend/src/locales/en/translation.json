@@ -21,6 +21,10 @@
         "Politics": "Privacy politics",
         "Privacy": "Privacy"
     },
+    "code": {
+        "Enter": "Enter Verification Code",
+        "Verify": "Verify"
+    },
     "form": {
         "name": "name",
         "email": "email",
@@ -189,6 +193,9 @@
         "Telephone": "Telephone number: ",
         "Email": "Email contact form:",
         "Submit": "Send"
+    },
+    "Login": {
+        "Login": "Login"
     },
     "Country": {
         "Macedonia": "Macedonia"

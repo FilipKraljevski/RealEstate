@@ -5,6 +5,8 @@ using Service.Command.Contact;
 using Service.Command.LookingForProperty;
 using Service.Command.YourOffer;
 using Service.DTO.Request;
+using Web.Authentication;
+using Web.Authorization;
 using Web.Common;
 
 namespace Web.Controllers
@@ -14,10 +16,36 @@ namespace Web.Controllers
     public class UserController : ControllerBase
     {
         private readonly IMediator mediator;
+        private readonly ILoginService loginService;
+        private readonly ICodeService codeService;
 
-        public UserController(IMediator mediator)
+        public UserController(IMediator mediator, ILoginService loginService, ICodeService codeService)
         {
             this.mediator = mediator;
+            this.loginService = loginService;
+            this.codeService = codeService;
+        }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<Result<bool>>> Login(LoginRequest request)
+        {
+            if(!loginService.AreCredentialsValid(request.Email, request.Password))
+            {
+                return Unauthorized();
+            }
+            if (request.CodeId == Guid.Empty)
+            {
+                var code = codeService.GenerateCode(request.Email);
+                var result = new OkResult<Guid>(code.Id) { StatusCode = 201 };
+                return ActionResultMapper.MapResult(result);
+            }
+            else if (codeService.UpdateCode(request.CodeId, request.Email, request.Code)) 
+            {
+                var token = loginService.GenerateToken(request.Email);
+                var result = new OkResult<string>(token);
+                return ActionResultMapper.MapResult(result);
+            }
+            return Unauthorized();
         }
 
         [HttpPost("Contact")]

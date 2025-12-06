@@ -20,14 +20,15 @@ export const Route = createLazyRoute('/LookingProperty')({
 export default function LookingProperty() {
 
     const { t } = useTranslation()
+    const [codeId, setCodeId] = useState("")
+    const [showDialog, setShowDialog] = useState(false);
 
     const purchaseOptions = enumToOptions(PurchaseType)
     const estateOptions = enumToOptions(EstateType)
     const countryOptions = enumToOptions(Country)
     const YesNoOptions = [{value: true, label: 'Yes'}, {value: false, label: 'No'}]
-    const [showDialog, setShowDialog] = useState(false);
 
-    const { mutate } = useMutation({
+    const { mutate, isSuccess, data } = useMutation({
         mutationFn: sendLookingForProperty
     })
 
@@ -106,6 +107,13 @@ export default function LookingProperty() {
         },
         onSubmit: ({value}) => {
             console.log(value)
+            const payload = {
+                ...value,
+                codeId: "",
+                code: ""
+            }
+            mutate(payload)
+            setCodeId(data?.data.toString() ?? "")
             setShowDialog(true)
         }
     })
@@ -116,8 +124,16 @@ export default function LookingProperty() {
         form.handleSubmit()
     }
 
-    const handleVerified = () => {
-        mutate(form.state.values)
+    const handleVerified = (closePopup: any, code: string) => {
+        const payload = {
+            ...form.state.values,
+            codeId: codeId,
+            code: code
+        }
+        mutate(payload)
+        if(isSuccess){
+            closePopup()
+        }
     };
 
     return (

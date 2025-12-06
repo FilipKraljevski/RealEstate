@@ -3,7 +3,7 @@ using Repository.Interface;
 using Service;
 using Service.DTO;
 using Service.Email;
-using System.Security.Cryptography;
+using Web.Authorization;
 
 namespace Web.Behaviors
 {
@@ -11,57 +11,43 @@ namespace Web.Behaviors
     {
         private readonly ICodeRepository _codeRepository;
         private readonly IEmailService _emailSender;
+        private readonly ICodeService codeService;
 
-        public TwoFactorBehavior(ICodeRepository codeRepository, IEmailService emailSender)
+        public TwoFactorBehavior(ICodeRepository codeRepository, IEmailService emailSender, ICodeService codeService)
         {
             _codeRepository = codeRepository;
             _emailSender = emailSender;
+            this.codeService = codeService;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-                var data = _codeRepository.GetWithIdAndEamil(request.CodeId, request.Email);
-                var expectedCode = data.Code;
+            if (request.CodeId == Guid.Empty)
+            {
+                var code = codeService.GenerateCode(request.Email);
 
-                if (request.Code == expectedCode)
+                var result = new Result<object>(201)
                 {
-                    var updated = data;
-                    updated.IsUsed = true;
-                    _codeRepository.Update(updated);
+                    Message = "Two‑factor authentication needed",
+                    Data = code.Id
+                };
 
-                    return await next();
-                }
-                else if (request.GetHashCode != null)
+                return (TResponse)(object)result;
+            }
+            else if (codeService.UpdateCode(request.CodeId, request.Email, request.Code))
+            {
+                return await next();
+            }
+            else
+            {
+                var result = new Result<TResponse>(StatusCodes.Status403Forbidden)
                 {
-                    var result = new Result<TResponse>(StatusCodes.Status403Forbidden)
-                    {
-                        Message = "Two‑factor authentication failed",
-                        Data = default
-                    };
-
-                    return (TResponse)(object)result;
-                }
-                else
-                {
-                    string body = "The verification code: " + GenerateSecureNumericCode();
-                    _emailSender.SendEmailToUser(request.Email, "Verification Code", body);
-
-                    var result = new Result<object>(200)
-                    {
-                        Message = "Two‑factor authentication needed",
-                        Data = data.Id
-                    };
-
-                    return (TResponse)(object)result;
-                }
-        }
-
-        public static string GenerateSecureNumericCode(int length = 6)
-        {
-            var bytes = new byte[length];
-            RandomNumberGenerator.Fill(bytes);
-            var code = string.Concat(bytes.Select(b => (b % 10).ToString()));
-            return code;
+                    Message = "Two‑factor authentication failed",
+                    Data = default
+                };
+                
+                return (TResponse)(object)result;
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import { getEnumTypeKey } from "../../common/Logic/EnumHelper";
 import { Edit } from "@mui/icons-material";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { agencyDetailsQueryOptions } from "../../common/Routing/RouteQueries";
+import { useAuth } from "../../common/Context/AuthProvider";
 
 export const Route = createLazyRoute("/AgencyDetails/$id")({
     component: AgencyDetails
@@ -14,6 +15,7 @@ export const Route = createLazyRoute("/AgencyDetails/$id")({
 export default function AgencyDetails() {
 
     const { t } = useTranslation()
+    const { user } = useAuth();
 
     const { id } = useParams({ from: "/AgencyDetails/$id" })
     const agencyDetailsQuery = useSuspenseQuery(agencyDetailsQueryOptions(id))
@@ -23,9 +25,9 @@ export default function AgencyDetails() {
         <Container sx={{textAlign: 'left', mt: '1%'}}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography variant='h4' sx={{mb: '1%'}}>{agency.name}</Typography>
-                <IconButton component={Link} to={`/AgencyForm/${agency.id}`}>
+                {user && user.isAdmin && <IconButton component={Link} to={`/AgencyForm/${agency.id}`}>
                     <Edit/>
-                </IconButton>
+                </IconButton> }
             </Box>
             <Divider />
 

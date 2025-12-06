@@ -1,17 +1,18 @@
 import { Box, Button, Card, CardActionArea, CardContent, CardHeader, CardMedia, Container, Divider, FormControl, Grid, IconButton, InputAdornment, InputLabel, MenuItem, Select, TablePagination, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { createLazyRoute, Link } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { EstateType } from '../../common/Domain/EstateType'
 import { PurchaseType } from '../../common/Domain/PurchaseType'
 import { Country } from '../../common/Domain/Country'
 import { enumToOptions, getEnumTypeKey } from '../../common/Logic/EnumHelper'
 import { Delete } from '@mui/icons-material'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { getCities } from '../../common/Service/CityService'
 import { getAgenciesName } from '../../common/Service/AgencyService'
 import type { AgencyName, City } from '../../common/Service/DTO/ResponseBody'
-import { getEstates } from '../../common/Service/EstateService'
+import { deleteEstate, getEstates } from '../../common/Service/EstateService'
+import { useAuth } from '../../common/Context/AuthProvider'
 
 export const Route = createLazyRoute('/RealEstate')({
     component: RealEstate,
@@ -37,6 +38,7 @@ interface Item {
 export default function RealEstate() {
 
     const { t } = useTranslation()
+    const { user } = useAuth();
     const theme = useTheme()
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -57,6 +59,9 @@ export default function RealEstate() {
         queryKey: ['estates', filter, page, rowsPerPage],
         queryFn:() => getEstates(filter, page, rowsPerPage)
     })
+    const { mutate } = useMutation({
+        mutationFn: deleteEstate
+    })
 
     const purchaseOptions = enumToOptions(PurchaseType)
     const estateOptions = enumToOptions(EstateType)
@@ -65,6 +70,10 @@ export default function RealEstate() {
     useEffect(() => {
         setOpenFilters(isSmallScreen ? false : true)
     }, [isSmallScreen])
+
+    const handleDelete = (id: string) => {
+        mutate(id)
+    }
 
     const handleOnChangeFilters = (name: string, value: any) => {
         setFilters(prev => ({
@@ -189,8 +198,8 @@ export default function RealEstate() {
                     {estates && estates.map(item => (
                         <Card key={item.id} sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
                             <CardHeader title={item.title} sx={{ backgroundColor: 'lightgray'}} 
-                                action={
-                                    <IconButton aria-label="delete" onClick={() => {console.log("Delete")}}>
+                                action={ user && user.isAdmin &&
+                                    <IconButton aria-label="delete" onClick={() => handleDelete(item.id)}>
                                         <Delete />
                                     </IconButton>
                                     }/>

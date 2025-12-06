@@ -3,10 +3,12 @@ import { House, Logout } from "@mui/icons-material";
 import { Tooltip, IconButton, Avatar, Divider, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../common/Context/AuthProvider";
 
 export default function Profile() {
 
     const { t } = useTranslation()
+    const { logout, isAuthenticated } = useAuth();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     
@@ -15,11 +17,11 @@ export default function Profile() {
     };
     
     const handleClose = () => {
-        setAnchorEl(null);
+        logout()
     };
 
     return (
-        <>
+        <> { isAuthenticated && <>
             <Tooltip title="Account">
                 <IconButton sx={{ ml: 2 }} onClick={handleClick} size="small">
                     <Avatar sx={{ width: 32, height: 32 }} src="/GramadaLogoUrl.png"/>
@@ -68,7 +70,7 @@ export default function Profile() {
                 </ListItemIcon>
                 {t('profile.Logout')}
             </MenuItem>
-        </Menu>
+        </Menu> </> }
        </>
     )
 }

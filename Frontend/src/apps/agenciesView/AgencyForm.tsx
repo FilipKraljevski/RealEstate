@@ -12,13 +12,22 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { changePassword, getAgencyDetails, saveAgency } from "../../common/Service/AgencyService";
 import { convertToObjectUrl, fileToImage } from "../../common/Logic/ImageHelper";
 import type { Image } from "../../common/Service/DTO/RequestBody";
+import { Protected } from "../../common/Routing/Routes";
 
 export const Route1 = createLazyRoute('/AgencyForm')({
-    component: AgencyForm,
+    component: () => (
+        <Protected>
+          <AgencyForm />
+        </Protected>
+      ),
 })
 
 export const Route = createLazyRoute('/AgencyForm/$id')({
-    component: AgencyForm,
+    component: () => (
+        <Protected>
+          <AgencyForm />
+        </Protected>
+      ),
 })
 
 export default function AgencyForm() {

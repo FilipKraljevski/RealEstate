@@ -134,3 +134,10 @@ export interface Contact {
     subject: string
     body: string
 }
+
+export interface Login {
+    email: string
+    password: string
+    codeId: string
+    code: string
+}

@@ -14,13 +14,22 @@ import { getCities } from '../../common/Service/CityService'
 import { getEstateDetails, saveEstate } from '../../common/Service/EstateService'
 import type { Image } from '../../common/Service/DTO/RequestBody'
 import { fileToImage } from '../../common/Logic/ImageHelper'
+import { Protected } from '../../common/Routing/Routes'
 
 export const Route1 = createLazyRoute('/EstateForm')({
-    component: EstateForm
+    component: () => (
+        <Protected>
+          <EstateForm />
+        </Protected>
+      )
 })
 
 export const Route = createLazyRoute('/EstateForm/$id')({
-    component: EstateForm
+    component: () => (
+        <Protected>
+          <EstateForm />
+        </Protected>
+      )
 })
 
 export default function EstateForm() {

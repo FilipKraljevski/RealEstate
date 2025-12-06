@@ -1,4 +1,5 @@
-﻿using Domain.Model;
+﻿using Domain;
+using Domain.Model;
 using Repository.Interface;
 
 namespace Repository.Implementation
@@ -12,6 +13,18 @@ namespace Repository.Implementation
         public CodeAuthorization GetWithIdAndEamil(Guid id, string email)
         {
             return entities.Where(x => x.Id == id && x.Email == email).FirstOrDefault();
+        }
+
+        public CodeAuthorization Add(CodeAuthorization entity) 
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity is null");
+            }
+
+            var code = entities.Add(entity).Entity;
+            realEstateDbContext.SaveChanges();
+            return code;
         }
     }
 }

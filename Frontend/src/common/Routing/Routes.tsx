@@ -1,7 +1,9 @@
-import { createRootRouteWithContext, createRoute, Link } from "@tanstack/react-router";
+import { createRootRouteWithContext, createRoute, Link, Navigate } from "@tanstack/react-router";
 import Layout from "../../apps/common/Layout";
 import { QueryClient } from '@tanstack/react-query'
 import { agenciesQueryOptions, agencyDetailsQueryOptions, estateDetailsQueryOptions } from "./RouteQueries";
+import { useAuth } from "../Context/AuthProvider";
+import { hasFlag } from "../Logic/EnumHelper";
 
 const rootRoute = createRootRouteWithContext<{queryClient: QueryClient}>()({
     component: Layout,
@@ -14,6 +16,17 @@ const rootRoute = createRootRouteWithContext<{queryClient: QueryClient}>()({
         )
     }
 })
+
+export function Protected({ children, authorizedRoles }: { children: React.ReactNode, authorizedRoles?: number }) {
+    const { isAuthenticated, user } = useAuth();
+    if (!isAuthenticated) {
+      return <Navigate to="/Login" />;
+    }
+    if(authorizedRoles && !hasFlag(user?.roles ?? 0, authorizedRoles)){
+        return null
+    }
+    return <>{children}</>;
+  }
 
 export const homeRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -45,9 +58,7 @@ export const yourEstatesRoute = createRoute({
 export const estateFormNewRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: 'EstateForm'
-}).lazy(() =>
-    import('../../apps/realEstateView/YourEstateForm').then((d) => d.Route1)
-);
+}).lazy(() => import('../../apps/realEstateView/YourEstateForm').then((d) => d.Route1));
 
 export const estateFormRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -93,6 +104,11 @@ export const contactRoute = createRoute({
     path: 'Contact',
 }).lazy(() => import('../../apps/contactView/Contact').then((d) => d.Route))
 
+export const loginRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: 'Login',
+}).lazy(() => import('../../apps/login/Login').then((d) => d.Route))
+
 export const routeTree = rootRoute.addChildren([
     homeRoute,
     aboutUsRoute,
@@ -108,4 +124,5 @@ export const routeTree = rootRoute.addChildren([
     agencyFormNewRoute,
     agencyFormRoute,
     contactRoute,
+    loginRoute
 ])

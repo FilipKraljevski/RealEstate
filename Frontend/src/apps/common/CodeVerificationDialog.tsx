@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 interface CodeVerificationDialogProps {
     open: boolean;
     onClose: () => void;
-    onVerified: () => void;
+    onVerified: (close: any, code: string) => void;
     maxDuration?: number;
 }
 
@@ -33,13 +33,15 @@ export function CodeVerificationDialog({ open, onClose, onVerified, maxDuration 
     }, [expiresAt, onClose]);
 
     const handleVerify = () => {
-        //backend call
+        onVerified(closePopup(), code);
+        // //onClose();
+        // localStorage.removeItem("codePopupExpiry");
+    };
 
-        //this is on success
-        onVerified();
+    const closePopup = () => {
         onClose();
         localStorage.removeItem("codePopupExpiry");
-    };
+    }
 
     return (
         <Dialog open={open} onClose={onClose}>

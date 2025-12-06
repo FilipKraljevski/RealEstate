@@ -10,6 +10,7 @@ using Service.Command.SaveProfile;
 using Service.DTO.Request;
 using Service.Command.ChangePassword;
 using Domain.UserClaims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
@@ -46,6 +47,7 @@ namespace Web.Controllers
         }
 
         [HttpPost("Save")]
+        [Authorize]
         public async Task<ActionResult<Result<bool>>> SaveAgency(SaveAgencyRequest saveAgencyRequest)
         {
             var result = await mediator.Send(new SaveAgencyCommand { SaveAgencyRequest = saveAgencyRequest });
@@ -53,6 +55,7 @@ namespace Web.Controllers
         }
 
         [HttpPost("ChangePassword")]
+        [Authorize]
         public async Task<ActionResult<Result<bool>>> ChangePassword(ChangePasswordRequest changePasswordRequest)
         {
             var userClaims = new UserClaims(); //This is for test, we will get this from the logged in user

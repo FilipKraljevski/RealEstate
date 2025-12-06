@@ -22,14 +22,15 @@ export const Route = createLazyRoute('/YourOffer')({
 export default function YourOffer() {
     
     const { t } = useTranslation()
+    const [showDialog, setShowDialog] = useState(false);
+    const [codeId, setCodeId] = useState("")
 
     const purchaseOptions = enumToOptions(PurchaseType)
     const estateOptions = enumToOptions(EstateType)
     const countryOptions = enumToOptions(Country)
     const YesNoOptions = [{value: true, label: 'Yes'}, {value: false, label: 'No'}]
-    const [showDialog, setShowDialog] = useState(false);
 
-    const { mutate } = useMutation({
+    const { mutate, isSuccess, data } = useMutation({
         mutationFn: sendYourOffer
     })
 
@@ -110,6 +111,14 @@ export default function YourOffer() {
         },
         onSubmit: ({value}) => {
             console.log(value)
+            const payload = {
+                ...value,
+                images: [],
+                codeId: "",
+                code: ""
+            }
+            mutate(payload)
+            setCodeId(data?.data.toString() ?? "")
             setShowDialog(true)
         }
     })
@@ -120,15 +129,20 @@ export default function YourOffer() {
         form.handleSubmit()
     }
 
-    const handleVerified = async () => {
+    const handleVerified = async (closePopup: any, code: string) => {
         const images: Image[] = await Promise.all(
             form.state.values.images.map((file) => fileToImage(file))
         );
         const payload = {
             ...form.state.values,
             images,
+            codeId: codeId,
+            code: code
         };
         mutate(payload)
+        if(isSuccess){
+            closePopup()
+        }
     };
 
     return (

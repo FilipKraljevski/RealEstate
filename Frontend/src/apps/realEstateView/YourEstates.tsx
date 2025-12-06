@@ -7,12 +7,17 @@ import { Country } from "../../common/Domain/Country";
 import { EstateType } from "../../common/Domain/EstateType";
 import { PurchaseType } from "../../common/Domain/PurchaseType";
 import { getEnumTypeKey } from "../../common/Logic/EnumHelper";
-import { useQuery } from "@tanstack/react-query";
-import { getEstates } from "../../common/Service/EstateService";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteEstate, getEstates } from "../../common/Service/EstateService";
 import type { EstateFilters } from "../../common/Service/DTO/RequestBody";
+import { Protected } from "../../common/Routing/Routes";
 
 export const Route = createLazyRoute('/YourEstates')({
-    component: YourEstates,
+    component: () => (
+        <Protected>
+          <YourEstates />
+        </Protected>
+      ),
 })
 
 export default function YourEstates(){
@@ -26,6 +31,13 @@ export default function YourEstates(){
         queryKey: ['estates', filter, page, rowsPerPage],
         queryFn:() => getEstates(filter, page, rowsPerPage)
     })
+    const { mutate } = useMutation({
+        mutationFn: deleteEstate
+    })
+
+    const handleDelete = (id: string) => {
+        mutate(id)
+    }
 
     const handleOnChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -54,7 +66,7 @@ export default function YourEstates(){
                             <CardHeader title={item.title} sx={{ backgroundColor: 'lightgray'}} 
                                 action={
                                     <>
-                                        <IconButton onClick={() => {console.log("Delete")}}>
+                                        <IconButton onClick={() => handleDelete(item.id)}>
                                             <Delete />
                                         </IconButton>
                                         <IconButton component={Link} to={`/EstateForm/${item.id}`} onClick={() => {console.log("Edit")}}>
