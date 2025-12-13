@@ -4,7 +4,7 @@ namespace Web.Authorization
 {
     public interface ICodeService
     {
-        CodeAuthorization GenerateCode(string email);
-        bool UpdateCode(Guid codeId, string email, string? code);
+        CodeAuthorization GenerateCode(string username);
+        bool UpdateCode(Guid codeId, string username, string? code);
     }
 }

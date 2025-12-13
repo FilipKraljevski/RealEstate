@@ -60,7 +60,9 @@
         "additionalInfo": "additional info",
         "oldPassword": "password",
         "newPassword": "new password",
-        "confirmPassword": "confirm new password"
+        "confirmPassword": "confirm new password",
+        "username": "username",
+        "password": "лозинка"
     },
     "filter": {
         "estateFor": "estate for",

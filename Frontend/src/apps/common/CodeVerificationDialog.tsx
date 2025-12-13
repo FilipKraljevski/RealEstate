@@ -1,5 +1,6 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface CodeVerificationDialogProps {
     open: boolean;
@@ -9,6 +10,8 @@ interface CodeVerificationDialogProps {
 }
 
 export function CodeVerificationDialog({ open, onClose, onVerified, maxDuration = 10000 }: CodeVerificationDialogProps) {
+
+    const { t } = useTranslation();
     const [code, setCode] = useState("");
     const [expiresAt, setExpiresAt] = useState<number | null>(null);
 
@@ -45,12 +48,12 @@ export function CodeVerificationDialog({ open, onClose, onVerified, maxDuration 
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Enter Verification Code</DialogTitle>
+            <DialogTitle>{t('code.Enter')}</DialogTitle>
             <DialogContent>
                 <TextField autoFocus fullWidth margin="dense" label="Code" type="text" value={code} onChange={(e) => setCode(e.target.value)} />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleVerify} variant="contained">Verify</Button>
+                <Button onClick={handleVerify} variant="contained">{t('code.Verify')}</Button>
             </DialogActions>
         </Dialog>
     );

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { url, type BooleanResponse, type Response } from "./ServiceConfig";
+import { url, type BooleanResponse, type Code, type Response } from "./ServiceConfig";
 import type { Estate, EstateDetails } from "./DTO/ResponseBody";
 import type { EstateFilters, SaveEstate } from "./DTO/RequestBody";
 
@@ -11,6 +11,10 @@ interface ResponseEstate extends Response {
 
 interface ResponseEstateDetails extends Response {
     data: EstateDetails
+}
+
+interface SaveEstateWithCode extends Code{
+    body: SaveEstate
 }
 
 export const getEstates = async (filters: EstateFilters, page: number, size: number) => {
@@ -27,16 +31,16 @@ export const getEstateDetails = async (id: string) => {
     return data.data
 }
 
-export const saveEstate = async (body: SaveEstate) => {
+export const saveEstate = async ({ body, code }: SaveEstateWithCode) => {
     const data =  await axios
-        .post<BooleanResponse>(`${endpoint}/Save}`, body)
+        .post<BooleanResponse>(`${endpoint}/Save}`, body, { headers: { Authorization: `Bearer ${code}` } })
         .then(x => x.data);
     return data.data
 }
 
-export const deleteEstate = async (id: string) => {
+export const deleteEstate = async ({ id, code }: any) => {
     const data = await axios
-        .post<BooleanResponse>(`${endpoint}/Delete/${id}`)
+        .post<BooleanResponse>(`${endpoint}/Delete/${id}`, { headers: { Authorization: `Bearer ${code}` } })
         .then(x => x.data)
     return data.data
 }

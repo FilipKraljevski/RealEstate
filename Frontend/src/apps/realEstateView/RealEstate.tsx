@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardActionArea, CardContent, CardHeader, CardMedia, Container, Divider, FormControl, Grid, IconButton, InputAdornment, InputLabel, MenuItem, Select, TablePagination, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { createLazyRoute, Link } from '@tanstack/react-router'
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { EstateType } from '../../common/Domain/EstateType'
 import { PurchaseType } from '../../common/Domain/PurchaseType'
@@ -38,7 +38,7 @@ interface Item {
 export default function RealEstate() {
 
     const { t } = useTranslation()
-    const { user } = useAuth();
+    const { user, token } = useAuth();
     const theme = useTheme()
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -72,7 +72,7 @@ export default function RealEstate() {
     }, [isSmallScreen])
 
     const handleDelete = (id: string) => {
-        mutate(id)
+        mutate({ id, code: token })
     }
 
     const handleOnChangeFilters = (name: string, value: any) => {

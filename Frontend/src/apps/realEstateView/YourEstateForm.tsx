@@ -15,10 +15,12 @@ import { getEstateDetails, saveEstate } from '../../common/Service/EstateService
 import type { Image } from '../../common/Service/DTO/RequestBody'
 import { fileToImage } from '../../common/Logic/ImageHelper'
 import { Protected } from '../../common/Routing/Routes'
+import { RoleType } from '../../common/Domain/RoleType'
+import { useAuth } from '../../common/Context/AuthProvider'
 
 export const Route1 = createLazyRoute('/EstateForm')({
     component: () => (
-        <Protected>
+        <Protected authorizedRoles={RoleType.Agency}>
           <EstateForm />
         </Protected>
       )
@@ -26,7 +28,7 @@ export const Route1 = createLazyRoute('/EstateForm')({
 
 export const Route = createLazyRoute('/EstateForm/$id')({
     component: () => (
-        <Protected>
+        <Protected authorizedRoles={RoleType.Agency}>
           <EstateForm />
         </Protected>
       )
@@ -35,6 +37,7 @@ export const Route = createLazyRoute('/EstateForm/$id')({
 export default function EstateForm() {
     const [addCityOpen, setAddCityOpen] = useState(true)
     const { t } = useTranslation()
+    const { token } = useAuth();
 
     const purchaseOptions = enumToOptions(PurchaseType)
     const estateOptions = enumToOptions(EstateType)
@@ -132,7 +135,7 @@ export default function EstateForm() {
                 images,
                 city
             };
-            mutate(payload)
+            mutate({ body: payload, code: token })
         }
     })
 

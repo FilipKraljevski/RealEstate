@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
@@ -10,9 +11,11 @@ using Repository;
 namespace Repository.Migrations
 {
     [DbContext(typeof(RealEstateDbContext))]
-    partial class RealEstateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251207121310_third_migration")]
+    partial class third_migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -68,30 +71,9 @@ namespace Repository.Migrations
                     b.Property<int>("Roles")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("Username")
-                        .IsUnique();
-
                     b.ToTable("Agencies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c0e272f6-b150-4a11-9633-419d23fec1b5"),
-                            Country = 1,
-                            Description = "Filip's Agency nominated as the best agency",
-                            Email = "testprojectsemail4@gmail.com",
-                            Name = "Filip's Agency",
-                            Password = "",
-                            ProfilePictureId = new Guid("00000000-0000-0000-0000-000000000000"),
-                            Roles = 6,
-                            Username = ""
-                        });
                 });
 
             modelBuilder.Entity("Domain.Model.City", b =>

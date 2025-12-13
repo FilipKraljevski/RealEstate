@@ -10,7 +10,7 @@ namespace Repository.Implementation
         {
         }
 
-        public CodeAuthorization GetWithIdAndEamil(Guid id, string email)
+        public CodeAuthorization GetWithIdAndEmail(Guid id, string email)
         {
             return entities.Where(x => x.Id == id && x.Email == email).FirstOrDefault();
         }

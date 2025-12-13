@@ -60,7 +60,9 @@
         "additionalInfo": "дополнителна информација",
         "oldPassword": "лозинка",
         "newPassword": "нова лозинка",
-        "confirmPassword": "потврди новата лозинка"
+        "confirmPassword": "потврди новата лозинка",
+        "username": "username",
+        "password": "лозинка"
     },
     "filter": {
         "estateFor": "недвижнина за",

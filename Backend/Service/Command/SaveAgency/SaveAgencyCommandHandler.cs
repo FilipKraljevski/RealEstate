@@ -28,6 +28,7 @@ namespace Service.Command.SaveProfile
             if (request.SaveAgencyRequest.Id == Guid.Empty)
             {
                 var agency = mapper.Map<Agency>(request.SaveAgencyRequest);
+                agency.Username = agency.Name.Replace(" ", "") + "_" + DateTime.Now.Date.ToString();
                 agency.Password = passwordHasher.HashPassword(agency, $"{agency.Name}_{DateTime.UtcNow.Date}");
                 agency.Roles = (int)RoleType.Agency;
 

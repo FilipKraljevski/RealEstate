@@ -58,8 +58,8 @@ namespace Web.Controllers
         [Authorize]
         public async Task<ActionResult<Result<bool>>> ChangePassword(ChangePasswordRequest changePasswordRequest)
         {
-            var userClaims = new UserClaims(); //This is for test, we will get this from the logged in user
-            var result = await mediator.Send(new ChangePasswordCommand { ChangePasswordRequest = changePasswordRequest, UserClaims = userClaims });
+            //var userClaims = new UserClaims(); //This is for test, we will get this from the logged in user
+            var result = await mediator.Send(new ChangePasswordCommand { ChangePasswordRequest = changePasswordRequest });
             return ActionResultMapper.MapResult(result);
         }
     }

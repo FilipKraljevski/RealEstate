@@ -1,6 +1,7 @@
 ﻿using Domain.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Repository.Interface;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -23,11 +24,14 @@ namespace Web.Authentication
 
         public bool AreCredentialsValid(string email, string password)
         {
-            var agency = agencyRepository.GetByEmail(email);
+            var agency = agencyRepository.GetByUsername(email);
+
             if (agency == null) 
             {
                 return false;
             }
+
+            //var p = passwordHasher.HashPassword(agency, request.ChangePasswordRequest.NewPassword);
 
             var isPasswordMatching = passwordHasher.VerifyHashedPassword(agency, agency.Password, password);
 
@@ -41,7 +45,7 @@ namespace Web.Authentication
 
         public string GenerateToken(string email)
         {
-            var agency = agencyRepository.GetByEmail(email);
+            var agency = agencyRepository.GetByUsername(email);
 
             var claims = new[]
             {

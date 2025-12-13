@@ -9,6 +9,7 @@ namespace Domain.Model
         public required string Description { get; set; }
         public Country Country { get; set; }
         public required string Email { get; set; }
+        public required string Username { get; set; }
         public required string Password { get; set; }
         public Guid ProfilePictureId {get; set; }
         public int Roles {  get; set; }

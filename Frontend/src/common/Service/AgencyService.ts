@@ -1,5 +1,5 @@
 import axios from "axios";
-import { url, type BooleanResponse, type Response } from "./ServiceConfig";
+import { url, type BooleanResponse, type Response, type Code } from "./ServiceConfig";
 import type { Agency, AgencyDetails, AgencyName } from "./DTO/ResponseBody";
 import type { ChangePassword, SaveAgency } from "./DTO/RequestBody";
 
@@ -15,6 +15,14 @@ interface ResponseAgencies extends Response {
 
 interface ResponseAgencyDetails extends Response {
     data: AgencyDetails
+}
+
+interface SaveAgencyWithCode extends Code {
+    body: SaveAgency
+}
+
+interface ChangePasswordWithCode extends Code {
+    body: ChangePassword
 }
 
 export const getAgenciesName = async () => {
@@ -38,16 +46,16 @@ export const getAgencyDetails = async (id: string) => {
     return data.data
 }
 
-export const saveAgency = async (body: SaveAgency) => {
+export const saveAgency = async ({ body, code }: SaveAgencyWithCode) => {
     const data =  await axios
-        .post<BooleanResponse>(`${endpoint}/Save`, body)
+        .post<BooleanResponse>(`${endpoint}/Save`, body, { headers: { Authorization: `Bearer ${code}` } })
         .then(x => x.data);
     return data.data
 }
 
-export const changePassword = async (body: ChangePassword) => {
+export const changePassword = async ({ body, code }: ChangePasswordWithCode) => {
     const data =  await axios
-        .post<BooleanResponse>(`${endpoint}/ChangePassword`, body)
+        .post<BooleanResponse>(`${endpoint}/ChangePassword`, body, { headers: { Authorization: `Bearer ${code}` } })
         .then(x => x.data);
     return data.data
 }

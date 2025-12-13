@@ -1,4 +1,5 @@
-﻿using Domain.Model;
+﻿using Domain.Enum;
+using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository
@@ -29,6 +30,10 @@ namespace Repository
             modelBuilder.Entity<Agency>()
                 .Property(x => x.Id)
                 .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Agency>()
+                .HasIndex(a => a.Username)
+                .IsUnique();
 
             modelBuilder.Entity<Agency>()
                 .HasMany(x => x.Estates)
@@ -73,6 +78,21 @@ namespace Repository
             modelBuilder.Entity<Telephone>()
                 .Property(x => x.Id)
                 .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Agency>().HasData(
+                new Agency
+                {
+                    Id = Guid.Parse("c0e272f6-b150-4a11-9633-419d23fec1b5"),
+                    Name = "Filip's Agency",
+                    Description = "Filip's Agency nominated as the best agency",
+                    Country = Country.Macedonia,
+                    Email = "testprojectsemail4@gmail.com",
+                    Username = "",
+                    Password = "",
+                    ProfilePictureId = Guid.Parse("00000000-0000-0000-0000-000000000000"),
+                    Roles = (int)(RoleType.Admin | RoleType.Agency)
+                }
+            );
         }
     }
 }

@@ -11,6 +11,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteEstate, getEstates } from "../../common/Service/EstateService";
 import type { EstateFilters } from "../../common/Service/DTO/RequestBody";
 import { Protected } from "../../common/Routing/Routes";
+import { useAuth } from "../../common/Context/AuthProvider";
 
 export const Route = createLazyRoute('/YourEstates')({
     component: () => (
@@ -25,8 +26,9 @@ export default function YourEstates(){
     const { t } = useTranslation()
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
+    const { user } = useAuth();
 
-    const filter: EstateFilters = { agencyId: undefined } //Agency LoggedIn
+    const filter: EstateFilters = { agencyId: user?.id }
     const { data: estates } = useQuery({
         queryKey: ['estates', filter, page, rowsPerPage],
         queryFn:() => getEstates(filter, page, rowsPerPage)

@@ -27,3 +27,7 @@ export interface BooleanResponse extends Response{
 export interface StringResponse extends Response {
     data: string
 }
+
+export interface Code {
+    code: any
+}

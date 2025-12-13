@@ -29,19 +29,19 @@ namespace Web.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<Result<bool>>> Login(LoginRequest request)
         {
-            if(!loginService.AreCredentialsValid(request.Email, request.Password))
+            if(!loginService.AreCredentialsValid(request.Username, request.Password))
             {
                 return Unauthorized();
             }
             if (request.CodeId == Guid.Empty)
             {
-                var code = codeService.GenerateCode(request.Email);
+                var code = codeService.GenerateCode(request.Username);
                 var result = new OkResult<Guid>(code.Id) { StatusCode = 201 };
                 return ActionResultMapper.MapResult(result);
             }
-            else if (codeService.UpdateCode(request.CodeId, request.Email, request.Code)) 
+            else if (codeService.UpdateCode(request.CodeId, request.Username, request.Code)) 
             {
-                var token = loginService.GenerateToken(request.Email);
+                var token = loginService.GenerateToken(request.Username);
                 var result = new OkResult<string>(token);
                 return ActionResultMapper.MapResult(result);
             }

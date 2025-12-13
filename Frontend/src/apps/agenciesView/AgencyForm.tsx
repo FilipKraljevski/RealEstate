@@ -13,10 +13,12 @@ import { changePassword, getAgencyDetails, saveAgency } from "../../common/Servi
 import { convertToObjectUrl, fileToImage } from "../../common/Logic/ImageHelper";
 import type { Image } from "../../common/Service/DTO/RequestBody";
 import { Protected } from "../../common/Routing/Routes";
+import { RoleType } from "../../common/Domain/RoleType";
+import { useAuth } from "../../common/Context/AuthProvider";
 
 export const Route1 = createLazyRoute('/AgencyForm')({
     component: () => (
-        <Protected>
+        <Protected authorizedRoles={RoleType.Admin}>
           <AgencyForm />
         </Protected>
       ),
@@ -34,6 +36,7 @@ export default function AgencyForm() {
     
     const { t } = useTranslation()
     const [changePasswordOpen, setChangePasswordOpen] = useState(false)
+    const { token } = useAuth();
     
     const countryOptions = enumToOptions(Country)
 
@@ -93,7 +96,7 @@ export default function AgencyForm() {
                     ...value,
                     profilePicture
                 };
-                mutateAgency(payload)
+                mutateAgency({ body: payload, code: token })
             } else {
                 const profilePicture = {
                     id: value.profilePictureId,
@@ -102,7 +105,7 @@ export default function AgencyForm() {
                     ...value,
                     profilePicture
                 };
-                mutateAgency(payload)
+                mutateAgency({ body: payload, code: token })
             }
         }
     })
@@ -140,7 +143,7 @@ export default function AgencyForm() {
         },
         onSubmit: ({value}) => {
             console.log(value)
-            mutatePassword(value)
+            mutatePassword({ body: value, code: token })
         }
     })
 

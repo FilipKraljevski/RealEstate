@@ -9,6 +9,6 @@ namespace Service.Command.SaveEstate
     {
         public required SaveEstateRequest SaveEstateRequest { get; set; }
 
-        public required UserClaims UserClaims { get; set; }
+        public UserClaims UserClaims { get; set; }
     }
 }

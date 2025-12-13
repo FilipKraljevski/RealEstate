@@ -136,7 +136,7 @@ export interface Contact {
 }
 
 export interface Login {
-    email: string
+    username: string
     password: string
     codeId: string
     code: string

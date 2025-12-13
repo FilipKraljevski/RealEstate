@@ -15,9 +15,9 @@ namespace Repository.Implementation
             return entities.Where(e => e.Country == country);
         }
 
-        public Agency GetByEmail(string email)
+        public Agency GetByUsername(string username)
         {
-            return entities.Where(e => e.Email == email).SingleOrDefault();
+            return entities.Where(e => e.Username == username).FirstOrDefault();
         }
     }
 }

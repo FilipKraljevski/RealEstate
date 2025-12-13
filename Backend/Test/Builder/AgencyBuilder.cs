@@ -11,6 +11,7 @@ namespace Test.Builder
         private string description = "Best agency in the world";
         private Country country = Country.Macedonia;
         private string email = "gramada@mail.com";
+        private string username = "username123";
         private string password = "password";
         private Guid profilePictureId = Guid.NewGuid();
         private ICollection<Estate> estates = new List<Estate>(); 
@@ -47,6 +48,7 @@ namespace Test.Builder
                 Description = description,
                 Country = country,
                 Email = email,
+                Username = username,
                 Password = password,
                 ProfilePictureId = profilePictureId,
                 Estates = estates,

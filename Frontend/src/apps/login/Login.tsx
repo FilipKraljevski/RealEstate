@@ -33,13 +33,13 @@ export default function Login() {
     }, []);
 
     const validationSchema = z.object({
-        email: z.string().email(t('error.Email')),
+        username: z.string().nonempty(t('error.Required')),
         password: z.string().nonempty(t('error.Required')),
     })
 
     const form = useAppForm({
         defaultValues: { 
-            email: "",
+            username: "",
             password: ""
         },
         validators: {
@@ -79,14 +79,12 @@ export default function Login() {
     };
     
     return (
-        <Box sx={{ minHeight: '10vh', display: 'grid', placeItems: 'center', 
-            bgcolor: (theme) => (theme.palette.mode === 'light' ? '#f5f5f5' : 'background.default'), p: 2 }}>
+        <Box sx={{ minHeight: '10vh', display: 'grid', placeItems: 'center', mt: 10,
+             p: 2 }}>
             <Paper elevation={3} sx={{ width: '100%', maxWidth: 420, p: 4, }} >
-                <Typography variant="h5" component="h1" gutterBottom>
-                    Log in
-                </Typography>
+                <Typography variant="h5" component="h1" gutterBottom> {t("Login.Login")}</Typography>
             <Box component="form"  noValidate autoComplete="off" onSubmit={handleOnSubmit}>
-                <form.AppField name='email'  children={(field ) => <field.Text fullWidth={true}/>} />
+                <form.AppField name='username'  children={(field ) => <field.Text fullWidth={true}/>} />
                 <form.AppField name='password'  children={(field ) => <field.Text type="password" fullWidth={true}/>} />
                 <form.Subscribe selector={(state) => state.isValid} children=
                     {(isValid) => {
