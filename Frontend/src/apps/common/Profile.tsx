@@ -17,8 +17,13 @@ export default function Profile() {
     };
     
     const handleClose = () => {
-        logout()
+        setAnchorEl(null);
     };
+
+    const handleLogout = () => {
+        logout();
+        setAnchorEl(null);
+      };
 
     return (
         <> { isAuthenticated && <>
@@ -64,7 +69,7 @@ export default function Profile() {
                 {t('profile.YourEstates')}
             </MenuItem>
             <Divider />
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>

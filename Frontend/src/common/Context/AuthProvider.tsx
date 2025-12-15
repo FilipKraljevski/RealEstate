@@ -4,8 +4,8 @@ import { hasFlag } from "../Logic/EnumHelper";
 import { RoleType } from "../Domain/RoleType";
 
 interface CustomJwtPayload extends JwtPayload {
-    id: string;
-    roles: string;
+    "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string;
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string;
 }
 
 interface User {
@@ -34,9 +34,9 @@ export const AuthProvider = ({ children }: any) => {
     const login = (jwt: string) => {
         const decoded = jwtDecode<CustomJwtPayload>(jwt)
         setToken(jwt)
-        const roles = parseInt(decoded.roles)
+        const roles = parseInt(decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
         setUser({
-            id: decoded.id,
+            id: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
             roles: roles,
             isAdmin: hasFlag(roles, RoleType.Admin),
             isAgency: hasFlag(roles, RoleType.Agency)
@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }: any) => {
         setToken(undefined)
         setUser(undefined)
         setIsAuthenticated(false)
+        //sessionStorage.removeItem('token')
     } 
 
     return (

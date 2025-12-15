@@ -62,7 +62,7 @@
         "newPassword": "new password",
         "confirmPassword": "confirm new password",
         "username": "username",
-        "password": "лозинка"
+        "password": "password"
     },
     "filter": {
         "estateFor": "estate for",

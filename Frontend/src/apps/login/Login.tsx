@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { createLazyRoute } from "@tanstack/react-router";
+import { createLazyRoute, useRouter } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { login } from "../../common/Service/UserService";
 import z from "zod";
@@ -19,9 +19,10 @@ export default function Login() {
     const { t } = useTranslation()
     const [showDialog, setShowDialog] = useState(false);
     const [codeId, setCodeId] = useState("")
-    const { login: setJwt } = useAuth()
+    const router = useRouter()
+    const { login: setJwt, isAuthenticated } = useAuth()
 
-    const { mutate, isSuccess, data } = useMutation({
+    const { mutate } = useMutation({
         mutationFn: login
     })
 
@@ -34,7 +35,7 @@ export default function Login() {
 
     const validationSchema = z.object({
         username: z.string().nonempty(t('error.Required')),
-        password: z.string().nonempty(t('error.Required')),
+        password: z.string(),
     })
 
     const form = useAppForm({
@@ -49,12 +50,15 @@ export default function Login() {
             console.log(value)
             const payload = {
                 ...value,
-                codeId: "",
+                codeId: undefined,
                 code: ""
             }
-            mutate(payload)
-            setCodeId(data?.data ?? "")
-            setShowDialog(true)
+            mutate(payload, {
+                onSuccess: (data) => {
+                    setCodeId(data?.data ?? "");
+                    setShowDialog(true);
+                },
+            });
         }
     })
 
@@ -71,14 +75,17 @@ export default function Login() {
             codeId: codeId,
             code: code
         }
-        mutate(payload)
-        if(isSuccess){
-            closePopup()
-            setJwt(data.data)
-        }
+        mutate(payload, {
+            onSuccess: (data) => {
+                setJwt(data.data);
+                router.navigate({ to: "/" });
+                closePopup();
+            },
+        });
     };
     
     return (
+        !isAuthenticated && 
         <Box sx={{ minHeight: '10vh', display: 'grid', placeItems: 'center', mt: 10,
              p: 2 }}>
             <Paper elevation={3} sx={{ width: '100%', maxWidth: 420, p: 4, }} >

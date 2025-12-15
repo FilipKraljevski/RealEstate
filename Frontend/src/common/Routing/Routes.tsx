@@ -23,7 +23,7 @@ export function Protected({ children, authorizedRoles }: { children: React.React
       return <Navigate to="/Login" />;
     }
     if(authorizedRoles && !hasFlag(user?.roles ?? 0, authorizedRoles)){
-        return null
+        return <Navigate to="/" />;
     }
     return <>{children}</>;
   }

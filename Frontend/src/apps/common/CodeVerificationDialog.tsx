@@ -9,7 +9,7 @@ interface CodeVerificationDialogProps {
     maxDuration?: number;
 }
 
-export function CodeVerificationDialog({ open, onClose, onVerified, maxDuration = 10000 }: CodeVerificationDialogProps) {
+export function CodeVerificationDialog({ open, onClose, onVerified, maxDuration = 180000 }: CodeVerificationDialogProps) {
 
     const { t } = useTranslation();
     const [code, setCode] = useState("");

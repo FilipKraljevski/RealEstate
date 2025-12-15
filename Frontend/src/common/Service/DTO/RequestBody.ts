@@ -138,6 +138,6 @@ export interface Contact {
 export interface Login {
     username: string
     password: string
-    codeId: string
+    codeId: any
     code: string
 }
