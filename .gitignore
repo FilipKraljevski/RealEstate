@@ -8,3 +8,5 @@ obj/
 Backend/Web/sqlite.db
 Backend/Web/sqlite.db-shm
 Backend/Web/sqlite.db-wal
+Backend/Repository/Images/
+Backend/.vs/

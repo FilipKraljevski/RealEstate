@@ -31,11 +31,11 @@ export default function Agencies() {
             </Box>
             <Divider />
 
-            <Box sx={{mt: 1, display: 'flex', flexWrap: 'wrap'}}>
+            <Box sx={{mt: 1, display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
                 {agencies && agencies.map((item) => (
-                    <Card sx={{ maxWidth: 350, mr: 2, mt: 2 }} key={item.id}>
+                    <Card sx={{ width: 350, mr: 2, mt: 2 }} key={item.id}>
                         <CardActionArea component={Link} to={`/AgencyDetails/${item.id}`}>
-                            <CardMedia component="img" image={item.profilePicture} alt={item.name} sx={{ width: '100%', objectFit: 'cover' }}/>
+                            <CardMedia component="img" src={`data:image;base64,${item.profilePicture}`} alt={item.name} sx={{ objectFit: 'fill', width: 350, height: 200 }}/>
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="div">{item.name}</Typography>
                                 <Typography gutterBottom variant="h6" component="div">{t('Agencies.Country')}: 

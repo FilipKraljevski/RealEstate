@@ -5,7 +5,7 @@ using Service.Email;
 
 namespace Service.Command.LookingForProperty
 {
-    public class LookingForPropertyCommandHandler : IRequestHandler<LookingForPropertyCommand, Result<bool>>
+    public class LookingForPropertyCommandHandler : IRequestHandler<LookingForPropertyCommand, Result<string>>
     {
         private readonly IMailLogRepository mailLogRepository;
         private readonly IAgencyRepository agencyRepository;
@@ -18,7 +18,7 @@ namespace Service.Command.LookingForProperty
             this.emailService = emailService;
         }
 
-        public async Task<Result<bool>> Handle(LookingForPropertyCommand request, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(LookingForPropertyCommand request, CancellationToken cancellationToken)
         {
             var agencies = agencyRepository.GetByCountry(request.LookingForPropertyRequest.Country);
 
@@ -45,7 +45,7 @@ namespace Service.Command.LookingForProperty
                              "\n Elevator: " + request.LookingForPropertyRequest.Elevator +
                              "\n Basement: " + request.LookingForPropertyRequest.Basement;
 
-                string body = header + "\n" + telephone + message + "\n" + info;
+                string body = header + "\n" + telephone + "\n" + message + "\n" + info;
 
                 emailService.SendEmailToAgencies(agencies.ToList(), "User " + request.LookingForPropertyRequest.Name + " Looking for Property", body, null);
             }
@@ -61,7 +61,7 @@ namespace Service.Command.LookingForProperty
 
             mailLogRepository.Add(mailLog);
 
-            return new OkResult<bool>(true);
+            return new OkResult<string>(true.ToString());
         }
     }
 }

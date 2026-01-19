@@ -32,6 +32,6 @@ namespace Service.DTO.Request
     public class YourOfferImagesRequest
     {
         public required string Name { get; set; }
-        public required byte[] Content { get; set; }
+        public required string Content { get; set; }
     }
 }

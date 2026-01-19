@@ -8,15 +8,17 @@ import { PurchaseType } from '../../common/Domain/PurchaseType'
 import { useAppForm } from '../../common/form'
 import AlertError from '../../common/form/components/AlertError'
 import { enumToOptions } from '../../common/Logic/EnumHelper'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { getCities } from '../../common/Service/CityService'
 import { getEstateDetails, saveEstate } from '../../common/Service/EstateService'
-import type { Image } from '../../common/Service/DTO/RequestBody'
-import { fileToImage } from '../../common/Logic/ImageHelper'
+import { convertToObjectUrl, fileToImage } from '../../common/Logic/ImageHelper'
 import { Protected } from '../../common/Routing/Routes'
 import { RoleType } from '../../common/Domain/RoleType'
 import { useAuth } from '../../common/Context/AuthProvider'
+import type { ImageResponse } from '../../common/Service/DTO/ResponseBody'
+import type { Response } from '../../common/Service/ServiceConfig'
+import { useNotification } from '../../common/Context/NotificationProvider'
 
 export const Route1 = createLazyRoute('/EstateForm')({
     component: () => (
@@ -38,6 +40,7 @@ export default function EstateForm() {
     const [addCityOpen, setAddCityOpen] = useState(true)
     const { t } = useTranslation()
     const { token } = useAuth();
+    const { notify } = useNotification()
 
     const purchaseOptions = enumToOptions(PurchaseType)
     const estateOptions = enumToOptions(EstateType)
@@ -51,12 +54,22 @@ export default function EstateForm() {
         queryFn:() => getEstateDetails(id)
     })
     const { mutate } = useMutation({
-        mutationFn: saveEstate
+        mutationFn: saveEstate,
+        onSuccess: () => notify("success"),
+        onError: (err: Response) => notify("error", err.message)
     })
 
+    const City = z.object({
+        id: z.string().optional(),
+        name: z.string()
+    })
+
+    type City = z.infer<typeof City>;
+
     const ImageShow = z.object({
-        id: z.string(),
+        id: z.string().optional(),
         content: z.string(),
+        name: z.string()
     });
 
     type ImageShow = z.infer<typeof ImageShow>;
@@ -76,25 +89,19 @@ export default function EstateForm() {
         estateType: z.nativeEnum(EstateType, { message: t('error.Select')}),
         area: z.coerce.number().nonnegative(t('error.NonNegative')),
         country: z.nativeEnum(Country, { message: t('error.Select')}),
-        city: z.string().nonempty(t('error.Required')),
-        cityId: z.string(),
+        city: City,
         municipality: z.string().nonempty(t('error.Required')),
         yearOfConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
         floor: z.string().nonempty(t('error.Required')),
         rooms: z.coerce.number().nonnegative(t('error.NonNegative')),
         description: z.string(),
         additionalEstateInfo: z.array(AdditionalEstateInfo),
-        images: z.array(ImageShow),
-        addedImages: z.array(z.instanceof(File))
-    }).superRefine((vals, ctx) => {
-        if(vals.addedImages.find(x => !x.type.startsWith("image/"))){
-            ctx.addIssue({
-                code:     z.ZodIssueCode.custom,
-                message:  t('error.Images'),
-                path:     ['addedImages'],
-            })
-        }
+        images: z.array(ImageShow).min(1)
     })
+
+    const mapResponseImages = (images: ImageResponse[] | undefined) => {
+        return images?.map(x => { return { id: x.id, content: x.content, name: ""} })
+    }
 
     const form = useAppForm({
         defaultValues: {
@@ -105,35 +112,28 @@ export default function EstateForm() {
             estateType: estate?.estateType ?? 0,
             area: estate?.area ?? 0,
             country: estate?.country ?? 0,
-            city: estate?.city ?? "",
-            cityId: estate?.cityId ?? "",
+            city: estate?.city ?? { id: undefined, name: "" } as City,
             municipality: estate?.municipality ?? "",
             yearOfConstruction: estate?.yearOfConstruction ?? 0,
             floor: estate?.floor ?? "0",
             rooms: estate?.rooms ?? 0,
             description: estate?.description ?? "",
             additionalEstateInfo: estate?.additionalEstateInfo ?? [] as AdditionalEstateInfo[],
-            images:  estate?.images ?? [] as ImageShow[],
-            addedImages: [] as File[]
+            images:  mapResponseImages(estate?.images) ?? [] as ImageShow[]
         },
         validators: {
             onSubmit: validationSchema
         },
         onSubmit: async ({value}) => {
-            console.log(value)
-            const images: Image[] = await Promise.all(
-                value.addedImages.map((file) => fileToImage(file))
-            );
-            const c = addCityOpen ? { id: undefined, name: value.city }: cities?.find(x => x.id == value.city)
             const city = {
-                id: c?.id,
-                name: c?.name ?? "",
+                id: value.city.id,
+                name:  value.city.name,
                 country: value.country
             }
             const payload = {
-                ...form.state.values,
-                images,
-                city
+                ...value,
+                city,
+                id: value.id === "" ? undefined : value.id
             };
             mutate({ body: payload, code: token })
         }
@@ -145,12 +145,43 @@ export default function EstateForm() {
         form.handleSubmit()
     }
 
-    const { data: cities } = useQuery({
+    const { data: cities, refetch } = useQuery({
         queryKey: ["cities", form.state.values.country],
         enabled: form.state.values.country != Country.None,
         queryFn:() =>  getCities(form.state.values.country) 
     })
 
+    const onCityClick = (value: boolean) => {
+        setAddCityOpen(value)
+        form.setFieldValue("city", { id: undefined, name: "" })
+    }
+
+    const onCitySelectChange = (e: any) => {
+        const city = cities?.find(x => x.id === e.target.value) ?? { id: e.target.value, name: ""}
+        form.setFieldValue("city", city )
+    }
+
+    const onCityAddChange = (e: any) => {
+        form.setFieldValue("city", { id: undefined, name: e.target.value } )
+    }
+
+    const onImageRemove = (index: number) => {
+        const images = form.state.values.images.filter((_, i) => i != index)
+        form.setFieldValue("images", images)
+    }
+
+    const onImageChange = async (e: any) => {
+        const files = [...(e.target.files ?? [])];
+        const images = [...form.state.values.images];
+        const newImages = await Promise.all(files.map(async (file) => {
+            const image = await fileToImage(file);
+            return { id: undefined, content: image.content, name: image.name };
+            })
+        );
+        const updated = [...images, ...newImages];
+        form.setFieldValue("images", updated);
+    }
+    
     return (
         <Container sx={{textAlign: 'left', mt: '1%'}}>
             <Typography variant='h4' sx={{mb: '1%',}}>{t('RealEstate.YourEstatesForm')}</Typography>
@@ -202,28 +233,31 @@ export default function EstateForm() {
                 <Typography sx={{mt: '1%', fontWeight: "bold"}}>{t('RealEstate.LocationInfo')}</Typography>
                 <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }} sx={{justifyContent: 'space-between'}}>
                     <Grid size={3}>
-                        <form.AppField name="country" children={(field) => <field.SelectField data={countryOptions}/>} />
+                        <form.AppField name="country" children={(field) => <field.SelectField data={countryOptions} defaultValue={true}/>} />
                     </Grid>
                     <form.Subscribe selector={(state) => state.values.country} children=
                         {(country) => {
-                            const isDisabled = country === 0
+                            if(country != Country.None && addCityOpen){
+                                refetch()
+                            }
+                            const isDisabled = country === Country.None
                             const cityOptions = isDisabled || cities == undefined ? [] : 
-                            cities.map(item =>{ return ( { label: item.name, value: item.id } ) })
+                                cities.map(item =>{ return ( { label: item.name, value: item.id } ) })
                             
                             return (
                                 <Grid size={3}>
                                     {addCityOpen ? 
                                     <>
-                                        <form.AppField name="city" children={(field) => <field.SelectField data={cityOptions}  
-                                            disabled={isDisabled} translate={false}/>} />
-                                        <Button onClick={() => setAddCityOpen(false)}>
+                                        <form.AppField name="city.id" children={(field) => <field.SelectField data={cityOptions}
+                                            disabled={isDisabled} translate={false} onChange={onCitySelectChange} defaultValue={true} label={t('form.city')}/>}/>
+                                        <Button onClick={() => onCityClick(false)}>
                                             {t('RealEstate.AddCity')}
                                         </Button>
                                     </>
                                     :
                                     <>
-                                        <form.AppField name="city" children={(field) => <field.Text fullWidth={true}/>} />
-                                        <Button onClick={() => setAddCityOpen(true)}>
+                                        <form.AppField name="city.name" children={(field) => <field.Text fullWidth={true} onChange={onCityAddChange} label={t('form.city')}/>} />
+                                        <Button onClick={() => onCityClick(true)}>
                                             {t('RealEstate.SelectCity')}
                                         </Button>
                                     </>
@@ -244,7 +278,7 @@ export default function EstateForm() {
                             <>
                                 {field.state.value.map((_, i) => {
                                 return (
-                                    <form.AppField key={i} name={`additionalEstateInfo[${i}]`} children={(field) => {
+                                    <form.AppField key={i} name={`additionalEstateInfo[${i}].name`} children={(field) => {
                                             return (
                                                 <Grid size={3}>
                                                     <field.Text fullWidth={true} label={t('form.additionalInfo')}/>
@@ -263,7 +297,6 @@ export default function EstateForm() {
                                         {t('RealEstate.Remove')}
                                     </Button>
                                 </Grid>
-
                             </>
                         )
                     }}
@@ -273,18 +306,19 @@ export default function EstateForm() {
                 <Typography sx={{mt: '1%', fontWeight: "bold"}}>{t('RealEstate.ImagesInfo')}</Typography>
                 <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }} sx={{justifyContent: 'space-between'}}>
                     <Grid size={12}>
-                        <form.AppField name="addedImages" children={(field) => <field.ImageField />} />
-                        <form.Subscribe selector={(state) => state.values.addedImages} children=
+                        <form.AppField name="images" children={(field) => <field.ImageField onChange={onImageChange} />} />
+                        <form.Subscribe selector={(state) => state.values.images} children=
                             {(images) => {
                                 return (
                                     <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                                        {images.map((file: any) => (
+                                        {images.map((image: ImageShow, i: any) => (
                                             <Box
-                                                key={file.name}
+                                                key={image.name}
                                                 component="img"
-                                                src={URL.createObjectURL(file)}
-                                                alt={file.name}
+                                                src={convertToObjectUrl(image.content)}
+                                                alt={image.name}
                                                 sx={{ width: 100, height: 100, objectFit: 'cover' }}
+                                                onClick={() => onImageRemove(i)}
                                             />
                                         ))}
                                     </Box>

@@ -18,29 +18,29 @@ namespace Web.Authorization
             _emailSender = emailSender;
         }
 
-        public CodeAuthorization GenerateCode(string username)
+        public CodeAuthorization GenerateCode(string username, bool isAgency = true)
         {
             var generated = GenerateSecureNumericCode();
-            var agency = _agencyRepository.GetByUsername(username);
             string body = "The verification code: " + generated;
-            _emailSender.SendEmailToUser(agency.Email, "Verification Code", body);
+            var toEmail = isAgency ? _agencyRepository.GetByUsername(username).Email : username;
+            _emailSender.SendEmailToUser(toEmail, "Verification Code", body);
 
             var newCode = new CodeAuthorization
             {
                 Code = generated,
-                Email = agency.Email,
+                Email = toEmail,
                 ExpirationDate = DateTime.Now.AddMinutes(5)
             };
 
             return _codeRepository.Add(newCode);
         }
 
-        public bool UpdateCode(Guid codeId, string username, string? code)
+        public bool UpdateCode(Guid codeId, string username, string? code, bool isAgency = true)
         {
-            var agency = _agencyRepository.GetByUsername(username);
-            var data = _codeRepository.GetWithIdAndEmail(codeId, agency.Email);
+            var toEmail = isAgency ? _agencyRepository.GetByUsername(username).Email : username;
+            var data = _codeRepository.GetWithIdAndEmail(codeId, toEmail);
             var expectedCode = data.Code;
-            if (code == expectedCode)
+            if (code == data.Code && !data.IsUsed)
             {
                 var updated = data;
                 updated.IsUsed = true;

@@ -13,17 +13,18 @@ import { getAgenciesName } from '../../common/Service/AgencyService'
 import type { AgencyName, City } from '../../common/Service/DTO/ResponseBody'
 import { deleteEstate, getEstates } from '../../common/Service/EstateService'
 import { useAuth } from '../../common/Context/AuthProvider'
+import { convertToObjectUrl } from '../../common/Logic/ImageHelper'
 
 export const Route = createLazyRoute('/RealEstate')({
     component: RealEstate,
 })
 
 interface Filter {
-    estateFor: PurchaseType,
+    purchaseType: PurchaseType,
     estateType: EstateType,
     country: Country,
-    city: string,
-    agency: string
+    cityId: string,
+    agencyId: string
     fromArea: number,
     toArea: number,
     fromPrice: number,
@@ -72,7 +73,7 @@ export default function RealEstate() {
     }, [isSmallScreen])
 
     const handleDelete = (id: string) => {
-        mutate({ id, code: token })
+        mutate({ id: id, code: token })
     }
 
     const handleOnChangeFilters = (name: string, value: any) => {
@@ -114,8 +115,8 @@ export default function RealEstate() {
                     <Grid size={3} >
                         <FormControl fullWidth>
                         <InputLabel id='filter.estateFor'>{t(`filter.estateFor`)}</InputLabel>
-                        <Select value={filter.estateFor} labelId='filter.estateFor' label={t(`filter.${filter.estateFor}`)}
-                            onChange={(e) => handleOnChangeFilters("estateFor", e.target.value)}>
+                        <Select value={filter.purchaseType} labelId='filter.estateFor' label={t(`filter.${filter.purchaseType}`)}
+                            onChange={(e) => handleOnChangeFilters("purchaseType", e.target.value)}>
                             {purchaseOptions.map((item: Item) => {
                                 return (
                                     <MenuItem key={item.value} value={item.value}>{t(`option.${item.label}`)}</MenuItem>
@@ -153,8 +154,8 @@ export default function RealEstate() {
                     <Grid size={3}>
                         <FormControl fullWidth>
                         <InputLabel id='filter.city'>{t(`filter.city`)}</InputLabel>
-                        <Select fullWidth value={filter.city} labelId='filter.city' label={t(`filter.${filter.city}`)}
-                            onChange={(e) => handleOnChangeFilters("city", e.target.value)}>
+                        <Select fullWidth value={filter.cityId} labelId='filter.city' label={t(`filter.${filter.cityId}`)}
+                            onChange={(e) => handleOnChangeFilters("cityId", e.target.value)}>
                             {cities && cities.map((item: City) => {
                                 return (
                                     <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
@@ -166,8 +167,8 @@ export default function RealEstate() {
                     <Grid size={3}>
                         <FormControl fullWidth>
                         <InputLabel id='filter.agency'>{t(`filter.agency`)}</InputLabel>
-                        <Select fullWidth value={filter.agency} labelId='filter.agency' label={t(`filter.${filter.agency}`)}
-                            onChange={(e) => handleOnChangeFilters("agency", e.target.value)}>
+                        <Select fullWidth value={filter.agencyId} labelId='filter.agency' label={t(`filter.${filter.agencyId}`)}
+                            onChange={(e) => handleOnChangeFilters("agencyId", e.target.value)}>
                             {agenciesName && agenciesName.map((item: AgencyName) => {
                                 return (
                                     <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
@@ -205,7 +206,7 @@ export default function RealEstate() {
                                     }/>
                             <CardActionArea component={Link} to={`/RealEstateDetails/${item.id}`} sx={{ display: 'flex', 
                                 flexDirection:{ xs: 'column', sm: 'row' }, alignItems: 'center', textDecoration: 'none' }} >
-                                <CardMedia component="img" image={item.image} alt={item.title} sx={{width: 350, objectFit: 'cover'}} />
+                                <CardMedia component="img" image={convertToObjectUrl(item.image)} alt={item.title} sx={{ objectFit: 'fill', maxWidth: 300, height: 200 }} />
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography variant="body2" gutterBottom>
                                         <strong>{t(`RealEstate.EstateFor`)}</strong> {t(`Purchase.${getEnumTypeKey(item.purchaseType, PurchaseType)}`)}
@@ -214,7 +215,7 @@ export default function RealEstate() {
                                         <strong>{t(`RealEstate.EstateType`)}</strong> {t(`Estate.${getEnumTypeKey(item.estateType, EstateType)}`)}
                                     </Typography>
                                     <Typography variant="body2" gutterBottom>
-                                        <strong>{t(`RealEstate.Agency`)}</strong> {item.agency.name}
+                                        <strong>{t(`RealEstate.Agency`)}</strong> {item.agency?.name}
                                     </Typography>
                                     <Typography variant="body2" gutterBottom>
                                         <strong>{t(`RealEstate.Country`)}</strong> {t(`Country.${getEnumTypeKey(item.country, Country)}`)}

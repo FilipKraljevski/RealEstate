@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Repository.Interface;
 using Service.Command.DeleteEstate;
+using Service.Image;
 using Test.Builder;
 
 namespace Test.ServiceTests
@@ -8,12 +9,14 @@ namespace Test.ServiceTests
     public class DeleteEstateCommandHandlerTest
     {
         private readonly Mock<IEstateRepository> _estateRepository;
+        private readonly Mock<IImageService> _imageService;
         private readonly DeleteEstateCommandHandler sut;
 
         public DeleteEstateCommandHandlerTest()
         {
             _estateRepository = new Mock<IEstateRepository>();
-            sut = new DeleteEstateCommandHandler(_estateRepository.Object);
+            _imageService = new Mock<IImageService>();
+            sut = new DeleteEstateCommandHandler(_estateRepository.Object, _imageService.Object);
         }
 
         [Fact]

@@ -2,15 +2,15 @@ import type { Country } from "../../Domain/Country";
 import type { EstateType } from "../../Domain/EstateType";
 import type { PurchaseType } from "../../Domain/PurchaseType";
 
-export interface Image {
+export interface ImageRequest {
     id?: string
     name: string
-    content: Uint8Array 
+    content: string 
 }
 
 export interface ProfilePicture {
     id?: string
-    content?: Uint8Array 
+    content?: string 
 }
 
 export interface Telephone {
@@ -33,7 +33,7 @@ export interface AdditionalEstateInfo
 
 //agency
 export interface SaveAgency {
-    id: string
+    id: string | undefined
     name: string
     description: string
     country: Country
@@ -64,7 +64,7 @@ export interface EstateFilters {
 }
 
 export interface SaveEstate {
-    id: string
+    id: string | undefined
     title: string
     estateType: EstateType
     purchaseType: PurchaseType
@@ -78,7 +78,7 @@ export interface SaveEstate {
     floor: string
     city: City
     additionalEstateInfo: AdditionalEstateInfo[]
-    images: Image[]
+    images: ImageRequest[]
 }
 
 //user
@@ -125,7 +125,7 @@ export interface YourOffer {
     parking: boolean
     elevator: boolean
     basement: boolean
-    images: Image[]
+    images: ImageRequest[]
 }
 
 export interface Contact {

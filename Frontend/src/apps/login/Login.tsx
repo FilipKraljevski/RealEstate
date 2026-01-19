@@ -35,7 +35,7 @@ export default function Login() {
 
     const validationSchema = z.object({
         username: z.string().nonempty(t('error.Required')),
-        password: z.string(),
+        password: z.string().nonempty(t('error.Required')),
     })
 
     const form = useAppForm({
@@ -47,7 +47,6 @@ export default function Login() {
             onSubmit: validationSchema
         },
         onSubmit: ({value}) => {
-            console.log(value)
             const payload = {
                 ...value,
                 codeId: undefined,

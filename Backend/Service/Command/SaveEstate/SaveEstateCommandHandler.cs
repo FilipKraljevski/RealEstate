@@ -39,8 +39,11 @@ namespace Service.Command.SaveEstate
 
                 estate.Agency = agency;
                 estate.PublishedDate = DateTime.Now;
+                estate.Images = new List<Images>();
 
-                AddImages(estate, request.SaveEstateRequest.Pictures);
+                AddCity(estate, request.SaveEstateRequest);
+
+                AddImages(estate, request.SaveEstateRequest.Images);
 
                 estateRepository.Add(estate);
             }
@@ -53,9 +56,7 @@ namespace Service.Command.SaveEstate
                     return new NotFoundResult<bool>("Not Found: Estate does not exist");
                 }
 
-                mapper.Map(request.SaveEstateRequest, existingEstate);
-
-                var imagesToRemove = existingEstate.Images?.Where(i => request.SaveEstateRequest.Pictures?.Find(x => x.Id == i.Id) == null).Select(x => x.Id).ToList();
+                var imagesToRemove = existingEstate.Images?.Where(i => request.SaveEstateRequest.Images?.Find(x => x.Id == i.Id) == null).Select(x => x.Id).ToList();
 
                 foreach (var image in imagesToRemove)
                 {
@@ -63,9 +64,13 @@ namespace Service.Command.SaveEstate
                     existingEstate.Images?.Remove(existingEstate.Images.Single(x => x.Id == image));
                 }
 
-                var imagesToAdd = request.SaveEstateRequest.Pictures?.Where(x => x.Id == Guid.Empty).ToList();
+                var imagesToAdd = request.SaveEstateRequest.Images?.Where(x => x.Id == Guid.Empty).ToList();
 
                 AddImages(existingEstate, imagesToAdd);
+
+                AddCity(existingEstate, request.SaveEstateRequest);
+
+                mapper.Map(request.SaveEstateRequest, existingEstate);
 
                 estateRepository.Update(existingEstate);
             }
@@ -79,9 +84,29 @@ namespace Service.Command.SaveEstate
             {
                 foreach (var image in imagesRequest)
                 {
-                    image.Id = Guid.NewGuid();
-                    imageService.Add(image.Id, image.Content);
-                    estate.Images?.Add(new Images { Id = image.Id, Name = image.Name, Estate = estate });
+                    var id = Guid.NewGuid();
+                    imageService.Add(id, Convert.FromBase64String(image.Content));
+                    estate.Images?.Add(new Images { Id = id, Name = image.Name, Estate = estate });
+                }
+            }
+        }
+
+        private void AddCity(Estate estate, SaveEstateRequest request)
+        {
+            if (estate.City == null || estate.City.Id != request.City.Id)
+            {
+                if (request.City?.Id != Guid.Empty)
+                {
+                    var city = cityRepository.Get(request.City.Id);
+
+                    if (city != null)
+                    {
+                        estate.City = city;
+                    };
+                }
+                else
+                {
+                    cityRepository.Add(new City { Name = request.City.Name, Country = request.Country });
                 }
             }
         }

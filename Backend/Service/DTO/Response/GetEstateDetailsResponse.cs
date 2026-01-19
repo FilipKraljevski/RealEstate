@@ -9,9 +9,9 @@ namespace Service.DTO.Response
         public required string Title { get; set; }
         public required string Description { get; set; }
         public EstateType EstateType { get; set; }
-        public DateTime PublishedDate { get; set; }
+        public required string PublishedDate { get; set; }
         public Country Country { get; set; }
-        public required string City { get; set; }
+        public required CityResponse City { get; set; }
         public required string Municipality { get; set; }
         public long Area { get; set; }
         public int YearOfConstruction { get; set; }
@@ -21,6 +21,12 @@ namespace Service.DTO.Response
         public long Price { get; set; }
         public List<AdditionalEstateInfoResponse>? AdditionalEstateInfo { get; set; }
         public required GetAgencyNameResponse Agency {  get; set; }
+    }
+
+    public class CityResponse
+    {
+        public Guid Id { get; set; }
+        public required string Name { get; set; }
     }
 
     public class ImageResponse

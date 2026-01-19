@@ -82,9 +82,10 @@ namespace Test.ServiceTests
             Assert.Equal(estate.Title, estateResponse?.Title);
             Assert.Equal(estate.Description, estateResponse?.Description);
             Assert.Equal(estate.EstateType, estateResponse?.EstateType);
-            Assert.Equal(estate.PublishedDate, estateResponse?.PublishedDate);
+            Assert.Equal(estate.PublishedDate.ToString("g"), estateResponse?.PublishedDate);
             Assert.Equal(estate.Country, estateResponse?.Country);
-            Assert.Equal(estate.City.Name, estateResponse?.City);
+            Assert.Equal(estate.City.Id, estateResponse?.City.Id);
+            Assert.Equal(estate.City.Name, estateResponse?.City.Name);
             Assert.Equal(estate.Municipality, estateResponse?.Municipality);
             Assert.Equal(estate.Area, estateResponse?.Area);
             Assert.Equal(estate.YearOfConstruction, estateResponse?.YearOfConstruction);

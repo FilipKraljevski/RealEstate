@@ -36,9 +36,7 @@ export function CodeVerificationDialog({ open, onClose, onVerified, maxDuration 
     }, [expiresAt, onClose]);
 
     const handleVerify = () => {
-        onVerified(closePopup(), code);
-        // //onClose();
-        // localStorage.removeItem("codePopupExpiry");
+        onVerified(closePopup, code);
     };
 
     const closePopup = () => {

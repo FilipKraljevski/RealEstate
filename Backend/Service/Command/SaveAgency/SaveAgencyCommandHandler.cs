@@ -34,7 +34,7 @@ namespace Service.Command.SaveProfile
 
                 if(request.SaveAgencyRequest.ProfilePicture?.Content != null)
                 {
-                    AddImage(agency, request.SaveAgencyRequest.ProfilePicture.Content);
+                    AddImage(agency, Convert.FromBase64String(request.SaveAgencyRequest.ProfilePicture.Content));
                 }
 
                 agencyRepository.Add(agency);
@@ -55,9 +55,9 @@ namespace Service.Command.SaveProfile
 
                 mapper.Map(request.SaveAgencyRequest, existingAgency);
 
-                if (request.SaveAgencyRequest.ProfilePicture?.Id == Guid.Empty && request.SaveAgencyRequest.ProfilePicture.Content != null)
+                if (request.SaveAgencyRequest.ProfilePicture?.Id == Guid.Empty && request.SaveAgencyRequest.ProfilePicture.Content != "")
                 {
-                    AddImage(existingAgency, request.SaveAgencyRequest.ProfilePicture.Content);
+                    AddImage(existingAgency, Convert.FromBase64String(request.SaveAgencyRequest.ProfilePicture.Content));
                 }
 
                 agencyRepository.Update(existingAgency);

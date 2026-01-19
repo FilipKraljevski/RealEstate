@@ -24,17 +24,17 @@ namespace Web.Behaviors
         {
             if (request.CodeId == Guid.Empty)
             {
-                var code = codeService.GenerateCode(request.Email);
+                var code = codeService.GenerateCode(request.Email, false);
 
-                var result = new Result<object>(201)
+                var result = new Result<string>(201)
                 {
                     Message = "Two‑factor authentication needed",
-                    Data = code.Id
+                    Data = code.Id.ToString()
                 };
 
                 return (TResponse)(object)result;
             }
-            else if (codeService.UpdateCode(request.CodeId, request.Email, request.Code))
+            else if (codeService.UpdateCode(request.CodeId, request.Email, request.Code, false))
             {
                 return await next();
             }

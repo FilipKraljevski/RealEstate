@@ -5,6 +5,11 @@ import { useState } from "react";
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { estateDetailsQueryOptions } from "../../common/Routing/RouteQueries";
+import { convertToObjectUrl } from "../../common/Logic/ImageHelper";
+import { PurchaseType } from "../../common/Domain/PurchaseType";
+import { getEnumTypeKey } from "../../common/Logic/EnumHelper";
+import { Country } from "../../common/Domain/Country";
+import { EstateType } from "../../common/Domain/EstateType";
 
 export const Route = createLazyRoute("/RealEstateDetails/$id")({
     component: RealEstateDetails
@@ -37,7 +42,7 @@ export default function RealEstateDetails() {
                         <IconButton onClick={showPrev} disabled={current === 0}sx={{ position: 'absolute', left: 0 }}>
                             <ArrowBackIos />
                         </IconButton>
-                        <Paper component="img" src={estate.images[current].content} alt={`Slide ${current + 1}`} sx={{width: '100%', height: '300px'}}/>
+                        <Paper component="img" src={convertToObjectUrl(estate.images[current]?.content)} alt={`Slide ${current + 1}`} sx={{objectFit: 'contain', width: '100%', height: '300px'}}/>
                         <IconButton onClick={showNext} disabled={current === estate.images.length - 1} sx={{position: 'absolute', right: 0 }}>
                             <ArrowForwardIos />
                         </IconButton>
@@ -45,19 +50,19 @@ export default function RealEstateDetails() {
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Estate')}</Typography>
                         <Typography padding={1}><b>{t(`form.purchaseType`)}: </b>
-                            {t(`Purchase.${estate.purchaseType.toString()}`)}
+                            {t(`Purchase.${getEnumTypeKey(estate.purchaseType, PurchaseType)}`)}
                             </Typography>
                         <Typography padding={1}><b>{t(`form.published`)}: </b>
-                            {estate.publishedDate.toString()}
+                            {estate.publishedDate}
                         </Typography>
                     </Paper>
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Location').substring(0, 8)}</Typography>
                         <Typography padding={1}><b>{t(`form.country`)}: </b> 
-                            {t(`Country.${estate.country.toString()}`)}
+                            {t(`Country.${getEnumTypeKey(estate.purchaseType, Country)}`)}
                         </Typography>
                         <Typography padding={1}><b>{t(`form.city`)}: </b> 
-                            {estate.city.toString()}
+                            {estate.city.name.toString()}
                         </Typography>
                         <Typography padding={1}><b>{t(`form.municipality`)}: </b> 
                             {estate.municipality.toString()}
@@ -79,7 +84,7 @@ export default function RealEstateDetails() {
                     <Paper variant="outlined" sx={{mt: 1}}>
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('RealEstate.Financial')}</Typography>
                         <Typography padding={1}><b>{t(`form.estateType`)}: </b> 
-                                {t(`Estate.${estate.estateType.toString()}`)}
+                                {t(`Estate.${getEnumTypeKey(estate.purchaseType, EstateType)}`)}
                         </Typography>
                         <Typography padding={1}><b>{t(`form.price`)}: </b> 
                                 {estate.price.toString()}

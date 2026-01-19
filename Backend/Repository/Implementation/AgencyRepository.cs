@@ -1,5 +1,6 @@
 ﻿using Domain.Enum;
 using Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 
 namespace Repository.Implementation
@@ -18,6 +19,14 @@ namespace Repository.Implementation
         public Agency GetByUsername(string username)
         {
             return entities.Where(e => e.Username == username).FirstOrDefault();
+        }
+
+        public new Agency Get(Guid id)
+        {
+            return entities.Where(e => e.Id == id)
+                .Include(x => x.Telephones)
+                .Include(x => x.Estates)
+                .FirstOrDefault();
         }
     }
 }

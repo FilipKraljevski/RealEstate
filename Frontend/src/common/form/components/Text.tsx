@@ -9,7 +9,8 @@ interface Props {
     type?: string,
     placeholder?: string,
     adornment?: string,
-    label?: string
+    label?: string,
+    onChange?: (e?: any) => void
 }
 
 const Adornment = (value: string) => {
@@ -26,10 +27,18 @@ export default function Text(props: Props) {
     const adornment = props.adornment ?? ''
     const label = props.label ?? undefined
 
+    const handleOnChange = (e: any) => {
+        if(props.onChange){
+            props.onChange(e)
+        } else {
+            field.handleChange(e.target.value)
+        }
+    }
+
     return (
         <Box>
             <TextField id={field.name} required={isRequired} label={label || t(`form.${field.name}`)} value={field.state.value} fullWidth={fullWidth}
-                type={type} margin='normal' placeholder={props.placeholder} onChange={(e) => field.handleChange(e.target.value)} 
+                type={type} margin='normal' placeholder={props.placeholder} onChange={(e) => handleOnChange(e)} 
                 error={getErrorsLength(field.state.meta)} slotProps={{ input: {endAdornment: Adornment(adornment)}}}/>
             <FieldError meta={field.state.meta} />
         </Box>

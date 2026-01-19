@@ -28,7 +28,7 @@ namespace Service.Email
 
         public void SendEmail(string subject, string body)
         {
-            var message = BuildMessage(settings.EmailDisplayName, settings.EmailDisplayName, subject, body);
+            var message = BuildMessage(settings.EmailDisplayName, settings.SmtpUserName, subject, body);
 
             Send(message);
         }
@@ -75,7 +75,7 @@ namespace Service.Email
             {
                 foreach (var file in attachments)
                 {
-                    builder.Attachments.Add(file.Name, file.Content);
+                    builder.Attachments.Add(file.Name, Convert.FromBase64String(file.Content));
                 }
             }
 

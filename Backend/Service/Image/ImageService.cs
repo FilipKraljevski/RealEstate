@@ -14,53 +14,33 @@ namespace Service.Image
 
         public void Add(Guid id, byte[] content)
         {
-            if(id == Guid.Empty)
+            if (id == Guid.Empty) 
             {
                 throw new ArgumentNullException($"Document id not provided");
             }
 
             var filePath = Path.Combine(imageSettings.LocalPath, id.ToString());
 
-            var stream = new MemoryStream(content);
-            
-            if(stream.CanSeek)
-            {
-                stream.Position = 0;
-            }
-
-            var fileStream = File.Create(filePath);
-
-            stream.CopyTo(fileStream);
+            File.WriteAllBytes(filePath, content);
         }
 
         public string Get(Guid id)
         {
-            if (id == Guid.Empty)
-            {
-                return String.Empty;
+            if (id == Guid.Empty) 
+            { 
+                return string.Empty; 
             }
 
-            var filePath = Path.Combine(imageSettings.LocalPath, id.ToString());
+            var filePath = Path.Combine(imageSettings.LocalPath, id.ToString()); 
 
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException($"Document {id} not found.");
-            }
+            if (!File.Exists(filePath)) 
+            { 
+                throw new FileNotFoundException($"Document {id} not found."); 
+            } 
 
-            var provider = new FileExtensionContentTypeProvider();
-            
-            if (!provider.TryGetContentType(filePath, out var contentType))
-            {
-                contentType = "application/octet-stream";
-            }
+            var bytes = File.ReadAllBytes(filePath);
 
-            var memoryStream = new MemoryStream(File.ReadAllBytes(filePath));
-
-            memoryStream.Position = 0;
-
-            var base64 = Convert.ToBase64String(memoryStream.ToArray());
-
-            return base64;
+            return Convert.ToBase64String(bytes);
         }
 
         public List<string> Get(List<Guid> id)

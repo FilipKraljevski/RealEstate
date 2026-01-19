@@ -11,10 +11,12 @@ import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { changePassword, getAgencyDetails, saveAgency } from "../../common/Service/AgencyService";
 import { convertToObjectUrl, fileToImage } from "../../common/Logic/ImageHelper";
-import type { Image } from "../../common/Service/DTO/RequestBody";
+import type { ImageRequest } from "../../common/Service/DTO/RequestBody";
 import { Protected } from "../../common/Routing/Routes";
 import { RoleType } from "../../common/Domain/RoleType";
 import { useAuth } from "../../common/Context/AuthProvider";
+import { useNotification } from "../../common/Context/NotificationProvider";
+import type { Response } from "../../common/Service/ServiceConfig";
 
 export const Route1 = createLazyRoute('/AgencyForm')({
     component: () => (
@@ -37,6 +39,7 @@ export default function AgencyForm() {
     const { t } = useTranslation()
     const [changePasswordOpen, setChangePasswordOpen] = useState(false)
     const { token } = useAuth();
+    const { notify } = useNotification()
     
     const countryOptions = enumToOptions(Country)
 
@@ -48,10 +51,14 @@ export default function AgencyForm() {
         queryFn: () => getAgencyDetails(id),
     })
     const { mutate: mutateAgency } = useMutation({
-        mutationFn: saveAgency
+        mutationFn: saveAgency,
+        onSuccess: () => notify("success"),
+        onError: (err: Response) => notify("error", err.message)
     })
     const { mutate: mutatePassword } = useMutation({
-        mutationFn: changePassword
+        mutationFn: changePassword,
+        onSuccess: () => notify("success"),
+        onError: (err: Response) => notify("error", err.message)
     })
 
     const Telephone = z.object({
@@ -71,8 +78,25 @@ export default function AgencyForm() {
         profilePictureId: z.string()
     })
 
+    const convert = () => {
+        if(agency == undefined){
+            return agency
+        }
+        const cleaned = agency.profilePicture.replace(/^data:[^;]+;base64,/, "");
+        const byteString = atob(cleaned); 
+        const byteArray = new Uint8Array(byteString.length); 
+        for (let i = 0; i < byteString.length; i++) { 
+            byteArray[i] = byteString.charCodeAt(i); 
+        }
+        const t = {
+            ...agency,
+            profilePicture: [new File([byteArray], "")]
+        }
+        return t;
+    }
+
     const form = useAppForm({
-        defaultValues: agency ?? {
+        defaultValues: convert() ?? {
             id: "",
             name: "",
             description: "",
@@ -86,27 +110,17 @@ export default function AgencyForm() {
             onSubmit: validationSchema
         },
         onSubmit: async ({value}) => {
-            console.log(value)
-            if(value.profilePicture instanceof File){
-                const imageContent: Image = await fileToImage(value.profilePicture)
-                const profilePicture = {
-                    content: imageContent.content
-                }
-                const payload = {
-                    ...value,
-                    profilePicture
-                };
-                mutateAgency({ body: payload, code: token })
-            } else {
-                const profilePicture = {
-                    id: value.profilePictureId,
-                }
-                const payload = {
-                    ...value,
-                    profilePicture
-                };
-                mutateAgency({ body: payload, code: token })
+            const imageContent: ImageRequest = await fileToImage(value.profilePicture[0])
+            const profilePicture = {
+                content: imageContent.content,
+                id: value.profilePictureId || undefined,
             }
+            const payload = {
+                ...value,
+                profilePicture,
+                id: value.id || undefined
+            };
+            mutateAgency({ body: payload, code: token })
         }
     })
 
@@ -116,13 +130,19 @@ export default function AgencyForm() {
         form.handleSubmit()
     }
 
+    const onProfileChange = (e: any) => {
+        const files = [...(e.target.files ?? [])];
+        form.setFieldValue("profilePicture", files)
+        form.setFieldValue("profilePictureId", "")
+    }
+
     const passwordValidationSchema = z.object({
         agencyId: z.string(),
-        oldPassword: z.string().nonempty(t('error.Required')),
+        oldPassword: z.string(),
         newPassword: z.string().nonempty(t('error.Required')),
         confirmPassword: z.string().nonempty(t('error.Required')),
     }).superRefine((vals, ctx) => {
-        if(vals.newPassword === vals.confirmPassword){
+        if(vals.newPassword !== vals.confirmPassword){
             ctx.addIssue({
                 code:     z.ZodIssueCode.custom,
                 message:  t('error.ConfirmPassword'),
@@ -142,7 +162,6 @@ export default function AgencyForm() {
             onSubmit: passwordValidationSchema
         },
         onSubmit: ({value}) => {
-            console.log(value)
             mutatePassword({ body: value, code: token })
         }
     })
@@ -176,7 +195,7 @@ export default function AgencyForm() {
                                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                                         <IconButton component="label" sx={{ ml: 2 }}>
                                             <PhotoCamera />
-                                            <field.ImageField multiple={false} hidden={true} hideName={true}/>
+                                            <field.ImageField multiple={false} hidden={true} hideName={true} onChange={onProfileChange}/>
                                         </IconButton>
                                     </Box>
                                 )
@@ -195,7 +214,7 @@ export default function AgencyForm() {
                                                 <form.AppField key={i} name={`telephones[${i}].phoneNumber`} children={(field) => {
                                                         return (
                                                             <Box sx={{display: 'inline-block', mr: 2}}>
-                                                                <field.Text  label={t('form.telephone')}/>
+                                                                <field.Text label={t('form.telephone')}/>
                                                             </Box>
                                                         )
                                                     }
@@ -228,9 +247,9 @@ export default function AgencyForm() {
                         <Button type='submit' variant='contained' sx={{mt: '1%'}}>{t('Agencies.Save')}</Button>
                     </Box>
                 </Box>
-                <Box flex={1}>
+                {id && <Box flex={1}>
                     <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 2, mt: 1 }}>
-                        <Typography variant="h6">{t("Agencies.NumberOfEstates")}: 25</Typography>
+                        <Typography variant="h6">{t("Agencies.NumberOfEstates")}: {agency?.numberOfEstates}</Typography>
                     </Box>
                     {changePasswordOpen ? 
                         <Box component="form" noValidate autoComplete="off" onSubmit={handlePasswordSubmit}
@@ -253,7 +272,7 @@ export default function AgencyForm() {
                         :
                         <Button variant="contained" sx={{ mt: 1 }} onClick={() => setChangePasswordOpen(true)}>{t("Agencies.ChangePassword")}</Button>
                     }
-                </Box>
+                </Box> }
             </Stack>
         </Container>
     )

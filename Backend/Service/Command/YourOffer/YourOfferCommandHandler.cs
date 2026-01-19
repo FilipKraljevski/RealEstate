@@ -5,7 +5,7 @@ using Service.Email;
 
 namespace Service.Command.YourOffer
 {
-    public class YourOfferCommandHandler : IRequestHandler<YourOfferCommand, Result<bool>>
+    public class YourOfferCommandHandler : IRequestHandler<YourOfferCommand, Result<string>>
     {
         private readonly IMailLogRepository mailLogRepository;
         private readonly IAgencyRepository agencyRepository;
@@ -18,7 +18,7 @@ namespace Service.Command.YourOffer
             this.emailService = emailService;
         }
 
-        public async Task<Result<bool>> Handle(YourOfferCommand request, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(YourOfferCommand request, CancellationToken cancellationToken)
         {
             var agencies = agencyRepository.GetByCountry(request.YourOfferRequest.Country);
 
@@ -44,7 +44,7 @@ namespace Service.Command.YourOffer
                              "\n Elevator: " + request.YourOfferRequest.Elevator +
                              "\n Basement: " + request.YourOfferRequest.Basement;
 
-                string body = header + "\n" + telephone + message + "\n" + info;
+                string body = header + "\n" + telephone + "\n" + message + "\n" + info;
 
                 emailService.SendEmailToAgencies(agencies.ToList(), "Offer From User " + request.YourOfferRequest.Name, body, request.YourOfferRequest.Images);
             }
@@ -60,7 +60,7 @@ namespace Service.Command.YourOffer
 
             mailLogRepository.Add(mailLog);
 
-            return new OkResult<bool>(true);
+            return new OkResult<string>(true.ToString());
         }
     }
 }

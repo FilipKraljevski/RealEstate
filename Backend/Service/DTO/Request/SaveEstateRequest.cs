@@ -18,8 +18,8 @@ namespace Service.DTO.Request
         public string? Floor { get; set; }
         public required CityRequest City { get; set; }
         public Guid UpdatedByAgencyId { get; set; } //Updated by for authorization purposes
-        public List<ImageRequest>? Pictures { get; set; }
-        public List<AdditionalEstateInfoRequest>? AdditionalEstateInfos { get; set; }
+        public List<ImageRequest>? Images { get; set; }
+        public List<AdditionalEstateInfoRequest>? AdditionalEstateInfo { get; set; }
     }
 
     public class CityRequest //keep in mind might add duplicate
@@ -33,7 +33,7 @@ namespace Service.DTO.Request
     {
         public Guid Id { get; set; }
         public required string Name { get; set; }
-        public required byte[] Content { get; set; }
+        public required string Content { get; set; }
     }
 
     public class AdditionalEstateInfoRequest

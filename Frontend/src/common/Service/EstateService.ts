@@ -13,7 +13,7 @@ interface ResponseEstateDetails extends Response {
     data: EstateDetails
 }
 
-interface SaveEstateWithCode extends Code{
+interface SaveEstateWithCode extends Code {
     body: SaveEstate
 }
 
@@ -33,14 +33,14 @@ export const getEstateDetails = async (id: string) => {
 
 export const saveEstate = async ({ body, code }: SaveEstateWithCode) => {
     const data =  await axios
-        .post<BooleanResponse>(`${endpoint}/Save}`, body, { headers: { Authorization: `Bearer ${code}` } })
+        .post<BooleanResponse>(`${endpoint}/Save`, body, { headers: { Authorization: `Bearer ${code}` } })
         .then(x => x.data);
     return data.data
 }
 
 export const deleteEstate = async ({ id, code }: any) => {
     const data = await axios
-        .post<BooleanResponse>(`${endpoint}/Delete/${id}`, { headers: { Authorization: `Bearer ${code}` } })
+        .post<BooleanResponse>(`${endpoint}/Delete/${id}`, undefined, { headers: { Authorization: `Bearer ${code}` } })
         .then(x => x.data)
     return data.data
 }

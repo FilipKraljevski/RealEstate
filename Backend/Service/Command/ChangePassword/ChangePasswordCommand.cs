@@ -8,6 +8,6 @@ namespace Service.Command.ChangePassword
     public class ChangePasswordCommand : IIdentityRequest, IRequest<Result<bool>>
     {
         public required ChangePasswordRequest ChangePasswordRequest { get; set; }
-        public UserClaims UserClaims { get; set; }
+        public UserClaims UserClaims { get; set; } = new UserClaims();
     }
 }

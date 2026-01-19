@@ -2,7 +2,7 @@ import type { Country } from "../../Domain/Country"
 import { EstateType } from "../../Domain/EstateType"
 import { PurchaseType } from "../../Domain/PurchaseType"
 
-export interface Image {
+export interface ImageResponse {
     id: string
     content: string 
 }
@@ -67,14 +67,13 @@ export interface Estate {
 
 export interface EstateDetails {
     id: string
-    images: Image[]
+    images: ImageResponse[]
     title: string
     description: string
     estateType: EstateType
-    publishedDate: Date
+    publishedDate: string
     country: Country
-    city: string
-    cityId: string
+    city: City
     municipality: string
     area: number
     yearOfConstruction: number

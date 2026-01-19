@@ -6,13 +6,13 @@ const endpoint = `${url}/User`
 
 export const sendLookingForProperty = async (body: LookingForProperty) => {
     const data =  await axios
-        .post<BooleanResponse>(`${endpoint}/LookingForProperty`, body)
+        .post<StringResponse>(`${endpoint}/LookingForProperty`, body)
     return data.data
 }
 
 export const sendYourOffer = async (body: YourOffer) => {
     const data =  await axios
-        .post<BooleanResponse | StringResponse>(`${endpoint}/YourOffer`, body)
+        .post<StringResponse>(`${endpoint}/YourOffer`, body)
     return data.data
 }
 

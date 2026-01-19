@@ -26,13 +26,13 @@ namespace Test.ServiceTests
         }
 
         [Fact]
-        public async void WhenAgencyeNotFound_ReturnNotFound()
+        public async void WhenAgencyNotFound_ReturnNotFound()
         {
             //arrange
             var picture = new ImageRequest
             {
                 Name = "Hall",
-                Content = new byte[1]
+                Content = Convert.ToBase64String(new byte[Convert.ToByte(1)])
             };
             var additionalEstateInfo = new AdditionalEstateInfoRequest
             {
@@ -59,11 +59,11 @@ namespace Test.ServiceTests
                         Name = "Skopje",
                         Country = Country.Macedonia
                     },
-                    Pictures = new List<ImageRequest>
+                    Images = new List<ImageRequest>
                     {
                         picture
                     },
-                    AdditionalEstateInfos = new List<AdditionalEstateInfoRequest>
+                    AdditionalEstateInfo = new List<AdditionalEstateInfoRequest>
                     {
                         additionalEstateInfo
                     }
@@ -87,7 +87,7 @@ namespace Test.ServiceTests
             var picture = new ImageRequest
             {
                 Name = "Hall",
-                Content = new byte[1]
+                Content = Convert.ToBase64String(new byte[Convert.ToByte(1)])
             };
             var additionalEstateInfo = new AdditionalEstateInfoRequest
             {
@@ -114,11 +114,11 @@ namespace Test.ServiceTests
                         Name = "Skopje",
                         Country = Country.Macedonia
                     },
-                    Pictures = new List<ImageRequest>
+                    Images = new List<ImageRequest>
                     {
                         picture
                     },
-                    AdditionalEstateInfos = new List<AdditionalEstateInfoRequest>
+                    AdditionalEstateInfo = new List<AdditionalEstateInfoRequest>
                     {
                         additionalEstateInfo
                     }
@@ -139,6 +139,8 @@ namespace Test.ServiceTests
 
             _estateRepository.Setup(x => x.Add(It.IsAny<Estate>()));
 
+            _cityRepository.Setup(x => x.Add(It.IsAny<City>()));
+
             //act
             var result = await sut.Handle(command, It.IsAny<CancellationToken>());
 
@@ -158,12 +160,11 @@ namespace Test.ServiceTests
             Assert.Equal(estate.YearOfConstruction, command.SaveEstateRequest.YearOfConstruction);
             Assert.Equal(estate.Rooms, command.SaveEstateRequest.Rooms);
             Assert.Equal(estate.Floor, command.SaveEstateRequest.Floor);
-            Assert.Equal(estate.City.Name, command.SaveEstateRequest.City.Name);
-            Assert.Equal(estate.City.Country, command.SaveEstateRequest.City.Country);
-            Assert.Equal(estate.AdditionalEstateInfo?.First().Name, command.SaveEstateRequest.AdditionalEstateInfos.First().Name);
+            Assert.Equal(estate.AdditionalEstateInfo?.First().Name, command.SaveEstateRequest.AdditionalEstateInfo.First().Name);
             _agencyRepository.Verify(x => x.Get(agencyId), Times.Once);
             _imageServiceMock.Verify(x => x.Add(It.IsAny<Guid>(), It.IsAny<byte[]>()), Times.Once);
             _estateRepository.Verify(x => x.Add(It.IsAny<Estate>()), Times.Once);
+            _cityRepository.Verify(x => x.Add(It.IsAny<City>()), Times.Once);
         }
 
         [Fact]
@@ -175,7 +176,7 @@ namespace Test.ServiceTests
             var picture = new ImageRequest
             {
                 Name = "Hall",
-                Content = new byte[1]
+                Content = Convert.ToBase64String(new byte[Convert.ToByte(1)])
             };
             var additionalEstateInfo = new AdditionalEstateInfoRequest
             {
@@ -203,11 +204,11 @@ namespace Test.ServiceTests
                         Name = "Skopje",
                         Country = Country.Macedonia
                     },
-                    Pictures = new List<ImageRequest>
+                    Images = new List<ImageRequest>
                     {
                         picture
                     },
-                    AdditionalEstateInfos = new List<AdditionalEstateInfoRequest>
+                    AdditionalEstateInfo = new List<AdditionalEstateInfoRequest>
                     {
                         additionalEstateInfo
                     }
@@ -233,18 +234,19 @@ namespace Test.ServiceTests
             //arrange
             var estateId = Guid.NewGuid();
             var agencyId = Guid.NewGuid();
+            var cityId = Guid.NewGuid();
             var pictureExistId = Guid.NewGuid();
             var additionalInfoExistId = Guid.NewGuid();
             var pictureAdd = new ImageRequest
             {
                 Name = "Hall",
-                Content = new byte[1]
+                Content = Convert.ToBase64String(new byte[Convert.ToByte(1)])
             };
             var pictureExistRequest = new ImageRequest
             {
                 Id = pictureExistId,
                 Name = "Hall",
-                Content = new byte[1]
+                Content = Convert.ToBase64String(new byte[Convert.ToByte(1)])
             };
             var additionalEstateInfoAdd = new AdditionalEstateInfoRequest
             {
@@ -274,15 +276,16 @@ namespace Test.ServiceTests
                     Floor = "2",
                     City = new CityRequest
                     {
+                        Id = cityId,
                         Name = "Skopje",
                         Country = Country.Macedonia
                     },
-                    Pictures = new List<ImageRequest>
+                    Images = new List<ImageRequest>
                     {
                         pictureAdd,
                         pictureExistRequest
                     },
-                    AdditionalEstateInfos = new List<AdditionalEstateInfoRequest>
+                    AdditionalEstateInfo = new List<AdditionalEstateInfoRequest>
                     {
                         additionalEstateInfoAdd
                     }
@@ -311,6 +314,10 @@ namespace Test.ServiceTests
                 .WithAdditionalEstateInfo(new List<AdditionalEstateInfo> {additionalInfoExist, additionalInfoRemove})
                 .Build();
 
+            var city = new CityBuilder()
+                .WithId(cityId)
+                .Build();
+
             _estateRepository.Setup(x => x.Get(estateId)).Returns(estate);
 
             _imageServiceMock.Setup(x => x.Remove(It.IsAny<Guid>()));
@@ -318,6 +325,8 @@ namespace Test.ServiceTests
             _imageServiceMock.Setup(x => x.Add(It.IsAny<Guid>(), It.IsAny<byte[]>()));
 
             _estateRepository.Setup(x => x.Update(It.IsAny<Estate>()));
+
+            _cityRepository.Setup(x => x.Get(cityId)).Returns(city);
 
             //act
             var result = await sut.Handle(command, It.IsAny<CancellationToken>());
@@ -340,12 +349,13 @@ namespace Test.ServiceTests
             Assert.Equal(estate.Floor, command.SaveEstateRequest.Floor);
             Assert.Equal(estate.City.Name, command.SaveEstateRequest.City.Name);
             Assert.Equal(estate.City.Country, command.SaveEstateRequest.City.Country);
-            Assert.Equal(estate.AdditionalEstateInfo?.Last().Id, command.SaveEstateRequest.AdditionalEstateInfos.Last().Id);
+            Assert.Equal(estate.AdditionalEstateInfo?.Last().Id, command.SaveEstateRequest.AdditionalEstateInfo.Last().Id);
             Assert.DoesNotContain(additionalInfoRemove.Id, estate.AdditionalEstateInfo?.Select(x => x.Id));
             _estateRepository.Verify(x => x.Get(estateId), Times.Once);
             _imageServiceMock.Verify(x => x.Remove(It.IsAny<Guid>()), Times.Once);
             _imageServiceMock.Verify(x => x.Add(It.IsAny<Guid>(), It.IsAny<byte[]>()), Times.Once);
             _estateRepository.Verify(x => x.Update(It.IsAny<Estate>()), Times.Once);
+            _cityRepository.Verify(x => x.Get(cityId), Times.Once);
         }
     }
 }

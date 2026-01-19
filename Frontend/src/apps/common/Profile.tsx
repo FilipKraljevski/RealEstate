@@ -8,7 +8,7 @@ import { useAuth } from "../../common/Context/AuthProvider";
 export default function Profile() {
 
     const { t } = useTranslation()
-    const { logout, isAuthenticated } = useAuth();
+    const { logout, isAuthenticated, user } = useAuth();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     
@@ -29,7 +29,7 @@ export default function Profile() {
         <> { isAuthenticated && <>
             <Tooltip title="Account">
                 <IconButton sx={{ ml: 2 }} onClick={handleClick} size="small">
-                    <Avatar sx={{ width: 32, height: 32 }} src="/GramadaLogoUrl.png"/>
+                    <Avatar sx={{ width: 32, height: 32 }}/>
                 </IconButton>
             </Tooltip>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose} onClick={handleClose}
@@ -58,8 +58,8 @@ export default function Profile() {
                     },
                 }}
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }} >
-            <MenuItem component={Link} to={'/AgencyForm'}>
-                <Avatar src="/GramadaLogoUrl.png"/> 
+            <MenuItem component={Link} to={`/AgencyForm/${user?.id}`}>
+                <Avatar/> 
                 {t('profile.Profile')}
             </MenuItem>
             <MenuItem component={Link} to={'/YourEstates'}>

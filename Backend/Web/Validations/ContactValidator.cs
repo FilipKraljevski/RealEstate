@@ -1,25 +1,25 @@
 ﻿using FluentValidation;
-using Service.DTO.Request;
+using Service.Command.Contact;
 
 namespace Web.Validations
 {
-    public class ContactValidator : AbstractValidator<ContactRequest>
+    public class ContactValidator : AbstractValidator<ContactCommand>
     {
         public ContactValidator()
         {
-            RuleFor(x => x.Name)
+            RuleFor(x => x.ContactRequest.Name)
                 .NotEmpty()
                 .WithMessage("Name is required");
 
-            RuleFor(x => x.Email)
+            RuleFor(x => x.ContactRequest.Email)
                 .EmailAddress()
                 .WithMessage("Email is not valid");
 
-            RuleFor(x => x.Subject)
+            RuleFor(x => x.ContactRequest.Subject)
                 .NotEmpty()
                 .WithMessage("Subject is required");
 
-            RuleFor(x => x.Body)
+            RuleFor(x => x.ContactRequest.Body)
                 .NotEmpty()
                 .WithMessage("Body is required");
         }

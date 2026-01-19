@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useRef, useState } from "react"
 import { jwtDecode, type JwtPayload } from "jwt-decode"
 import { hasFlag } from "../Logic/EnumHelper";
 import { RoleType } from "../Domain/RoleType";
@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }: any) => {
     const [token, setToken] = useState<string | undefined>(undefined)
     const [user, setUser] = useState<User | undefined>(undefined)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const logoutTimerRef = useRef<number | undefined>(undefined);
 
     const login = (jwt: string) => {
         const decoded = jwtDecode<CustomJwtPayload>(jwt)
@@ -42,13 +43,22 @@ export const AuthProvider = ({ children }: any) => {
             isAgency: hasFlag(roles, RoleType.Agency)
         })
         setIsAuthenticated(true)
+        if (logoutTimerRef.current) { 
+            clearTimeout(logoutTimerRef.current); 
+        } 
+        logoutTimerRef.current = setTimeout(() => { 
+            logout(); 
+        }, 15 * 60 * 1000);
     }
 
     const logout = () => {
         setToken(undefined)
         setUser(undefined)
         setIsAuthenticated(false)
-        //sessionStorage.removeItem('token')
+        if (logoutTimerRef.current) { 
+            clearTimeout(logoutTimerRef.current);
+            logoutTimerRef.current = undefined;
+        } 
     } 
 
     return (

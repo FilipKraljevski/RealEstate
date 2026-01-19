@@ -33,7 +33,7 @@ export default function AgencyDetails() {
 
             <Grid container spacing={1} columns={{ xs: 4, sm: 8, md: 12 }} sx={{mt: 1}}>
                 <Grid size={8}>
-                    <Paper component='img' src={agency.profilePicture} alt={agency.name} sx={{ width: '100%', height: '300px'}}/>
+                    <Paper component='img' src={`data:image;base64,${agency.profilePicture}`} alt={agency.name} sx={{ objectFit: 'contain', width: '100%', height: '300px'}}/>
                     <Paper variant="outlined">
                         <Typography variant="h6" padding={1} bgcolor={'lightgray'} sx={{fontWeight: "bold"}}>{t('Agencies.Country')}</Typography>
                         <Typography padding={1}>{t(`Country.${getEnumTypeKey(agency.country, Country)}`)}</Typography>

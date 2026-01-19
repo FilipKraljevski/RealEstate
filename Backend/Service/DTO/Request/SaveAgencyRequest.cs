@@ -16,7 +16,7 @@ namespace Service.DTO.Request
     public class ProfilePictureRequest
     {
         public Guid Id { get; set; }
-        public byte[]? Content { get; set; }
+        public string? Content { get; set; }
     }
 
     public class TelephoneRequest

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Domain.Model;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ using Service.Mapper;
 using System.Text;
 using Web.Authentication;
 using Web.Authorization;
+using Web.Behaviors;
 using Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,8 +58,11 @@ builder.Services.AddMediatR(c =>
 });
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICodeService, CodeService>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(IdentityBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TwoFactorBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -66,7 +71,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
-
 var key = builder.Configuration["Jwt:Key"];
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
@@ -81,6 +85,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
     };
+});
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 104857600;
 });
 
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

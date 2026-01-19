@@ -6,6 +6,8 @@ import AlertError from '../../common/form/components/AlertError'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 import { sendContact } from '../../common/Service/UserService'
+import { useNotification } from '../../common/Context/NotificationProvider'
+import type { Response } from '../../common/Service/ServiceConfig'
 
 export const Route = createLazyRoute('/Contact')({
     component: Contact,
@@ -14,9 +16,12 @@ export const Route = createLazyRoute('/Contact')({
 export default function Contact() {
 
     const { t } = useTranslation()
+    const { notify } = useNotification()
 
     const { mutate } = useMutation({
-        mutationFn: sendContact
+        mutationFn: sendContact,
+        onSuccess: () => notify("success"),
+        onError: (err: Response) => notify("error", err.message)
     })
 
     const validationSchema = z.object({
@@ -37,7 +42,6 @@ export default function Contact() {
             onSubmit: validationSchema
         },
         onSubmit: ({value}) => {
-            console.log(value)
             mutate(value)
         }
     })

@@ -12,6 +12,8 @@ import { useState, useEffect } from 'react'
 import { CodeVerificationDialog } from '../common/CodeVerificationDialog'
 import { useMutation } from '@tanstack/react-query'
 import { sendLookingForProperty } from '../../common/Service/UserService'
+import { useNotification } from '../../common/Context/NotificationProvider'
+import type { Response } from '../../common/Service/ServiceConfig'
 
 export const Route = createLazyRoute('/LookingProperty')({
     component: LookingProperty,
@@ -20,6 +22,7 @@ export const Route = createLazyRoute('/LookingProperty')({
 export default function LookingProperty() {
 
     const { t } = useTranslation()
+    const { notify } = useNotification()
     const [codeId, setCodeId] = useState("")
     const [showDialog, setShowDialog] = useState(false);
 
@@ -28,8 +31,10 @@ export default function LookingProperty() {
     const countryOptions = enumToOptions(Country)
     const YesNoOptions = [{value: true, label: 'Yes'}, {value: false, label: 'No'}]
 
-    const { mutate, isSuccess, data } = useMutation({
-        mutationFn: sendLookingForProperty
+    const { mutate } = useMutation({
+        mutationFn: sendLookingForProperty,
+        onSuccess: () => notify("success"),
+        onError: (err: Response) => notify("error", err.message)
     })
 
     useEffect(() => {
@@ -106,15 +111,17 @@ export default function LookingProperty() {
             onSubmit: validationSchema
         },
         onSubmit: ({value}) => {
-            console.log(value)
             const payload = {
                 ...value,
-                codeId: "",
+                codeId: undefined,
                 code: ""
             }
-            mutate(payload)
-            setCodeId(data?.data.toString() ?? "")
-            setShowDialog(true)
+            mutate(payload, {
+                onSuccess: (data) => {
+                    setCodeId(data?.data ?? "");
+                    setShowDialog(true);
+                },
+            });
         }
     })
 
@@ -130,10 +137,11 @@ export default function LookingProperty() {
             codeId: codeId,
             code: code
         }
-        mutate(payload)
-        if(isSuccess){
-            closePopup()
-        }
+        mutate(payload, {
+            onSuccess: () => {
+                closePopup()
+            },
+        });
     };
 
     return (

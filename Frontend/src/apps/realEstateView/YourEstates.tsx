@@ -12,6 +12,7 @@ import { deleteEstate, getEstates } from "../../common/Service/EstateService";
 import type { EstateFilters } from "../../common/Service/DTO/RequestBody";
 import { Protected } from "../../common/Routing/Routes";
 import { useAuth } from "../../common/Context/AuthProvider";
+import { convertToObjectUrl } from "../../common/Logic/ImageHelper";
 
 export const Route = createLazyRoute('/YourEstates')({
     component: () => (
@@ -26,7 +27,7 @@ export default function YourEstates(){
     const { t } = useTranslation()
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
-    const { user } = useAuth();
+    const { user, token } = useAuth();
 
     const filter: EstateFilters = { agencyId: user?.id }
     const { data: estates } = useQuery({
@@ -38,7 +39,7 @@ export default function YourEstates(){
     })
 
     const handleDelete = (id: string) => {
-        mutate(id)
+        mutate({ id: id, code: token })
     }
 
     const handleOnChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -71,14 +72,14 @@ export default function YourEstates(){
                                         <IconButton onClick={() => handleDelete(item.id)}>
                                             <Delete />
                                         </IconButton>
-                                        <IconButton component={Link} to={`/EstateForm/${item.id}`} onClick={() => {console.log("Edit")}}>
+                                        <IconButton component={Link} to={`/EstateForm/${item.id}`}>
                                             <Edit />
                                         </IconButton>
                                      </>
                                     }/>
                             <CardActionArea component={Link} to={`/RealEstateDetails/${item.id}`} sx={{ display: 'flex', 
                                 flexDirection:{ xs: 'column', sm: 'row' }, alignItems: 'center', textDecoration: 'none' }} >
-                                <CardMedia component="img" image={item.image[0]} alt={item.title} sx={{width: 350, objectFit: 'cover'}} />
+                                <CardMedia component="img" image={convertToObjectUrl(item.image)} alt={item.title} sx={{objectFit: 'fill', width: 300, height: 200}} />
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography variant="body2" gutterBottom>
                                         <strong>{t(`RealEstate.EstateFor`)}</strong> {t(`Purchase.${getEnumTypeKey(item.purchaseType, PurchaseType)}`)}
@@ -87,7 +88,7 @@ export default function YourEstates(){
                                         <strong>{t(`RealEstate.EstateType`)}</strong> {t(`Estate.${getEnumTypeKey(item.estateType, EstateType)}`)}
                                     </Typography>
                                     <Typography variant="body2" gutterBottom>
-                                        <strong>{t(`RealEstate.Agency`)}</strong> {item.agency.name}
+                                        <strong>{t(`RealEstate.Agency`)}</strong> {item.agency?.name}
                                     </Typography>
                                     <Typography variant="body2" gutterBottom>
                                         <strong>{t(`RealEstate.Country`)}</strong> {t(`Country.${getEnumTypeKey(item.country, Country)}`)}

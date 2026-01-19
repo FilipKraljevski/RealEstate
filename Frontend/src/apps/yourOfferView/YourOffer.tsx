@@ -13,7 +13,9 @@ import { useMutation } from '@tanstack/react-query'
 import { sendYourOffer } from '../../common/Service/UserService'
 import { CodeVerificationDialog } from '../common/CodeVerificationDialog'
 import { fileToImage } from '../../common/Logic/ImageHelper'
-import type { Image } from '../../common/Service/DTO/RequestBody'
+import type { ImageRequest } from '../../common/Service/DTO/RequestBody'
+import type { Response } from '../../common/Service/ServiceConfig'
+import { useNotification } from '../../common/Context/NotificationProvider'
 
 export const Route = createLazyRoute('/YourOffer')({
     component: YourOffer,
@@ -22,6 +24,7 @@ export const Route = createLazyRoute('/YourOffer')({
 export default function YourOffer() {
     
     const { t } = useTranslation()
+    const { notify } = useNotification()
     const [showDialog, setShowDialog] = useState(false);
     const [codeId, setCodeId] = useState("")
 
@@ -30,8 +33,10 @@ export default function YourOffer() {
     const countryOptions = enumToOptions(Country)
     const YesNoOptions = [{value: true, label: 'Yes'}, {value: false, label: 'No'}]
 
-    const { mutate, isSuccess, data } = useMutation({
-        mutationFn: sendYourOffer
+    const { mutate } = useMutation({
+        mutationFn: sendYourOffer,
+        onSuccess: () => notify("success"),
+        onError: (err: Response) => notify("error", err.message)
     })
 
     useEffect(() => {
@@ -110,16 +115,18 @@ export default function YourOffer() {
             onSubmit: validationSchema
         },
         onSubmit: ({value}) => {
-            console.log(value)
             const payload = {
                 ...value,
                 images: [],
-                codeId: "",
+                codeId: undefined,
                 code: ""
             }
-            mutate(payload)
-            setCodeId(data?.data.toString() ?? "")
-            setShowDialog(true)
+            mutate(payload, {
+                onSuccess: (data) => {
+                    setCodeId(data?.data ?? "");
+                    setShowDialog(true);
+                },
+            });
         }
     })
 
@@ -130,7 +137,7 @@ export default function YourOffer() {
     }
 
     const handleVerified = async (closePopup: any, code: string) => {
-        const images: Image[] = await Promise.all(
+        const images: ImageRequest[] = await Promise.all(
             form.state.values.images.map((file) => fileToImage(file))
         );
         const payload = {
@@ -139,10 +146,11 @@ export default function YourOffer() {
             codeId: codeId,
             code: code
         };
-        mutate(payload)
-        if(isSuccess){
-            closePopup()
-        }
+        mutate(payload, {
+            onSuccess: () => {
+                closePopup()
+            },
+        });
     };
 
     return (

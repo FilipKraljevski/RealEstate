@@ -63,9 +63,9 @@ namespace Repository
                 .WithOne(x => x.Estate)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<Images>()
-            //    .Property(x => x.Id)
-            //    .ValueGeneratedOnAdd();
+            modelBuilder.Entity<Images>()
+                .Property(x => x.Id)
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<CodeAuthorization>()
                 .Property(x => x.Id)

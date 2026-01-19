@@ -1,20 +1,20 @@
 ﻿using FluentValidation;
-using Service.DTO.Request;
+using Service.Command.ChangePassword;
 
 namespace Web.Validations
 {
-    public class ChangePasswordValidator : AbstractValidator<ChangePasswordRequest>
+    public class ChangePasswordValidator : AbstractValidator<ChangePasswordCommand>
     {
         public ChangePasswordValidator()
         {
-            RuleFor(x => x.NewPassword)
+            RuleFor(x => x.ChangePasswordRequest.NewPassword)
                 .NotEmpty()
                 .WithMessage("New password is requried");
 
-            RuleFor(x => x.ConfirmPassword)
+            RuleFor(x => x.ChangePasswordRequest.ConfirmPassword)
                 .NotEmpty()
                 .WithMessage("Confirm password is requried")
-                .Matches(x => x.NewPassword)
+                .Equal(x => x.ChangePasswordRequest.NewPassword)
                 .WithMessage("Confirm password must be equal with new password");
         }
     }

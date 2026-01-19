@@ -8,7 +8,9 @@ interface Props {
     required?: boolean,
     disabled?: boolean,
     defaultValue?: boolean,
-    translate?: boolean
+    label?: string,
+    translate?: boolean,
+    onChange?: (e?: any) => void
 }
 
 interface Item {
@@ -25,12 +27,21 @@ export default function SelectField(props: Props) {
     const data = props.data
     const defaultValue = props.defaultValue
     const translate = props.translate ?? true
+    const label = props.label ?? undefined
+
+    const handleOnChange = (e: any) => {
+        if(props.onChange){
+            props.onChange(e)
+        } else {
+            field.handleChange(e.target.value)
+        }
+    }
 
     return (
         <FormControl sx={{mt: '16px', mb: '8px'}} fullWidth>
-            <InputLabel id='select-label'>{t(`form.${field.name}`)}{isRequired ? '*' : ''}</InputLabel>
+            <InputLabel id='select-label'>{label || t(`form.${field.name}`)}{isRequired ? '*' : ''}</InputLabel>
             <Select id={field.name} required={isRequired} value={field.state.value} labelId="select-label" label={t(`form.${field.name}`)}
-                disabled={isDisabled} onChange={(e) => field.handleChange(e.target.value)} error={getErrorsLength(field.state.meta)}>
+                disabled={isDisabled} onChange={(e) => handleOnChange(e)} error={getErrorsLength(field.state.meta)}>
                     {defaultValue || 
                         <MenuItem value='0'>{t(`option.Select`)}</MenuItem>
                     }

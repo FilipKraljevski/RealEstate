@@ -6,6 +6,7 @@ using Moq;
 using Repository.Interface;
 using Service.Command.SaveProfile;
 using Service.DTO.Request;
+using System.Buffers.Text;
 using Test.Builder;
 using Test.Setup;
 
@@ -43,7 +44,7 @@ namespace Test.ServiceTests
                     Email = "gramada@mail.com",
                     ProfilePicture = new ProfilePictureRequest()
                     {
-                        Content = new byte[1]
+                        Content = Convert.ToBase64String(new byte[Convert.ToByte(1)])
                     },
                     Telephones = new List<TelephoneRequest>() { telephone }
                 }
@@ -91,7 +92,7 @@ namespace Test.ServiceTests
                     Email = "gramada@mail.com",
                     ProfilePicture = new ProfilePictureRequest()
                     {
-                        Content = new byte[1]
+                        Content = Convert.ToBase64String(new byte[Convert.ToByte(1)])
                     },
                     Telephones = new List<TelephoneRequest>() { telephone }
                 }
@@ -131,7 +132,7 @@ namespace Test.ServiceTests
                     Email = "gramada@mail.com",
                     ProfilePicture = new ProfilePictureRequest()
                     {
-                        Content = new byte[1]
+                        Content = Convert.ToBase64String(new byte[Convert.ToByte(1)])
                     },
                     Telephones = new List<TelephoneRequest>() { telephoneAdd, telephoneExist }
                 }
