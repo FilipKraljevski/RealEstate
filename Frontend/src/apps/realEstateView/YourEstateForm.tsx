@@ -76,7 +76,7 @@ export default function EstateForm() {
 
     const AdditionalEstateInfo = z.object({
         id: z.string().optional(),
-        name: z.string()
+        name: z.string().nonempty(t('error.Required'))
     })
 
     type AdditionalEstateInfo = z.infer<typeof AdditionalEstateInfo>;
@@ -87,16 +87,24 @@ export default function EstateForm() {
         price: z.coerce.number().gt(0, t('error.GT0')),
         purchaseType: z.nativeEnum(PurchaseType, { message: t('error.Select')}),
         estateType: z.nativeEnum(EstateType, { message: t('error.Select')}),
-        area: z.coerce.number().nonnegative(t('error.NonNegative')),
+        area: z.coerce.number().gt(0, t('error.GT0')),
         country: z.nativeEnum(Country, { message: t('error.Select')}),
         city: City,
         municipality: z.string().nonempty(t('error.Required')),
-        yearOfConstruction: z.coerce.number().nonnegative(t('error.NonNegative')),
+        yearOfConstruction: z.coerce.number().gt(0, t('error.GT0')),
         floor: z.string().nonempty(t('error.Required')),
         rooms: z.coerce.number().nonnegative(t('error.NonNegative')),
         description: z.string(),
         additionalEstateInfo: z.array(AdditionalEstateInfo),
-        images: z.array(ImageShow).min(1)
+        images: z.array(ImageShow).min(1, t('error.Required'))
+    }).superRefine((vals, ctx) => {
+        if(vals.country == Country.None){
+            ctx.addIssue({
+                code:     z.ZodIssueCode.custom,
+                message:  t('error.Required'),
+                path:     ['country'],
+            })
+        }
     })
 
     const mapResponseImages = (images: ImageResponse[] | undefined) => {

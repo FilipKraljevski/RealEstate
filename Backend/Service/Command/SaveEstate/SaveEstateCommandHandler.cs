@@ -106,7 +106,9 @@ namespace Service.Command.SaveEstate
                 }
                 else
                 {
-                    cityRepository.Add(new City { Name = request.City.Name, Country = request.Country });
+                    var city = new City { Name = request.City.Name, Country = request.Country };
+                    cityRepository.Add(city);
+                    estate.City = city;
                 }
             }
         }

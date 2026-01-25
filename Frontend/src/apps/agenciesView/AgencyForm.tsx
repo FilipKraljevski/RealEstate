@@ -76,6 +76,14 @@ export default function AgencyForm() {
         telephones: z.array(Telephone).min(1, t('error.Required')),
         profilePicture: z.array(z.instanceof(File)).max(1),
         profilePictureId: z.string()
+    }).superRefine((vals, ctx) => {
+        if(vals.country == Country.None){
+            ctx.addIssue({
+                code:     z.ZodIssueCode.custom,
+                message:  t('error.Required'),
+                path:     ['country'],
+            })
+        }
     })
 
     const convert = () => {
@@ -203,7 +211,7 @@ export default function AgencyForm() {
                         </Box>
                         <form.AppField name='name' children={( field ) => <field.Text fullWidth={true}/> }/>
                         <form.AppField name='email'  children={(field ) => <field.Text fullWidth={true}/>} />
-                        <form.AppField name="country" children={(field) => <field.SelectField data={countryOptions}/>} />
+                        <form.AppField name="country" children={(field) => <field.SelectField data={countryOptions} defaultValue={true}/>} />
                         <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
                             <form.Field name="telephones" mode="array">
                                 {(field) => {
